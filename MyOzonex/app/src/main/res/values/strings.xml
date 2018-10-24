@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">MyOzonex</string>
+
+    <string name="navigation_drawer_open">Ouvrir la navigation</string>
+    <string name="navigation_drawer_close">Fermer la navigation</string>
+    <string name="nav_header_subtitle">ozonex.service@gmail.com</string>
+
+    <string name="action_actualiser">Actualiser</string>
+
+    <string name="connexion">Connexion</string>
+    <string name="donnees">Données</string>
+    <string name="synoptique">Synoptique</string>
+    <string name="menu">Menu</string>
+    <string name="pompe_filtration">Pompe filtration</string>
+    <string name="filtre">Filtre</string>
+    <string name="surpresseur">Surpresseur</string>
+    <string name="chauffage">Chauffage</string>
+    <string name="lampes_uv">Lampes UV</string>
+    <string name="ozonateur">Ozonateur</string>
+    <string name="electrolyseur">Electrolyseur</string>
+    <string name="regulateur_ph_plus">Régulateur pH+</string>
+    <string name="regulateur_ph_moins">Régulateur pH-</string>
+    <string name="regulateur_orp">Régulateur ORP</string>
+    <string name="algicide">Algicide</string>
+    <string name="deconnexion">Déconnexion</string>
+</resources>

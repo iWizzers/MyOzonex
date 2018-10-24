@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#00ddff</color>
+    <color name="colorPrimaryDark">#33b5e5</color>
+    <color name="colorAccent">#00ddff</color>
+
+    <color name="ligneSeparatricePortrait">#CCCCCC</color>
+    <color name="bordureGroupPortrait">#CCCCCC</color>
+
+    <color name="titleBackground">#AAFFFF</color>
+    <color name="transparentBackground">#55000000</color>
+    <color name="couleurSousTitre">#00FFFF</color>
+    <color name="couleurTexteGeneral">#FFFFFF</color>
+
+    <color name="ligneCapteur">#AA55FF</color>
+    <color name="ligneInjectionActive">#5299FF</color>
+    <color name="ligneInjectionActiveChaud">#FF4500</color>
+    <color name="ligneInjectionInactive">#C0C0C0</color>
+
+    <color name="synoptique">#EEF7FF</color>
+
+    <color name="manuel">#FF00FF</color>
+    <color name="autoMarche">#00FF00</color>
+    <color name="autoArret">#000000</color>
+
+    <color name="algicide">#00AA00</color>
+    <color name="orp">#FFFF00</color>
+    <color name="phMoins">#FF0000</color>
+    <color name="phPlus">#800080</color>
+
+    <color name="bouton3EtatSelectionne">#00FF00</color>
+    <color name="bouton3EtatNonSelectionne">#FFFFFF</color>
+</resources>

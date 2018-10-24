@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/horizontal_scroll"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal"
+    android:background="@drawable/fond1">
+
+    <ScrollView
+        android:id="@+id/vertical_scroll"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <AbsoluteLayout
+            android:id="@+id/layout"
+            android:layout_width="1280dp"
+            android:layout_height="wrap_content"
+            tools:ignore="Deprecated">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/title" >
+                    <ImageButton
+                        android:id="@+id/bouton_retour"
+                        android:layout_width="121dp"
+                        android:layout_height="121dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="TODO"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/bouton_retour"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:maxLines="1"
+                        android:text="Retour"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/texteSousTitre" />
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0"
+                        android:maxLines="1"
+                        android:text="Supresseur"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/texteTitre" />
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="0"
+                        android:layout_row="0"
+                        android:layout_columnWeight="0"
+                        android:background="@color/transparentBackground"
+                        android:paddingTop="24dp"
+                        android:paddingBottom="25dp"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" >
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal" >
+                                <View
+                                    android:layout_width="50dp"
+                                    android:layout_height="10dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/ligne_horizontal_sous_titre"
+                                    android:layerType="software"
+                                    android:layout_gravity="center" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0"
+                                    android:maxLines="1"
+                                    android:text="Consommations"
+                                    android:textStyle="bold"
+                                    android:gravity="center"
+                                    android:textColor="@color/couleurSousTitre"
+                                    android:textSize="@dimen/texteSousTitre" />
+
+                                <View
+                                    android:layout_width="50dp"
+                                    android:layout_height="10dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/ligne_horizontal_sous_titre"
+                                    android:layerType="software"
+                                    android:layout_gravity="center" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:paddingLeft="25dp"
+                                android:paddingRight="25dp">
+                                <TextView
+                                    android:id="@+id/texte_donnees_conso"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Depuis :\nHeures pleines :\nHeures creuses :"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/couleurTexteGeneral"
+                                    android:textSize="@dimen/texteGeneral" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_row="0"
+                        android:layout_columnWeight="0"
+                        android:paddingTop="24dp"
+                        android:paddingRight="25dp"
+                        android:orientation="vertical">
+                        <FrameLayout
+                            android:layout_width="171dp"
+                            android:layout_height="223dp" >
+                            <ImageView
+                                android:id="@+id/bouton_3_etats"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:contentDescription="TODO"
+                                android:scaleType="fitXY"
+                                app:srcCompat="@drawable/bouton_off_vertical"
+                                tools:ignore="MissingConstraints" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:gravity="center"
+                                android:padding="15dp" >
+                                <Button
+                                    android:id="@+id/bouton_auto"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@android:color/transparent"
+                                    android:text="AUTO"
+                                    android:textStyle="bold"
+                                    android:gravity="center"
+                                    android:textColor="@color/bouton3EtatNonSelectionne"
+                                    android:textSize="@dimen/texteSousTitre" />
+
+                                <Button
+                                    android:id="@+id/bouton_arret"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@android:color/transparent"
+                                    android:text="O"
+                                    android:textStyle="bold"
+                                    android:gravity="center"
+                                    android:textColor="@color/bouton3EtatNonSelectionne"
+                                    android:textSize="@dimen/texteSousTitre" />
+
+                                <Button
+                                    android:id="@+id/bouton_marche"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:background="@android:color/transparent"
+                                    android:text="MARCHE"
+                                    android:textStyle="bold"
+                                    android:gravity="center"
+                                    android:textColor="@color/bouton3EtatNonSelectionne"
+                                    android:textSize="@dimen/texteSousTitre" />
+                            </LinearLayout>
+                        </FrameLayout>
+                    </LinearLayout>
+                </GridLayout>
+            </LinearLayout>
+        </AbsoluteLayout>
+    </ScrollView>
+</HorizontalScrollView>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="line">
+            <stroke
+                android:color="@android:color/black"
+                android:dashWidth="6dp"
+                android:dashGap="8dp"
+                android:width="2dp" />
+        </shape>
+    </item>
+    <item
+        android:left="116dp">
+        <!-- left is icon size + 2x side padding around icon-->
+        <!-- 100 + 8 + 8 -->
+        <shape>
+            <stroke
+                android:color="@android:color/black"
+                android:dashWidth="16dp"
+                android:dashGap="8dp"
+                android:width="2dp" />
+
+            <solid android:color="@color/synoptique" />
+
+            <padding android:left="10dp"
+                android:top="10dp"
+                android:right="10dp"
+                android:bottom="10dp" />
+        </shape>
+    </item>
+</layer-list>
