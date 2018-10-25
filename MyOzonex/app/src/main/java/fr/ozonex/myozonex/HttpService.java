@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -45,9 +46,11 @@ public class HttpService extends Service {
     /**
      * it sets the timer to print the counter every x seconds
      */
+    int test = 0;
     public void initializeTimerTask() {
         timerTask = new TimerTask() {
             public void run() {
+                Log.d("TEST", "ICI :" + test++);
                 MainActivity.instance().sendData(false,
                         "",
                         "",

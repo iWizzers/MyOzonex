@@ -49,6 +49,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
+                                                <entry key="scalingPercent" value="80" />
                                                 <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
@@ -59,9 +60,24 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="backgroundAssetType" value="COLOR" />
-                                      <entry key="backgroundColor" value="7f7f7f" />
+                                      <entry key="backgroundColor" value="000080" />
+                                      <entry key="backgroundImage" value="D:\Users\Mickael\Pictures\background_transparent.png" />
                                       <entry key="foregroundImage" value="D:\Users\Mickael\Pictures\Piscine\Application\logo_gpac_7.png" />
+                                      <entry key="outputName" value="logo" />
+                                      <entry key="showSafeZone" value="false" />
+                                    </map>
+                                  </option>
+                                </PersistentState>
+                              </value>
+                            </entry>
+                            <entry key="notification">
+                              <value>
+                                <PersistentState>
+                                  <option name="values">
+                                    <map>
+                                      <entry key="assetType" value="IMAGE" />
+                                      <entry key="imageAsset" value="D:\Users\Mickael\Pictures\Piscine\Application\logo_gpac_7.png" />
+                                      <entry key="outputName" value="ic_stat_logo" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -71,7 +87,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputIconType" value="ACTIONBAR" />
+                            <entry key="outputIconType" value="NOTIFICATION" />
                           </map>
                         </option>
                       </PersistentState>
@@ -80,6 +96,11 @@
                 </map>
               </option>
             </PersistentState>
+          </value>
+        </entry>
+        <entry key="vectorWizard">
+          <value>
+            <PersistentState />
           </value>
         </entry>
       </map>
