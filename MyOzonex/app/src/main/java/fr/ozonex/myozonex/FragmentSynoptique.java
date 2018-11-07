@@ -11,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import static android.support.v4.view.MotionEventCompat.getPointerCount;
@@ -23,8 +25,6 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
     View view = null;
 
     // Orientation paysage
-    private ScaleGestureDetector mScaleGestureDetector;
-    AbsoluteLayout layout;
     ProgressBar contenuBidonAlgicide;
     ProgressBar contenuBidonOrp;
     ProgressBar contenuBidonPhMoins;
@@ -176,32 +176,9 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
 
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            layout = (AbsoluteLayout) view.findViewById(R.id.layout);
-            mScaleGestureDetector = new ScaleGestureDetector(MainActivity.instance(), new ScaleListener(layout));
-            view.findViewById(R.id.horizontal_scroll).setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (getPointerCount(event) == 2) {
-                        mScaleGestureDetector.onTouchEvent(event);
-                    } else {
-                        return false;
-                    }
-
-                    return true;
-                }
-            });
-            view.findViewById(R.id.vertical_scroll).setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (getPointerCount(event) == 2) {
-                        mScaleGestureDetector.onTouchEvent(event);
-                    } else {
-                        return false;
-                    }
-
-                    return true;
-                }
-            });
+            new ScaleListener((HorizontalScrollView) view.findViewById(R.id.horizontal_scroll),
+                    (ScrollView) view.findViewById(R.id.vertical_scroll),
+                    (AbsoluteLayout) view.findViewById(R.id.layout));
 
             contenuBidonAlgicide = (ProgressBar) view.findViewById(R.id.contenu_bidon_algicide);
             contenuBidonOrp = (ProgressBar) view.findViewById(R.id.contenu_bidon_orp);
@@ -377,8 +354,8 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             int couleurLigneInjection = pompeFiltrationActive ? ((Donnees.instance().obtenirTypeAsservissement().equals(Donnees.ASSERVISSEMENT_TOR) && chauffageActive) ? getResources().getColor(R.color.ligneInjectionActiveChaud) : getResources().getColor(R.color.ligneInjectionActive)) : getResources().getColor(R.color.ligneInjectionInactive);
 
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                texteCapteurTempExterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureLocal) ? View.VISIBLE : View.GONE);
-                texteCapteurTempExterne.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureLocal) + " °C");
+                texteCapteurTempExterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.CapteurExterne) ? View.VISIBLE : View.GONE);
+                texteCapteurTempExterne.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureExterne) + " °C");
 
                 boutonPompeFiltration.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PompeFiltration));
                 definirImageBouton(boutonPompeFiltration, Donnees.Equipement.PompeFiltration);

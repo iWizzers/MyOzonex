@@ -34,8 +34,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/layoutSpace"
-            android:layout_marginLeft="@dimen/layoutSpace"
+            android:layout_marginStart="@dimen/layout_space"
+            android:layout_marginLeft="@dimen/layout_space"
             android:layout_gravity="center"
             android:text="@string/nav_header_subtitle"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />

@@ -55,7 +55,7 @@ public class HttpService extends Service {
                         "",
                         "",
                         HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Get),
-                        HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.Data));
+                        HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageData));
             }
         };
     }

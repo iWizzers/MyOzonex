@@ -12,11 +12,13 @@ import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import static android.support.v4.view.MotionEventCompat.getPointerCount;
@@ -36,8 +38,6 @@ public class FragmentAlgicide extends Fragment implements View.OnClickListener {
     RadioButton rbMarche;
 
     // Orientation paysage
-    private ScaleGestureDetector mScaleGestureDetector;
-    AbsoluteLayout layout;
     ImageButton boutonRetour;
     ImageView bouton3Etats;
     Button boutonAuto;
@@ -60,32 +60,9 @@ public class FragmentAlgicide extends Fragment implements View.OnClickListener {
             rbArret.setOnClickListener(this);
             rbMarche.setOnClickListener(this);
         } else {
-            layout = (AbsoluteLayout) view.findViewById(R.id.layout);
-            mScaleGestureDetector = new ScaleGestureDetector(MainActivity.instance(), new ScaleListener(layout));
-            view.findViewById(R.id.horizontal_scroll).setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (getPointerCount(event) == 2) {
-                        mScaleGestureDetector.onTouchEvent(event);
-                    } else {
-                        return false;
-                    }
-
-                    return true;
-                }
-            });
-            view.findViewById(R.id.vertical_scroll).setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (getPointerCount(event) == 2) {
-                        mScaleGestureDetector.onTouchEvent(event);
-                    } else {
-                        return false;
-                    }
-
-                    return true;
-                }
-            });
+            new ScaleListener((HorizontalScrollView) view.findViewById(R.id.horizontal_scroll),
+                    (ScrollView) view.findViewById(R.id.vertical_scroll),
+                    (AbsoluteLayout) view.findViewById(R.id.layout));
 
             boutonRetour = (ImageButton) view.findViewById(R.id.bouton_retour);
             bouton3Etats = (ImageView) view.findViewById(R.id.bouton_3_etats);
@@ -150,7 +127,7 @@ public class FragmentAlgicide extends Fragment implements View.OnClickListener {
 
     private void modifierMode(RadioButton rb) {
         int etat = Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Algicide);
-        String data = "state=";
+        String data = "etat=";
 
         if (rb == rbAuto) {
             etat = (etat == Donnees.AUTO_MARCHE) ? Donnees.AUTO_MARCHE : Donnees.AUTO_ARRET;
@@ -167,13 +144,13 @@ public class FragmentAlgicide extends Fragment implements View.OnClickListener {
                 "",
                 "",
                 HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.Algicide),
+                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageAlgicide),
                 data + String.valueOf(etat));
     }
 
     private void modifierMode(Button bouton) {
         int etat = Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Algicide);
-        String data = "state=";
+        String data = "etat=";
 
         if (bouton == boutonAuto) {
             etat = (etat == Donnees.AUTO_MARCHE) ? Donnees.AUTO_MARCHE : Donnees.AUTO_ARRET;
@@ -190,7 +167,7 @@ public class FragmentAlgicide extends Fragment implements View.OnClickListener {
                 "",
                 "",
                 HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.Algicide),
+                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageAlgicide),
                 data + String.valueOf(etat));
     }
 
@@ -252,12 +229,22 @@ public class FragmentAlgicide extends Fragment implements View.OnClickListener {
         checkBoxEtat.setText("Etat : " + (Donnees.instance().obtenirEtat(Donnees.Equipement.Algicide) ? "activé" : "désactivé"));
         checkBoxEtat.setChecked(Donnees.instance().obtenirEtat(Donnees.Equipement.Algicide));
         texteDonneesAlgicide.setVisibility(Donnees.instance().obtenirEtat(Donnees.Equipement.Algicide) ? View.VISIBLE : View.GONE);
-        texteDonneesAlgicide.setText(Donnees.instance().obtenirDonneesAlgicide());
+        MainActivity.instance().setHtmlText(texteDonneesAlgicide, Donnees.instance().obtenirDonneesAlgicide());
     }
 
     private void consoAEteModifie(String date, double consoVolume, double consoVolumeRestant) {
-        texteConso.setText("Depuis : " + date +
-                "\nVolume : " + consoVolume + " L" +
-                "\nVolume restant : " + consoVolumeRestant + " L");
+        String color;
+
+        if (consoVolumeRestant < (consoVolume * Global.HYSTERESIS_BIDON_VIDE / 100.0)) {
+            color = "red";
+        } else if (consoVolumeRestant < (consoVolume * Global.HYSTERESIS_BIDON_PRESQUE_VIDE / 100.0)) {
+            color = "orange";
+        } else {
+            color = "#00FF00";
+        }
+
+        MainActivity.instance().setHtmlText(texteConso, "Depuis : " + date +
+                "<br />Volume : <b>" + consoVolume + " L</b>" +
+                "<br /><font color=\"" + color + "\"><i>Volume restant : <b>" + consoVolumeRestant + " L</b></i></font>");
     }
 }

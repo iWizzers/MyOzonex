@@ -11,11 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import static android.support.v4.view.MotionEventCompat.getPointerCount;
@@ -33,8 +35,6 @@ public class FragmentOzone extends Fragment implements View.OnClickListener {
     RadioButton rbMarche;
 
     // Orientation paysage
-    private ScaleGestureDetector mScaleGestureDetector;
-    AbsoluteLayout layout;
     ImageButton boutonRetour;
     ImageView bouton3Etats;
     Button boutonAuto;
@@ -57,32 +57,9 @@ public class FragmentOzone extends Fragment implements View.OnClickListener {
             rbArret.setOnClickListener(this);
             rbMarche.setOnClickListener(this);
         } else {
-            layout = (AbsoluteLayout) view.findViewById(R.id.layout);
-            mScaleGestureDetector = new ScaleGestureDetector(MainActivity.instance(), new ScaleListener(layout));
-            view.findViewById(R.id.horizontal_scroll).setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (getPointerCount(event) == 2) {
-                        mScaleGestureDetector.onTouchEvent(event);
-                    } else {
-                        return false;
-                    }
-
-                    return true;
-                }
-            });
-            view.findViewById(R.id.vertical_scroll).setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (getPointerCount(event) == 2) {
-                        mScaleGestureDetector.onTouchEvent(event);
-                    } else {
-                        return false;
-                    }
-
-                    return true;
-                }
-            });
+            new ScaleListener((HorizontalScrollView) view.findViewById(R.id.horizontal_scroll),
+                    (ScrollView) view.findViewById(R.id.vertical_scroll),
+                    (AbsoluteLayout) view.findViewById(R.id.layout));
 
             boutonRetour = (ImageButton) view.findViewById(R.id.bouton_retour);
             bouton3Etats = (ImageView) view.findViewById(R.id.bouton_3_etats);
@@ -142,7 +119,7 @@ public class FragmentOzone extends Fragment implements View.OnClickListener {
 
     private void modifierMode(RadioButton rb) {
         int etat = Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Ozone);
-        String data = "state=";
+        String data = "etat=";
 
         if (rb == rbAuto) {
             etat = (etat == Donnees.AUTO_MARCHE) ? Donnees.AUTO_MARCHE : Donnees.AUTO_ARRET;
@@ -159,13 +136,13 @@ public class FragmentOzone extends Fragment implements View.OnClickListener {
                 "",
                 "",
                 HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.Ozone),
+                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageOzonateur),
                 data + String.valueOf(etat));
     }
 
     private void modifierMode(Button bouton) {
         int etat = Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Ozone);
-        String data = "state=";
+        String data = "etat=";
 
         if (bouton == boutonAuto) {
             etat = (etat == Donnees.AUTO_MARCHE) ? Donnees.AUTO_MARCHE : Donnees.AUTO_ARRET;
@@ -182,7 +159,7 @@ public class FragmentOzone extends Fragment implements View.OnClickListener {
                 "",
                 "",
                 HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.Ozone),
+                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageOzonateur),
                 data + String.valueOf(etat));
     }
 

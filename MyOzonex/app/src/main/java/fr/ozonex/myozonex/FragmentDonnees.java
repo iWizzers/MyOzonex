@@ -11,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -25,6 +27,8 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
     View view = null;
 
     // Orientation portrait
+    LinearLayout globalLayoutPortrait;
+    TextView texteAucunCapteurs;
     TextView texteTemperatureBassin;
     TextView valeurTemperatureBassin;
     TextView texteTemperatureExterne;
@@ -41,8 +45,7 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
     TextView valeur_4_20_Libre;
 
     // Orientation paysage
-    private ScaleGestureDetector mScaleGestureDetector;
-    AbsoluteLayout layout;
+    HorizontalScrollView globalLayoutPaysage;
     Button boutonSynoptique;
     LinearLayout layoutPh;
     TextView texteDonneesPh;
@@ -62,6 +65,8 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
 
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            globalLayoutPortrait = view.findViewById(R.id.global_layout);
+            texteAucunCapteurs = (TextView) view.findViewById(R.id.texte_aucun_capteurs);
             texteTemperatureBassin = (TextView) view.findViewById(R.id.texte_temperature_bassin);
             valeurTemperatureBassin = (TextView) view.findViewById(R.id.valeur_temperature_bassin);
             texteTemperatureExterne = (TextView) view.findViewById(R.id.texte_temperature_externe);
@@ -77,33 +82,11 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
             texte_4_20_Libre = (TextView) view.findViewById(R.id.texte_4_20_libre);
             valeur_4_20_Libre = (TextView) view.findViewById(R.id.valeur_4_20_libre);
         } else {
-            layout = (AbsoluteLayout) view.findViewById(R.id.layout);
-            mScaleGestureDetector = new ScaleGestureDetector(MainActivity.instance(), new ScaleListener(layout));
-            view.findViewById(R.id.horizontal_scroll).setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (getPointerCount(event) == 2) {
-                        mScaleGestureDetector.onTouchEvent(event);
-                    } else {
-                        return false;
-                    }
+            new ScaleListener((HorizontalScrollView) view.findViewById(R.id.horizontal_scroll),
+                    (ScrollView) view.findViewById(R.id.vertical_scroll),
+                    (AbsoluteLayout) view.findViewById(R.id.layout));
 
-                    return true;
-                }
-            });
-            view.findViewById(R.id.vertical_scroll).setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (getPointerCount(event) == 2) {
-                        mScaleGestureDetector.onTouchEvent(event);
-                    } else {
-                        return false;
-                    }
-
-                    return true;
-                }
-            });
-
+            globalLayoutPaysage = view.findViewById(R.id.horizontal_scroll);
             boutonSynoptique = (Button) view.findViewById(R.id.bouton_synoptique);
             layoutPh = (LinearLayout) view.findViewById(R.id.layout_ph);
             valeurPh = (TextView) view.findViewById(R.id.texte_valeur_ph);
@@ -137,13 +120,23 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
     public void update() {
         if ((view != null) && isAdded()) {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
+
+                texteAucunCapteurs.setVisibility(!Donnees.instance().presence(Donnees.Capteur.TemperatureBassin)
+                        && !Donnees.instance().presence(Donnees.Capteur.CapteurExterne)
+                        && !Donnees.instance().presence(Donnees.Capteur.Ph)
+                        && !Donnees.instance().presence(Donnees.Capteur.Redox)
+                        && !Donnees.instance().presence(Donnees.Capteur.Pression)
+                        && !Donnees.instance().presence(Donnees.Capteur.Ampero)
+                        && !Donnees.instance().presence(Donnees.Capteur._4_20_Libre) ? View.VISIBLE : View.GONE);
+
                 texteTemperatureBassin.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
                 valeurTemperatureBassin.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
                 valeurTemperatureBassin.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin) + " °C");
 
-                texteTemperatureExterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureLocal) ? View.VISIBLE : View.GONE);
-                valeurTemperatureExterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureLocal) ? View.VISIBLE : View.GONE);
-                valeurTemperatureExterne.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureLocal) + " °C");
+                texteTemperatureExterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.CapteurExterne) ? View.VISIBLE : View.GONE);
+                valeurTemperatureExterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureExterne) ? View.VISIBLE : View.GONE);
+                valeurTemperatureExterne.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureExterne) + " °C");
 
                 textePh.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ph) ? View.VISIBLE : View.GONE);
                 valeurPh.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ph) ? View.VISIBLE : View.GONE);
@@ -165,6 +158,8 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
                 valeur_4_20_Libre.setVisibility(Donnees.instance().presence(Donnees.Capteur._4_20_Libre) ? View.VISIBLE : View.GONE);
                 valeur_4_20_Libre.setText(Donnees.instance().obtenirValeur(Donnees.Capteur._4_20_Libre));
             } else {
+                globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());
+
                 layoutPh.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ph) ? View.VISIBLE : View.GONE);
                 valeurPh.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.Ph));
                 texteDonneesPh.setVisibility(View.GONE);
@@ -180,14 +175,14 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
                 valeurORP.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.Redox) + " mV");
                 texteDonneesORP.setVisibility(View.GONE);
 
-                layoutTemperatures.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) || Donnees.instance().presence(Donnees.Capteur.TemperatureLocal) ? View.VISIBLE : View.GONE);
+                layoutTemperatures.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) || Donnees.instance().presence(Donnees.Capteur.CapteurExterne) ? View.VISIBLE : View.GONE);
                 texteTemperatureBassin.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
                 valeurTemperatureBassin.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
                 valeurTemperatureBassin.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin) + " °C");
-                ligneSepTemperatures.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) && Donnees.instance().presence(Donnees.Capteur.TemperatureLocal) ? View.VISIBLE : View.GONE);
-                texteTemperatureExterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureLocal) ? View.VISIBLE : View.GONE);
-                valeurTemperatureExterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureLocal) ? View.VISIBLE : View.GONE);
-                valeurTemperatureExterne.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureLocal) + " °C");
+                ligneSepTemperatures.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) && Donnees.instance().presence(Donnees.Capteur.CapteurExterne) ? View.VISIBLE : View.GONE);
+                texteTemperatureExterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureExterne) ? View.VISIBLE : View.GONE);
+                valeurTemperatureExterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureExterne) ? View.VISIBLE : View.GONE);
+                valeurTemperatureExterne.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureExterne) + " °C");
             }
         }
     }

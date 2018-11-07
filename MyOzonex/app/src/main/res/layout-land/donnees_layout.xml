@@ -7,7 +7,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="horizontal"
-    android:background="@drawable/fond1">
+    android:background="@drawable/fond_paysage_1">
 
     <ScrollView
         android:id="@+id/vertical_scroll"
@@ -21,15 +21,15 @@
             tools:ignore="Deprecated">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="800dp"
                 android:orientation="horizontal">
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:background="@color/transparentBackground"
-                    android:paddingTop="24dp"
-                    android:paddingBottom="25dp"
-                    android:layout_weight="0"
+                    android:paddingTop="@dimen/layout_widget_space"
+                    android:paddingBottom="@dimen/layout_widget_space"
                     android:orientation="vertical" >
                     <LinearLayout
                         android:id="@+id/layout_ph"
@@ -42,11 +42,11 @@
                             android:orientation="horizontal" >
                             <View
                                 android:layout_width="50dp"
-                                android:layout_height="10dp"
+                                android:layout_height="2dp"
                                 android:layout_weight="1"
-                                android:background="@drawable/ligne_horizontal_sous_titre"
-                                android:layerType="software"
-                                android:layout_gravity="center" />
+                                android:layout_gravity="center"
+                                android:background="@color/couleurSousTitre"
+                                android:layerType="software" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -61,19 +61,19 @@
 
                             <View
                                 android:layout_width="50dp"
-                                android:layout_height="10dp"
+                                android:layout_height="2dp"
                                 android:layout_weight="1"
-                                android:background="@drawable/ligne_horizontal_sous_titre"
-                                android:layerType="software"
-                                android:layout_gravity="center" />
+                                android:layout_gravity="center"
+                                android:background="@color/couleurSousTitre"
+                                android:layerType="software" />
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:paddingLeft="25dp"
-                            android:paddingRight="25dp">
+                            android:paddingLeft="@dimen/layout_widget_space"
+                            android:paddingRight="@dimen/layout_widget_space">
                             <TextView
                                 android:id="@+id/texte_valeur_ph"
                                 android:layout_width="match_parent"
@@ -101,18 +101,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginTop="15dp">
+                        android:layout_marginTop="@dimen/layout_container_space">
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal" >
                             <View
                                 android:layout_width="50dp"
-                                android:layout_height="10dp"
+                                android:layout_height="2dp"
                                 android:layout_weight="1"
-                                android:background="@drawable/ligne_horizontal_sous_titre"
-                                android:layerType="software"
-                                android:layout_gravity="center" />
+                                android:layout_gravity="center"
+                                android:background="@color/couleurSousTitre"
+                                android:layerType="software" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -127,18 +127,18 @@
 
                             <View
                                 android:layout_width="50dp"
-                                android:layout_height="10dp"
+                                android:layout_height="2dp"
                                 android:layout_weight="1"
-                                android:background="@drawable/ligne_horizontal_sous_titre"
-                                android:layerType="software"
-                                android:layout_gravity="center" />
+                                android:layout_gravity="center"
+                                android:background="@color/couleurSousTitre"
+                                android:layerType="software" />
                         </LinearLayout>
 
                         <GridLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="25dp"
-                            android:paddingRight="25dp" >
+                            android:paddingLeft="@dimen/layout_widget_space"
+                            android:paddingRight="@dimen/layout_widget_space" >
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -200,11 +200,12 @@
                             <View
                                 android:id="@+id/ligne_sep_orp"
                                 android:layout_width="2dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="0dp"
                                 android:layout_column="2"
                                 android:layout_row="0"
                                 android:layout_rowSpan="3"
-                                android:background="@android:color/white" />
+                                android:background="@android:color/white"
+                                android:layout_rowWeight="1" />
 
                             <TextView
                                 android:id="@+id/texte_valeur_orp"
@@ -247,18 +248,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginTop="15dp" >
+                        android:layout_marginTop="@dimen/layout_container_space" >
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal" >
                             <View
                                 android:layout_width="50dp"
-                                android:layout_height="10dp"
+                                android:layout_height="2dp"
                                 android:layout_weight="1"
-                                android:background="@drawable/ligne_horizontal_sous_titre"
-                                android:layerType="software"
-                                android:layout_gravity="center" />
+                                android:layout_gravity="center"
+                                android:background="@color/couleurSousTitre"
+                                android:layerType="software" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -273,98 +274,95 @@
 
                             <View
                                 android:layout_width="50dp"
-                                android:layout_height="10dp"
+                                android:layout_height="2dp"
                                 android:layout_weight="1"
-                                android:background="@drawable/ligne_horizontal_sous_titre"
-                                android:layerType="software"
-                                android:layout_gravity="center" />
+                                android:layout_gravity="center"
+                                android:background="@color/couleurSousTitre"
+                                android:layerType="software" />
                         </LinearLayout>
 
                         <GridLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="25dp"
-                            android:paddingRight="25dp" >
+                            android:paddingLeft="@dimen/layout_widget_space"
+                            android:paddingRight="@dimen/layout_widget_space">
+
                             <TextView
                                 android:id="@+id/texte_temp_bassin"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_column="0"
                                 android:layout_row="0"
+                                android:layout_column="0"
                                 android:layout_columnWeight="1"
                                 android:layout_gravity="center"
-                                android:text="Bassin"
                                 android:gravity="center"
-                                android:textStyle="bold"
+                                android:text="Bassin"
                                 android:textColor="@color/couleurTexteGeneral"
-                                android:textSize="@dimen/texteGeneral" />
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/texte_valeur_temp_bassin"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_column="0"
                                 android:layout_row="1"
+                                android:layout_column="0"
                                 android:layout_columnWeight="1"
                                 android:layout_gravity="center"
-                                android:text="24.1 °C"
                                 android:gravity="center"
-                                android:textStyle="bold"
+                                android:text="24.1 °C"
                                 android:textColor="@color/couleurTexteGeneral"
-                                android:textSize="@dimen/texteValeurPageDonnee" />
+                                android:textSize="@dimen/texteValeurPageDonnee"
+                                android:textStyle="bold" />
 
                             <View
                                 android:id="@+id/ligne_sep_temperatures"
                                 android:layout_width="2dp"
-                                android:layout_height="wrap_content"
-                                android:layout_column="1"
+                                android:layout_height="0dp"
                                 android:layout_row="0"
                                 android:layout_rowSpan="2"
+                                android:layout_rowWeight="1"
+                                android:layout_column="1"
                                 android:background="@android:color/white" />
 
                             <TextView
                                 android:id="@+id/texte_temp_ext"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_column="2"
                                 android:layout_row="0"
+                                android:layout_column="2"
                                 android:layout_columnWeight="1"
                                 android:layout_gravity="center"
-                                android:text="Externe"
                                 android:gravity="center"
-                                android:textStyle="bold"
+                                android:text="Externe"
                                 android:textColor="@color/couleurTexteGeneral"
-                                android:textSize="@dimen/texteGeneral" />
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/texte_valeur_temp_ext"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_column="2"
                                 android:layout_row="1"
+                                android:layout_column="2"
                                 android:layout_columnWeight="1"
                                 android:layout_gravity="center"
-                                android:text="24.1 °C"
                                 android:gravity="center"
-                                android:textStyle="bold"
+                                android:text="24.1 °C"
                                 android:textColor="@color/couleurTexteGeneral"
-                                android:textSize="@dimen/texteValeurPageDonnee" />
+                                android:textSize="@dimen/texteValeurPageDonnee"
+                                android:textStyle="bold" />
                         </GridLayout>
                     </LinearLayout>
                 </LinearLayout>
 
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:paddingTop="24dp"
-                    android:paddingBottom="25dp"
-                    android:paddingLeft="25dp"
-                    android:paddingRight="25dp"
+                    android:paddingTop="@dimen/layout_widget_space"
+                    android:paddingBottom="@dimen/layout_widget_space"
+                    android:paddingLeft="@dimen/layout_widget_space"
+                    android:paddingRight="@dimen/layout_widget_space"
                     android:layout_weight="0"
                     android:orientation="vertical" >
                     <Space

@@ -10,10 +10,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class HttpGetRequest extends AsyncTask<String, Void, String> {
-    private static final String BDD = "http://www.g-pac.online";
+    private static final String BDD = "http://192.168.1.2/poolmanagerserver";     // Local
+    //private static final String BDD = "http://www.g-pac.online";                  // Serveur
     private static final String REQUEST_METHOD = "GET";
-    private static final int READ_TIMEOUT = 15000;
-    private static final int CONNECTION_TIMEOUT = 15000;
 
     private ProgressDialog progressDialog;
 
@@ -28,34 +27,40 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
     };
 
     public enum PageHTTP {
-        Login,
-        Data,
-        Sensors,
-        FiltrationPump,
-        Booster,
-        Filter,
-        Ozone,
-        Heater,
-        UV_lamps,
-        Ph_Minus,
-        Ph_Plus,
-        Orp,
-        Algicide
+        PageLogin,
+        PageData,
+        PageHorlogerie,
+        PageBassin,
+        PageCapteurs,
+        PagePompeFiltration,
+        PageFiltre,
+        PageSurpresseur,
+        PageChauffage,
+        PageOzonateur,
+        PageLampesUV,
+        PageElectrolyseur,
+        PageRegulateurPhPlus,
+        PageRegulateurPhMoins,
+        PageRegulateurORP,
+        PageAlgicide
     };
 
     private static String pageString[] = {
         "login",
         "data",
-        "sensors",
-        "filtration_pump",
-        "booster",
-        "filter",
-        "ozone",
-        "heater",
-        "uv_lamps",
-        "ph_minus",
-        "ph_plus",
-        "orp",
+        "horlogerie",
+        "bassin",
+        "capteurs",
+        "pompe_filtration",
+        "filtre",
+        "surpresseur",
+        "chauffage",
+        "ozonateur",
+        "lampes_uv",
+        "electrolyseur",
+        "reg_ph_plus",
+        "reg_ph_moins",
+        "reg_orp",
         "algicide"
     };
 
@@ -89,7 +94,7 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params) {
-        String stringUrl = BDD + '/' + params[0] + '_' + params[1] + "?id_system=" + Donnees.getPreferences(Donnees.ID_SYSTEME);
+        String stringUrl = BDD + '/' + params[0] + '_' + params[1] + "?id_systeme=" + Donnees.getPreferences(Donnees.ID_SYSTEME);
         if (params.length > 2) {
             stringUrl += '&' + params[2];
         }
@@ -105,8 +110,8 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
 
             // Set methods and timeouts
             connection.setRequestMethod(REQUEST_METHOD);
-            connection.setReadTimeout(READ_TIMEOUT);
-            connection.setConnectTimeout(CONNECTION_TIMEOUT);
+            connection.setReadTimeout(Global.TEMPO_RAFRAICHISSEMENT / 2);
+            connection.setConnectTimeout(Global.TEMPO_RAFRAICHISSEMENT / 2);
 
             // Connect to our url
             connection.connect();
@@ -130,7 +135,7 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
             // Set our result equal to our stringBuilder
             result = stringBuilder.toString();
         } catch(IOException e){
-            e.printStackTrace();
+            //e.printStackTrace();
             result = null;
         }
 

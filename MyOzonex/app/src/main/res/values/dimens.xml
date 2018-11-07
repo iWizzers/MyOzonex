@@ -11,5 +11,7 @@
     <dimen name="texteGeneral">16dp</dimen>
     <dimen name="texteValeurPageDonnee">64dp</dimen>
 
-    <dimen name="layoutSpace">6dp</dimen>
+    <dimen name="layout_widget_space">25dp</dimen>
+    <dimen name="layout_container_space">15dp</dimen>
+    <dimen name="layout_space">6dp</dimen>
 </resources>

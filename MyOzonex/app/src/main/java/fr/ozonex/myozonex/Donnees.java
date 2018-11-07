@@ -1,7 +1,11 @@
 package fr.ozonex.myozonex;
 
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.preference.PreferenceManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Donnees {
     private static Donnees inst = new Donnees();
@@ -18,20 +22,32 @@ public class Donnees {
         Ozone,
         LampesUV,
         Electrolyseur,
+        PhGlobal,
         PhMoins,
         PhPlus,
         Orp,
-        Algicide
+        Algicide,
+        HeuresCreuses,
+        Eclairage,
+        Bassin,
+        Events
     }
 
     public enum Capteur {
         TemperatureBassin,
-        TemperatureLocal,
         Ph,
         Redox,
         Pression,
         Ampero,
-        _4_20_Libre
+        _4_20_Libre,
+        CapteurInterne,
+        TemperatureInterne,
+        HumiditeInterne,
+        PressionAtmospheriqueInterne,
+        CapteurExterne,
+        TemperatureExterne,
+        HumiditeExterne,
+        PressionAtmospheriqueExterne
     }
 
     // Page source
@@ -68,6 +84,7 @@ public class Donnees {
     private int modeChauffage = ARRET;
     private int modeLampesUV = ARRET;
     private int modeOzone = ARRET;
+    private int modeElectrolyseur = ARRET;
     private int modePhMoins = ARRET;
     private int modePhPlus = ARRET;
     private int modeOrp = ARRET;
@@ -78,6 +95,7 @@ public class Donnees {
     private String dateDebutConsoChauffage = null;
     private String dateDebutConsoLampesUV = null;
     private String dateDebutConsoOzone = null;
+    private String dateDebutConsoElectrolyseur = null;
     private String dateDebutConsoPhMoins = null;
     private String dateDebutConsoPhPlus = null;
     private String dateDebutConsoOrp = null;
@@ -88,12 +106,14 @@ public class Donnees {
     private double consoHPChauffage = 0;
     private double consoHPLampesUV = 0;
     private double consoHPOzone = 0;
+    private double consoHPElectrolyseur = 0;
 
     private double consoHCPompeFiltration = 0;
     private double consoHCSurpresseur = 0;
     private double consoHCChauffage = 0;
     private double consoHCLampesUV = 0;
     private double consoHCOzone = 0;
+    private double consoHCElectrolyseur = 0;
 
     private double volumePhMoins = 0;
     private double volumePhPlus = 0;
@@ -104,6 +124,11 @@ public class Donnees {
     private double volumeRestantPhPlus = 0;
     private double volumeRestantOrp = 0;
     private double volumeRestantAlgicide = 0;
+
+    private List<Object> listePlagePompeFiltration = new ArrayList<Object>();
+    private List<Object> listePlageSurpresseur = new ArrayList<Object>();
+    private List<Object> listePlageChauffage = new ArrayList<Object>();
+    private List<Object> listePlageHeuresCreuses = new ArrayList<Object>();
 
     private String dateDernierLavage = null;
     private double pressionApresLavage = 0;
@@ -118,16 +143,17 @@ public class Donnees {
     private int temperatureConsigne = 0;
 
     private int volumeBassin = 0;
+    private String typeRefoulement = null;
     private String typeAsservissement = null;
+    private int tempsSecuriteInjection = 0;
+    private double hysteresisInjectionPh = 0;
+    private int hysteresisInjectionORP = 0;
+    private double hysteresisInjectionAmpero = 0;
 
     private int traitementEnCoursPhMoins = 0;
     private int traitementEnCoursPhPlus = 0;
     private int traitementEnCoursOrp = 0;
     private int traitementEnCoursAlgicide = 0;
-
-    private int reglageAutoPhMoins = 0;
-    private int reglageAutoPhPlus = 0;
-    private int reglageAutoOrp = 0;
 
     private int dureeCyclePhMoins = 0;
     private int dureeCyclePhPlus = 0;
@@ -159,33 +185,45 @@ public class Donnees {
     private int etat_algicide = 0;
     private String donnees_algicide = null;
 
-    private int presenceCapteurPt = 0;
-    private int presenceCapteurLocal = 0;
-    private int presenceCapteurPh = 0;
-    private int presenceCapteurRedox = 0;
-    private int presenceCapteurPression = 0;
-    private int presenceCapteurAmpero = 0;
-    private int presenceCapteur_4_20_Libre = 0;
+    private boolean presenceCapteurPt = false;
+    private boolean presenceCapteurInterne = false;
+    private boolean presenceCapteurExterne = false;
+    private boolean presenceCapteurPh = false;
+    private boolean presenceCapteurRedox = false;
+    private boolean presenceCapteurPression = false;
+    private boolean presenceCapteurAmpero = false;
+    private boolean presenceCapteur_4_20_Libre = false;
 
     private double temperatureBassin;
-    private double temperatureLocal;
+    private double temperatureInterne;
+    private double humiditeInterne;
+    private double pressionAtmInterne;
+    private double temperatureExterne;
+    private double humiditeExterne;
+    private double pressionAtmExterne;
     private double valeurPh;
     private double valeurRedox;
     private double valeurPression;
     private double valeurAmpero;
     private double valeur_4_20_Libre;
 
-    private boolean defautPt;
-    private boolean defautTempLocal;
-    private boolean defautPh;
-    private boolean defautRedox;
-    private boolean defautPression;
-    private boolean defautAmpero;
-    private boolean defaut_4_20_Libre;
+    private boolean defautPt = false;
+    private boolean defautTemperatureInterne = false;
+    private boolean defautHumiditeInterne = false;
+    private boolean defautPressionAtmInterne = false;
+    private boolean defautTemperatureExterne = false;
+    private boolean defautHumiditeExterne = false;
+    private boolean defautPressionAtmExterne = false;
+    private boolean defautPh = false;
+    private boolean defautRedox = false;
+    private boolean defautPression = false;
+    private boolean defautAmpero = false;
+    private boolean defaut_4_20_Libre = false;
 
     public static final String ID_SYSTEME = "id system";
     public static final String MOTDEPASSE = "password";
 
+    private int background;
     private int pageSource;
 
     static SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.instance());
@@ -198,6 +236,54 @@ public class Donnees {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(key, value);
         editor.commit();
+    }
+
+    public int obtenirBackground() {
+        int drawable;
+
+        if (MainActivity.instance().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            if (background == 0) {
+                drawable = R.drawable.fond_portrait_1;
+            } else if (background == 1) {
+                drawable = R.drawable.fond_portrait_2;
+            } else if (background == 2) {
+                drawable = R.drawable.fond_portrait_3;
+            } else if (background == 3) {
+                drawable = R.drawable.fond_portrait_4;
+            } else if (background == 4) {
+                drawable = R.drawable.fond_portrait_5;
+            } else if (background == 5) {
+                drawable = R.drawable.fond_portrait_6;
+            } else if (background == 6) {
+                drawable = R.drawable.fond_portrait_7;
+            } else {
+                drawable = R.drawable.fond_portrait_1;
+            }
+        } else {
+            if (background == 0) {
+                drawable = R.drawable.fond_paysage_1;
+            } else if (background == 1) {
+                drawable = R.drawable.fond_paysage_2;
+            } else if (background == 2) {
+                drawable = R.drawable.fond_paysage_3;
+            } else if (background == 3) {
+                drawable = R.drawable.fond_paysage_4;
+            } else if (background == 4) {
+                drawable = R.drawable.fond_paysage_5;
+            } else if (background == 5) {
+                drawable = R.drawable.fond_paysage_6;
+            } else if (background == 6) {
+                drawable = R.drawable.fond_paysage_7;
+            } else {
+                drawable = R.drawable.fond_paysage_1;
+            }
+        }
+
+        return drawable;
+    }
+
+    public void definirBackground(int index) {
+        background = index;
     }
 
     public int obtenirPageSource() {
@@ -277,6 +363,8 @@ public class Donnees {
             mode = modeLampesUV;
         } else if (equipement == Equipement.Ozone) {
             mode = modeOzone;
+        } else if (equipement == Equipement.Electrolyseur) {
+            mode = modeElectrolyseur;
         } else if (equipement == Equipement.PhMoins) {
             mode = modePhMoins;
         } else if (equipement == Equipement.PhPlus) {
@@ -342,6 +430,13 @@ public class Donnees {
                 modeOzone = mode;
                 sendNotification = true;
             }
+        } else if (equipement == Equipement.Electrolyseur) {
+            titre = "Electrolyseur";
+
+            if (modeElectrolyseur != mode) {
+                modeElectrolyseur = mode;
+                sendNotification = true;
+            }
         } else if (equipement == Equipement.PhMoins) {
             titre = "Régulateur pH-";
 
@@ -390,6 +485,8 @@ public class Donnees {
             date = dateDebutConsoLampesUV;
         } else if (equipement == Equipement.Ozone) {
             date = dateDebutConsoOzone;
+        } else if (equipement == Equipement.Electrolyseur) {
+            date = dateDebutConsoElectrolyseur;
         } else if (equipement == Equipement.PhMoins) {
             date = dateDebutConsoPhMoins;
         } else if (equipement == Equipement.PhPlus) {
@@ -414,6 +511,8 @@ public class Donnees {
             dateDebutConsoLampesUV = date;
         } else if (equipement == Equipement.Ozone) {
             dateDebutConsoOzone = date;
+        } else if (equipement == Equipement.Electrolyseur) {
+            dateDebutConsoElectrolyseur = date;
         } else if (equipement == Equipement.PhMoins) {
             dateDebutConsoPhMoins = date;
         } else if (equipement == Equipement.PhPlus) {
@@ -438,6 +537,8 @@ public class Donnees {
             consoHP = consoHPLampesUV;
         } else if (equipement == Equipement.Ozone) {
             consoHP = consoHPOzone;
+        } else if (equipement == Equipement.Electrolyseur) {
+            consoHP = consoHPElectrolyseur;
         }
 
         return consoHP;
@@ -454,6 +555,8 @@ public class Donnees {
             consoHPLampesUV = valeur;
         } else if (equipement == Equipement.Ozone) {
             consoHPOzone = valeur;
+        } else if (equipement == Equipement.Electrolyseur) {
+            consoHPElectrolyseur = valeur;
         }
     }
 
@@ -470,6 +573,8 @@ public class Donnees {
             consoHC = consoHCLampesUV;
         } else if (equipement == Equipement.Ozone) {
             consoHC = consoHCOzone;
+        } else if (equipement == Equipement.Electrolyseur) {
+            consoHC = consoHCElectrolyseur;
         }
 
         return consoHC;
@@ -486,6 +591,8 @@ public class Donnees {
             consoHCLampesUV = valeur;
         } else if (equipement == Equipement.Ozone) {
             consoHCOzone = valeur;
+        } else if (equipement == Equipement.Electrolyseur) {
+            consoHCElectrolyseur = valeur;
         }
     }
 
@@ -567,6 +674,104 @@ public class Donnees {
                 break;
             case Algicide:
                 volumeRestantAlgicide = volume;
+                break;
+            default:
+                break;
+        }
+    }
+
+    public boolean obtenirEtatPlage(Equipement equipement, int index) {
+        boolean etat = false;
+
+        index *= 2;
+
+        switch (equipement) {
+            case PompeFiltration:
+                etat = (boolean) listePlagePompeFiltration.get(index);
+                break;
+            case Surpresseur:
+                etat = (boolean) listePlageSurpresseur.get(index);
+                break;
+            case Chauffage:
+                etat = (boolean) listePlageChauffage.get(index);
+                break;
+            case HeuresCreuses:
+                etat = (boolean) listePlageHeuresCreuses.get(index);
+                break;
+            default:
+                break;
+        }
+
+        return etat;
+    }
+
+    public String  obtenirPlage(Equipement equipement, int index) {
+        String plage = "";
+
+        index *= 2;
+
+        switch (equipement) {
+            case PompeFiltration:
+                plage = (String) listePlagePompeFiltration.get(index + 1);
+                break;
+            case Surpresseur:
+                plage = (String) listePlageSurpresseur.get(index + 1);
+                break;
+            case Chauffage:
+                plage = (String) listePlageChauffage.get(index + 1);
+                break;
+            case HeuresCreuses:
+                plage = (String) listePlageHeuresCreuses.get(index + 1);
+                break;
+            default:
+                break;
+        }
+
+        return plage;
+    }
+
+    public void definirPlage(Equipement equipement, int index, String plage) {
+        String[] split = plage.split(" - ");
+        boolean etat = !split[0].equals(split[1]);
+
+        index *= 2;
+
+        switch (equipement) {
+            case PompeFiltration:
+                if (index >= listePlagePompeFiltration.size()) {
+                    listePlagePompeFiltration.add(etat);
+                    listePlagePompeFiltration.add(plage);
+                } else {
+                    listePlagePompeFiltration.set(index, etat);
+                    listePlagePompeFiltration.set(index + 1, plage);
+                }
+                break;
+            case Surpresseur:
+                if (index >= listePlageSurpresseur.size()) {
+                    listePlageSurpresseur.add(etat);
+                    listePlageSurpresseur.add(plage);
+                } else {
+                    listePlageSurpresseur.set(index, etat);
+                    listePlageSurpresseur.set(index + 1, plage);
+                }
+                break;
+            case Chauffage:
+                if (index >= listePlageChauffage.size()) {
+                    listePlageChauffage.add(etat);
+                    listePlageChauffage.add(plage);
+                } else {
+                    listePlageChauffage.set(index, etat);
+                    listePlageChauffage.set(index + 1, plage);
+                }
+                break;
+            case HeuresCreuses:
+                if (index >= listePlageHeuresCreuses.size()) {
+                    listePlageHeuresCreuses.add(etat);
+                    listePlageHeuresCreuses.add(plage);
+                } else {
+                    listePlageHeuresCreuses.set(index, etat);
+                    listePlageHeuresCreuses.set(index + 1, plage);
+                }
                 break;
             default:
                 break;
@@ -665,12 +870,52 @@ public class Donnees {
         volumeBassin = volume;
     }
 
+    public String obtenirTypeRefoulement() {
+        return typeRefoulement;
+    }
+
+    public void definirTypeRefoulement(String type) {
+        typeRefoulement = type;
+    }
+
     public String obtenirTypeAsservissement() {
         return typeAsservissement;
     }
 
     public void definirTypeAsservissement(String type) {
         typeAsservissement = type;
+    }
+
+    public int obtenirTempsSecuriteInjection() {
+        return tempsSecuriteInjection;
+    }
+
+    public void definirTempsSecuriteInjection(int valeur) {
+        tempsSecuriteInjection = valeur;
+    }
+
+    public double obtenirHysteresisInjectionPh() {
+        return hysteresisInjectionPh;
+    }
+
+    public void definirHysteresisInjectionPh(double valeur) {
+        hysteresisInjectionPh = valeur;
+    }
+
+    public int obtenirHysteresisInjectionORP() {
+        return hysteresisInjectionORP;
+    }
+
+    public void definirHysteresisInjectionORP(int valeur) {
+        hysteresisInjectionORP = valeur;
+    }
+
+    public double obtenirHysteresisInjectionAmpero() {
+        return hysteresisInjectionAmpero;
+    }
+
+    public void definirHysteresisInjectionAmpero(double valeur) {
+        hysteresisInjectionAmpero = valeur;
     }
 
     public boolean obtenirTraitementEnCours(Equipement equipement) {
@@ -709,42 +954,6 @@ public class Donnees {
                 break;
             case Algicide:
                 traitementEnCoursAlgicide = traitementEnCours;
-                break;
-            default:
-                break;
-        }
-    }
-
-    public boolean obtenirReglageAuto(Equipement equipement) {
-        int reglageAuto = 0;
-
-        switch (equipement) {
-            case PhMoins:
-                reglageAuto = reglageAutoPhMoins;
-                break;
-            case PhPlus:
-                reglageAuto = reglageAutoPhPlus;
-                break;
-            case Orp:
-                reglageAuto = reglageAutoOrp;
-                break;
-            default:
-                break;
-        }
-
-        return (reglageAuto == 1);
-    }
-
-    public void definirReglageAuto(Equipement equipement, int reglageAuto) {
-        switch (equipement) {
-            case PhMoins:
-                reglageAutoPhMoins = reglageAuto;
-                break;
-            case PhPlus:
-                reglageAutoPhPlus = reglageAuto;
-                break;
-            case Orp:
-                reglageAutoOrp = reglageAuto;
                 break;
             default:
                 break;
@@ -1017,39 +1226,45 @@ public class Donnees {
         boolean capteurPresent = false;
 
         if (capteur == Capteur.TemperatureBassin) {
-            capteurPresent = presenceCapteurPt > 0;
-        } else if (capteur == Capteur.TemperatureLocal) {
-            capteurPresent = presenceCapteurLocal > 0;
+            capteurPresent = presenceCapteurPt;
+        } else if (capteur == Capteur.CapteurInterne) {
+            capteurPresent = presenceCapteurInterne;
+        } else if (capteur == Capteur.CapteurExterne) {
+            capteurPresent = presenceCapteurExterne;
         } else if (capteur == Capteur.Ph) {
-            capteurPresent = presenceCapteurPh > 0;
+            capteurPresent = presenceCapteurPh;
         } else if (capteur == Capteur.Redox) {
-            capteurPresent = presenceCapteurRedox > 0;
+            capteurPresent = presenceCapteurRedox;
         } else if (capteur == Capteur.Pression) {
-            capteurPresent = presenceCapteurPression > 0;
+            capteurPresent = presenceCapteurPression;
         } else if (capteur == Capteur.Ampero) {
-            capteurPresent = presenceCapteurAmpero > 0;
+            capteurPresent = presenceCapteurAmpero;
         } else if (capteur == Capteur._4_20_Libre) {
-            capteurPresent = presenceCapteur_4_20_Libre > 0;
+            capteurPresent = presenceCapteur_4_20_Libre;
         }
 
         return capteurPresent;
     }
 
     public void definirPresence(Capteur capteur, int available) {
+        boolean presence = available > 0;
+
         if (capteur == Capteur.TemperatureBassin) {
-            presenceCapteurPt = available;
-        } else if (capteur == Capteur.TemperatureLocal) {
-            presenceCapteurLocal = available;
+            presenceCapteurPt = presence;
+        } else if (capteur == Capteur.CapteurInterne) {
+            presenceCapteurInterne = presence;
+        } else if (capteur == Capteur.CapteurExterne) {
+            presenceCapteurExterne = presence;
         } else if (capteur == Capteur.Ph) {
-            presenceCapteurPh = available;
+            presenceCapteurPh = presence;
         } else if (capteur == Capteur.Redox) {
-            presenceCapteurRedox = available;
+            presenceCapteurRedox = presence;
         } else if (capteur == Capteur.Pression) {
-            presenceCapteurPression = available;
+            presenceCapteurPression = presence;
         } else if (capteur == Capteur.Ampero) {
-            presenceCapteurAmpero = available;
+            presenceCapteurAmpero = presence;
         } else if (capteur == Capteur._4_20_Libre) {
-            presenceCapteur_4_20_Libre = available;
+            presenceCapteur_4_20_Libre = presence;
         }
     }
 
@@ -1058,8 +1273,18 @@ public class Donnees {
 
         if (capteur == Capteur.TemperatureBassin) {
             etat = defautPt;
-        } else if (capteur == Capteur.TemperatureLocal) {
-            etat = defautTempLocal;
+        } else if (capteur == Capteur.TemperatureInterne) {
+            etat = defautTemperatureInterne;
+        } else if (capteur == Capteur.HumiditeInterne) {
+            etat = defautHumiditeInterne;
+        } else if (capteur == Capteur.PressionAtmospheriqueInterne) {
+            etat = defautPressionAtmInterne;
+        } else if (capteur == Capteur.TemperatureExterne) {
+            etat = defautTemperatureExterne;
+        } else if (capteur == Capteur.HumiditeExterne) {
+            etat = defautHumiditeExterne;
+        } else if (capteur == Capteur.PressionAtmospheriqueExterne) {
+            etat = defautPressionAtmExterne;
         } else if (capteur == Capteur.Ph) {
             etat = defautPh;
         } else if (capteur == Capteur.Redox) {
@@ -1078,8 +1303,18 @@ public class Donnees {
     public void definirEtat(Capteur capteur, String etat) {
         if (capteur == Capteur.TemperatureBassin) {
             defautPt = etat.contains("ERR");
-        } else if (capteur == Capteur.TemperatureLocal) {
-            defautTempLocal = etat.contains("ERR");
+        } else if (capteur == Capteur.TemperatureInterne) {
+            defautTemperatureInterne = etat.contains("ERR");
+        } else if (capteur == Capteur.HumiditeInterne) {
+            defautHumiditeInterne = etat.contains("ERR");
+        } else if (capteur == Capteur.PressionAtmospheriqueInterne) {
+            defautPressionAtmInterne = etat.contains("ERR");
+        } else if (capteur == Capteur.TemperatureExterne) {
+            defautTemperatureExterne = etat.contains("ERR");
+        } else if (capteur == Capteur.HumiditeExterne) {
+            defautHumiditeExterne = etat.contains("ERR");
+        } else if (capteur == Capteur.PressionAtmospheriqueExterne) {
+            defautPressionAtmExterne = etat.contains("ERR");
         } else if (capteur == Capteur.Ph) {
             defautPh = etat.contains("ERR");
         } else if (capteur == Capteur.Redox) {
@@ -1098,8 +1333,18 @@ public class Donnees {
 
         if (capteur == Capteur.TemperatureBassin) {
             valeur = temperatureBassin;
-        } else if (capteur == Capteur.TemperatureLocal) {
-            valeur = temperatureLocal;
+        } else if (capteur == Capteur.TemperatureInterne) {
+            valeur = temperatureInterne;
+        } else if (capteur == Capteur.HumiditeInterne) {
+            valeur = humiditeInterne;
+        } else if (capteur == Capteur.PressionAtmospheriqueInterne) {
+            valeur = pressionAtmInterne;
+        } else if (capteur == Capteur.TemperatureExterne) {
+            valeur = temperatureExterne;
+        } else if (capteur == Capteur.HumiditeExterne) {
+            valeur = humiditeExterne;
+        } else if (capteur == Capteur.PressionAtmospheriqueExterne) {
+            valeur = pressionAtmExterne;
         } else if (capteur == Capteur.Ph) {
             valeur = valeurPh;
         } else if (capteur == Capteur.Redox) {
@@ -1118,8 +1363,18 @@ public class Donnees {
     public void definirValeur(Capteur capteur, double valeur) {
         if (capteur == Capteur.TemperatureBassin) {
             temperatureBassin = valeur;
-        } else if (capteur == Capteur.TemperatureLocal) {
-            temperatureLocal = valeur;
+        } else if (capteur == Capteur.TemperatureInterne) {
+            temperatureInterne = valeur;
+        } else if (capteur == Capteur.HumiditeInterne) {
+            humiditeInterne = valeur;
+        } else if (capteur == Capteur.PressionAtmospheriqueInterne) {
+            pressionAtmInterne = valeur;
+        } else if (capteur == Capteur.TemperatureExterne) {
+            temperatureExterne = valeur;
+        } else if (capteur == Capteur.HumiditeExterne) {
+            humiditeExterne = valeur;
+        } else if (capteur == Capteur.PressionAtmospheriqueExterne) {
+            pressionAtmExterne = valeur;
         } else if (capteur == Capteur.Ph) {
             valeurPh = valeur;
         } else if (capteur == Capteur.Redox) {

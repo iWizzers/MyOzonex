@@ -11,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import static android.support.v4.view.MotionEventCompat.getPointerCount;
@@ -29,8 +31,6 @@ public class FragmentFiltre extends Fragment implements View.OnClickListener {
     TextView texteDonneesConfiguration;
 
     // Orientation paysage
-    private ScaleGestureDetector mScaleGestureDetector;
-    AbsoluteLayout layout;
     ImageButton boutonRetour;
 
     @Nullable
@@ -42,32 +42,9 @@ public class FragmentFiltre extends Fragment implements View.OnClickListener {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             texteDonneesConfiguration = (TextView) view.findViewById(R.id.texte_donnees_configuration);
         } else {
-            layout = (AbsoluteLayout) view.findViewById(R.id.layout);
-            mScaleGestureDetector = new ScaleGestureDetector(MainActivity.instance(), new ScaleListener(layout));
-            view.findViewById(R.id.horizontal_scroll).setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (getPointerCount(event) == 2) {
-                        mScaleGestureDetector.onTouchEvent(event);
-                    } else {
-                        return false;
-                    }
-
-                    return true;
-                }
-            });
-            view.findViewById(R.id.vertical_scroll).setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (getPointerCount(event) == 2) {
-                        mScaleGestureDetector.onTouchEvent(event);
-                    } else {
-                        return false;
-                    }
-
-                    return true;
-                }
-            });
+            new ScaleListener((HorizontalScrollView) view.findViewById(R.id.horizontal_scroll),
+                    (ScrollView) view.findViewById(R.id.vertical_scroll),
+                    (AbsoluteLayout) view.findViewById(R.id.layout));
 
             boutonRetour = (ImageButton) view.findViewById(R.id.bouton_retour);
 

@@ -1,170 +1,246 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    android:background="@drawable/fond_portrait_2">
     <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:fillViewport="false"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="false">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="@dimen/layout_widget_space"
+            android:paddingBottom="@dimen/layout_widget_space"
             android:orientation="vertical">
-
-            <FrameLayout
-                android:layout_width="fill_parent"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/dotted_border">
-
+                android:paddingBottom="@dimen/layout_widget_space"
+                android:background="@color/transparentBackground"
+                android:orientation="vertical">
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
 
                     <TextView
-                        android:id="@+id/texte_mode"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:maxLines="1"
                         android:text="Mode de fonctionnement"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/holo_blue_light"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textColor="@color/couleurSousTitre"
+                        android:textSize="@dimen/texteSousTitre" />
 
-                    <RadioGroup
-                        android:id="@+id/groupe_boutons_mode"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <RadioButton
-                            android:id="@+id/radio_bouton_auto"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Auto"
-                            android:textColor="@android:color/black" />
-
-                        <RadioButton
-                            android:id="@+id/radio_bouton_arret"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Arrêt"
-                            android:textColor="@android:color/black" />
-
-                        <RadioButton
-                            android:id="@+id/radio_bouton_marche"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Marche"
-                            android:textColor="@android:color/black" />
-                    </RadioGroup>
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
                 </LinearLayout>
 
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/dotted_border">
-
-                <LinearLayout
+                <RadioGroup
+                    android:id="@+id/groupe_boutons_mode"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/texte_asservissement"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Asservissement"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/holo_blue_light"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <RadioGroup
-                        android:id="@+id/groupe_boutons_type_asservissement"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/texte_type_asservissement"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Type :"
-                            android:textColor="@android:color/black" />
-
-                        <RadioButton
-                            android:id="@+id/radio_bouton_tor"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:clickable="false"
-                            android:text="TOR"
-                            android:textColor="@android:color/black" />
-
-                        <RadioButton
-                            android:id="@+id/radio_bouton_lineaire"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:clickable="false"
-                            android:text="LIN"
-                            android:textColor="@android:color/black" />
-                    </RadioGroup>
-
-                    <TextView
-                        android:id="@+id/texte_donnees_asservissement"
-                        android:layout_width="match_parent"
+                    android:layout_marginLeft="@dimen/layout_widget_space"
+                    android:layout_marginRight="@dimen/layout_widget_space"
+                    android:orientation="horizontal">
+                    <RadioButton
+                        android:id="@+id/radio_bouton_auto"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Durée cycle : X minutes\nMultiplicateur de différence : X\nDurée injection : X minutes\nTemps de réponse après injection : X minutes\nTemps d'injection journalier maximum : X minutes"
-                        android:textColor="@android:color/black" />
+                        android:text="Auto"
+                        android:textColor="@color/couleurTexteGeneral"
+                        android:textSize="@dimen/texteGeneral"
+                        android:textStyle="bold"
+                        android:buttonTint="#00FFFF" />
 
-                </LinearLayout>
-            </FrameLayout>
+                    <RadioButton
+                        android:id="@+id/radio_bouton_arret"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Arrêt"
+                        android:textColor="@color/couleurTexteGeneral"
+                        android:textSize="@dimen/texteGeneral"
+                        android:textStyle="bold"
+                        android:buttonTint="#00FFFF" />
 
-            <FrameLayout
-                android:layout_width="fill_parent"
+                    <RadioButton
+                        android:id="@+id/radio_bouton_marche"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Marche"
+                        android:textColor="@color/couleurTexteGeneral"
+                        android:textSize="@dimen/texteGeneral"
+                        android:textStyle="bold"
+                        android:buttonTint="#00FFFF" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/dotted_border">
-
+                android:layout_marginTop="@dimen/layout_widget_space"
+                android:paddingBottom="@dimen/layout_widget_space"
+                android:background="@color/transparentBackground"
+                android:orientation="vertical">
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
 
                     <TextView
-                        android:id="@+id/texte_conso"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Consommation"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/holo_blue_light"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:layout_weight="0"
+                        android:maxLines="1"
+                        android:text="Consommations"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textColor="@color/couleurSousTitre"
+                        android:textSize="@dimen/texteSousTitre" />
 
-                    <TextView
-                        android:id="@+id/texte_donnees_conso"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Depuis : 26/05/2014\nVolume : X L\nVolume restant : X L"
-                        android:textColor="@android:color/black" />
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
                 </LinearLayout>
 
-            </FrameLayout>
+                <TextView
+                    android:id="@+id/texte_donnees_conso"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/layout_widget_space"
+                    android:layout_marginRight="@dimen/layout_widget_space"
+                    android:text="Depuis : 26/05/2014\nVolume : X L\nVolume restant : X L"
+                    android:textColor="@color/couleurTexteGeneral"
+                    android:textSize="@dimen/texteGeneral"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/layout_widget_space"
+                android:paddingBottom="@dimen/layout_widget_space"
+                android:background="@color/transparentBackground"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:maxLines="1"
+                        android:text="Asservissement"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textColor="@color/couleurSousTitre"
+                        android:textSize="@dimen/texteSousTitre" />
+
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+                </LinearLayout>
+
+                <RadioGroup
+                    android:id="@+id/groupe_boutons_type_asservissement"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/layout_widget_space"
+                    android:layout_marginRight="@dimen/layout_widget_space"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/texte_type_asservissement"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Type :"
+                        android:textColor="@color/couleurTexteGeneral"
+                        android:textSize="@dimen/texteGeneral"
+                        android:textStyle="bold" />
+
+                    <RadioButton
+                        android:id="@+id/radio_bouton_tor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:clickable="false"
+                        android:text="TOR"
+                        android:textColor="@color/couleurTexteGeneral"
+                        android:textSize="@dimen/texteGeneral"
+                        android:textStyle="bold"
+                        android:buttonTint="#00FFFF" />
+
+                    <RadioButton
+                        android:id="@+id/radio_bouton_lineaire"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:clickable="false"
+                        android:text="LIN"
+                        android:textColor="@color/couleurTexteGeneral"
+                        android:textSize="@dimen/texteGeneral"
+                        android:textStyle="bold"
+                        android:buttonTint="#00FFFF" />
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/texte_donnees_asservissement"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/layout_widget_space"
+                    android:layout_marginRight="@dimen/layout_widget_space"
+                    android:text="Durée cycle : X minutes\nMultiplicateur de différence : X\nDurée injection : X minutes\nTemps de réponse après injection : X minutes\nTemps d'injection journalier maximum : X minutes"
+                    android:textColor="@color/couleurTexteGeneral"
+                    android:textSize="@dimen/texteGeneral"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

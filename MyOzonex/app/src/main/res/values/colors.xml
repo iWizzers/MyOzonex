@@ -4,7 +4,6 @@
     <color name="colorPrimaryDark">#33b5e5</color>
     <color name="colorAccent">#00ddff</color>
 
-    <color name="ligneSeparatricePortrait">#CCCCCC</color>
     <color name="bordureGroupPortrait">#CCCCCC</color>
 
     <color name="titleBackground">#AAFFFF</color>
@@ -30,4 +29,16 @@
 
     <color name="bouton3EtatSelectionne">#00FF00</color>
     <color name="bouton3EtatNonSelectionne">#FFFFFF</color>
+
+    <color name="couleurHeuresCreuses">#0000FF</color>
+    <color name="couleurHeuresPleines">#FFFFFF</color>
+    <color name="couleurPompeFiltration">#00FF00</color>
+    <color name="couleurSurpresseur">#FF00FF</color>
+    <color name="couleurChauffage">#FFAA00</color>
+    <color name="couleurEclairage">#FFF000</color>
+    <color name="couleurPh">#C5003A</color>
+    <color name="couleurOrp">#FFF000</color>
+
+    <color name="couleurBoutonValider">#00AA00</color>
+    <color name="couleurBoutonAnnuler">#FF0000</color>
 </resources>

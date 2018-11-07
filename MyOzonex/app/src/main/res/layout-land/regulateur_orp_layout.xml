@@ -7,7 +7,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="horizontal"
-    android:background="@drawable/fond1">
+    android:background="@drawable/fond_paysage_1">
 
     <ScrollView
         android:id="@+id/vertical_scroll"
@@ -21,7 +21,7 @@
             tools:ignore="Deprecated">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="800dp"
                 android:orientation="vertical" >
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -72,16 +72,16 @@
 
                 <GridLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="match_parent" >
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_column="0"
                         android:layout_row="0"
                         android:layout_columnWeight="0"
                         android:background="@color/transparentBackground"
-                        android:paddingTop="24dp"
-                        android:paddingBottom="25dp"
+                        android:paddingTop="@dimen/layout_widget_space"
+                        android:paddingBottom="@dimen/layout_widget_space"
                         android:orientation="vertical">
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -93,11 +93,11 @@
                                 android:orientation="horizontal" >
                                 <View
                                     android:layout_width="50dp"
-                                    android:layout_height="10dp"
+                                    android:layout_height="2dp"
                                     android:layout_weight="1"
-                                    android:background="@drawable/ligne_horizontal_sous_titre"
-                                    android:layerType="software"
-                                    android:layout_gravity="center" />
+                                    android:layout_gravity="center"
+                                    android:background="@color/couleurSousTitre"
+                                    android:layerType="software" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -112,19 +112,19 @@
 
                                 <View
                                     android:layout_width="50dp"
-                                    android:layout_height="10dp"
+                                    android:layout_height="2dp"
                                     android:layout_weight="1"
-                                    android:background="@drawable/ligne_horizontal_sous_titre"
-                                    android:layerType="software"
-                                    android:layout_gravity="center" />
+                                    android:layout_gravity="center"
+                                    android:background="@color/couleurSousTitre"
+                                    android:layerType="software" />
                             </LinearLayout>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical"
-                                android:paddingLeft="25dp"
-                                android:paddingRight="25dp">
+                                android:paddingLeft="@dimen/layout_widget_space"
+                                android:paddingRight="@dimen/layout_widget_space">
                                 <TextView
                                     android:id="@+id/texte_donnees_conso"
                                     android:layout_width="match_parent"
@@ -152,7 +152,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingTop="15dp"
+                            android:paddingTop="@dimen/layout_container_space"
                             android:orientation="vertical" >
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -160,11 +160,11 @@
                                 android:orientation="horizontal" >
                                 <View
                                     android:layout_width="50dp"
-                                    android:layout_height="10dp"
+                                    android:layout_height="2dp"
                                     android:layout_weight="1"
-                                    android:background="@drawable/ligne_horizontal_sous_titre"
-                                    android:layerType="software"
-                                    android:layout_gravity="center" />
+                                    android:layout_gravity="center"
+                                    android:background="@color/couleurSousTitre"
+                                    android:layerType="software" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -179,19 +179,19 @@
 
                                 <View
                                     android:layout_width="50dp"
-                                    android:layout_height="10dp"
+                                    android:layout_height="2dp"
                                     android:layout_weight="1"
-                                    android:background="@drawable/ligne_horizontal_sous_titre"
-                                    android:layerType="software"
-                                    android:layout_gravity="center" />
+                                    android:layout_gravity="center"
+                                    android:background="@color/couleurSousTitre"
+                                    android:layerType="software" />
                             </LinearLayout>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
-                                android:paddingLeft="25dp"
-                                android:paddingRight="25dp">
+                                android:paddingLeft="@dimen/layout_widget_space"
+                                android:paddingRight="@dimen/layout_widget_space">
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -272,8 +272,10 @@
                         android:layout_column="2"
                         android:layout_row="0"
                         android:layout_columnWeight="0"
-                        android:paddingTop="24dp"
-                        android:paddingRight="25dp"
+                        android:paddingTop="@dimen/layout_widget_space"
+                        android:paddingBottom="@dimen/layout_widget_space"
+                        android:paddingLeft="@dimen/layout_widget_space"
+                        android:paddingRight="@dimen/layout_widget_space"
                         android:orientation="vertical">
                         <FrameLayout
                             android:layout_width="171dp"
@@ -292,7 +294,7 @@
                                 android:layout_height="match_parent"
                                 android:orientation="vertical"
                                 android:gravity="center"
-                                android:padding="15dp" >
+                                android:padding="@dimen/layout_container_space" >
                                 <Button
                                     android:id="@+id/bouton_auto"
                                     android:layout_width="match_parent"

@@ -1,85 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    android:background="@drawable/fond_portrait_2">
     <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:fillViewport="false"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp">
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="false">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_widget_space"
+            android:paddingTop="@dimen/layout_widget_space"
+            android:paddingBottom="@dimen/layout_widget_space"
+            android:paddingLeft="@dimen/layout_widget_space"
+            android:paddingRight="@dimen/layout_widget_space"
+            android:background="@color/transparentBackground"
             android:orientation="vertical">
-
             <TextView
                 android:id="@+id/texteID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
                 android:text="ID du système"
                 android:textAlignment="center"
-                android:textColor="@android:color/holo_blue_light"
+                android:textColor="@color/couleurSousTitre"
+                android:textSize="@dimen/texteSousTitre"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/editID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:ems="10"
-                android:hint="ID machine"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:textColor="@color/couleurTexteGeneral"
+                android:textSize="@dimen/texteGeneral"
+                android:textStyle="bold"
+                app:backgroundTint="@color/couleurTexteGeneral" />
 
             <TextView
                 android:id="@+id/textePassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="@dimen/layout_container_space"
                 android:text="Mot de passe"
                 android:textAlignment="center"
-                android:textColor="@android:color/holo_blue_light"
+                android:textColor="@color/couleurSousTitre"
+                android:textSize="@dimen/texteSousTitre"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/editPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:ems="10"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:textColor="@color/couleurTexteGeneral"
+                android:textSize="@dimen/texteGeneral"
+                android:textStyle="bold"
+                app:backgroundTint="@color/couleurTexteGeneral" />
 
             <Button
                 android:id="@+id/boutonConnexion"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
-                android:text="Se connecter" />
+                android:layout_marginTop="@dimen/layout_container_space"
+                android:layout_gravity="center"
+                android:text="Se connecter"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/texteGeneral" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
