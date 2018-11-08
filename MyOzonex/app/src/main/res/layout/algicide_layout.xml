@@ -195,6 +195,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/layout_widget_space"
                     android:layout_marginRight="@dimen/layout_widget_space"
+                    android:clickable="false"
                     android:text="Etat : désactivée"
                     android:textColor="@color/couleurTexteGeneral"
                     android:textSize="@dimen/texteGeneral"

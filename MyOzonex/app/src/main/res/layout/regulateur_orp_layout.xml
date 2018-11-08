@@ -253,10 +253,11 @@
 
                 <CheckBox
                     android:id="@+id/checkbox_surchloration"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/layout_widget_space"
                     android:layout_marginRight="@dimen/layout_widget_space"
+                    android:clickable="false"
                     android:text="Surchloration : désactivée"
                     android:textColor="@color/couleurTexteGeneral"
                     android:textSize="@dimen/texteGeneral"

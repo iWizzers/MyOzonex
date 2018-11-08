@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity
 
         inst = this;
 
-        /*View decorView = getWindow().getDecorView();
+        View decorView = getWindow().getDecorView();
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             //requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                             | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        }*/
+        }
 
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -111,7 +111,6 @@ public class MainActivity extends AppCompatActivity
             toggle.syncState();
 
             navigationView.setNavigationItemSelectedListener(this);
-            menu.findItem(R.id.nav_synoptique_layout).setVisible(false);
             menu.findItem(R.id.nav_menu_layout).setVisible(false);
 
             View headerView = navigationView.getHeaderView(0);

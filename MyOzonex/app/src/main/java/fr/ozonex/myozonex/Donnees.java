@@ -251,13 +251,19 @@ public class Donnees {
         String date = strDateHeure.split("-")[0];
         String heure = strDateHeure.split("-")[1];
 
-        Date dateAndroid = Calendar.getInstance().getTime();
         Calendar calendarIHM = Calendar.getInstance();
-        calendarIHM.set(Integer.parseInt(date.split("/")[2]), Integer.parseInt(date.split("/")[1]), Integer.parseInt(date.split("/")[0]),
-                Integer.parseInt(heure.split(":")[0]), Integer.parseInt(heure.split(":")[1]));
-        Calendar calendarIHMPlus = calendarIHM;
-        calendarIHMPlus.add(Calendar.MINUTE, 5);
+        calendarIHM.set(Calendar.SECOND, 0);
+        calendarIHM.set(Calendar.MINUTE, Integer.parseInt(heure.split(":")[1]));
+        calendarIHM.set(Calendar.HOUR, Integer.parseInt(heure.split(":")[0]));
+        calendarIHM.set(Calendar.MONTH, Integer.parseInt(date.split("/")[1]) - 1);
+        calendarIHM.set(Calendar.DAY_OF_MONTH, Integer.parseInt(date.split("/")[0]));
+        calendarIHM.set(Calendar.YEAR, Integer.parseInt(date.split("/")[2]));
+        calendarIHM.add(Calendar.MINUTE, -5);
 
+        Calendar calendarIHMPlus = (Calendar) calendarIHM.clone();
+        calendarIHMPlus.add(Calendar.MINUTE, 10);
+
+        Date dateAndroid = Calendar.getInstance().getTime();
         Date dateIHM = calendarIHM.getTime();
         Date dateIHMPlus = calendarIHMPlus.getTime();
 
@@ -266,48 +272,43 @@ public class Donnees {
         } else {
             activiteIHM = false;
         }
-
-        Log.d("HEURE IHM", String.valueOf(calendarIHM.getTime()));
-        Log.d("HEURE IH+", String.valueOf(calendarIHMPlus.getTime()));
-        Log.d("HEURE AND", String.valueOf(dateAndroid));
-        Log.d("ACTIVITE IHM", String.valueOf(activiteIHM));
     }
 
     public int obtenirBackground() {
         int drawable;
 
         if (MainActivity.instance().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            if (background == 0) {
+            if (background == 1) {
                 drawable = R.drawable.fond_portrait_1;
-            } else if (background == 1) {
-                drawable = R.drawable.fond_portrait_2;
             } else if (background == 2) {
-                drawable = R.drawable.fond_portrait_3;
+                drawable = R.drawable.fond_portrait_2;
             } else if (background == 3) {
-                drawable = R.drawable.fond_portrait_4;
+                drawable = R.drawable.fond_portrait_3;
             } else if (background == 4) {
-                drawable = R.drawable.fond_portrait_5;
+                drawable = R.drawable.fond_portrait_4;
             } else if (background == 5) {
-                drawable = R.drawable.fond_portrait_6;
+                drawable = R.drawable.fond_portrait_5;
             } else if (background == 6) {
+                drawable = R.drawable.fond_portrait_6;
+            } else if (background == 7) {
                 drawable = R.drawable.fond_portrait_7;
             } else {
                 drawable = R.drawable.fond_portrait_1;
             }
         } else {
-            if (background == 0) {
+            if (background == 1) {
                 drawable = R.drawable.fond_paysage_1;
-            } else if (background == 1) {
-                drawable = R.drawable.fond_paysage_2;
             } else if (background == 2) {
-                drawable = R.drawable.fond_paysage_3;
+                drawable = R.drawable.fond_paysage_2;
             } else if (background == 3) {
-                drawable = R.drawable.fond_paysage_4;
+                drawable = R.drawable.fond_paysage_3;
             } else if (background == 4) {
-                drawable = R.drawable.fond_paysage_5;
+                drawable = R.drawable.fond_paysage_4;
             } else if (background == 5) {
-                drawable = R.drawable.fond_paysage_6;
+                drawable = R.drawable.fond_paysage_5;
             } else if (background == 6) {
+                drawable = R.drawable.fond_paysage_6;
+            } else if (background == 7) {
                 drawable = R.drawable.fond_paysage_7;
             } else {
                 drawable = R.drawable.fond_paysage_1;

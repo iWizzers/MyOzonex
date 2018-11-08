@@ -532,7 +532,7 @@ public class FragmentChauffage extends Fragment implements View.OnClickListener 
 
         if (heureDebutPlage == null) {
             intent.putExtra(ClavierActivity.EXTRA_QUESTION, "Donnez l'heure de début de la plage séparée par une virgule");
-            heureMinimumPlage = indexPlage > 0 ? Donnees.instance().obtenirPlage(Donnees.Equipement.Chauffage, indexPlage - 1).split(" - ")[0] : "00h00";
+            heureMinimumPlage = indexPlage > 0 ? Donnees.instance().obtenirPlage(Donnees.Equipement.Chauffage, indexPlage - 1).split(" - ")[1] : "00h00";
         } else {
             intent.putExtra(ClavierActivity.EXTRA_QUESTION, "Donnez l'heure de fin de la plage séparée par une virgule");
             heureMinimumPlage = heureDebutPlage;
