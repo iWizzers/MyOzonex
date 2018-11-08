@@ -3,8 +3,12 @@ package fr.ozonex.myozonex;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class Donnees {
@@ -223,6 +227,7 @@ public class Donnees {
     public static final String ID_SYSTEME = "id system";
     public static final String MOTDEPASSE = "password";
 
+    private boolean activiteIHM = false;
     private int background;
     private int pageSource;
 
@@ -236,6 +241,36 @@ public class Donnees {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(key, value);
         editor.commit();
+    }
+
+    public boolean obtenirActiviteIHM() {
+        return activiteIHM;
+    }
+
+    public void definirActiviteIHM(String strDateHeure) {
+        String date = strDateHeure.split("-")[0];
+        String heure = strDateHeure.split("-")[1];
+
+        Date dateAndroid = Calendar.getInstance().getTime();
+        Calendar calendarIHM = Calendar.getInstance();
+        calendarIHM.set(Integer.parseInt(date.split("/")[2]), Integer.parseInt(date.split("/")[1]), Integer.parseInt(date.split("/")[0]),
+                Integer.parseInt(heure.split(":")[0]), Integer.parseInt(heure.split(":")[1]));
+        Calendar calendarIHMPlus = calendarIHM;
+        calendarIHMPlus.add(Calendar.MINUTE, 5);
+
+        Date dateIHM = calendarIHM.getTime();
+        Date dateIHMPlus = calendarIHMPlus.getTime();
+
+        if (dateAndroid.after(dateIHM) && dateAndroid.before(dateIHMPlus)) {
+            activiteIHM = true;
+        } else {
+            activiteIHM = false;
+        }
+
+        Log.d("HEURE IHM", String.valueOf(calendarIHM.getTime()));
+        Log.d("HEURE IH+", String.valueOf(calendarIHMPlus.getTime()));
+        Log.d("HEURE AND", String.valueOf(dateAndroid));
+        Log.d("ACTIVITE IHM", String.valueOf(activiteIHM));
     }
 
     public int obtenirBackground() {

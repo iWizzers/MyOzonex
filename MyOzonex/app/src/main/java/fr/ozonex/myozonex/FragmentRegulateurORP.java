@@ -35,12 +35,14 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
     TextView texteDonneesSurchloration;
 
     // Orientation portrait
+    LinearLayout globalLayoutPortrait;
     RadioGroup rgBoutonsMode;
     RadioButton rbAuto;
     RadioButton rbArret;
     RadioButton rbMarche;
 
     // Orientation paysage
+    HorizontalScrollView globalLayoutPaysage;
     ImageButton boutonRetour;
     ImageView bouton3Etats;
     Button boutonAuto;
@@ -54,6 +56,7 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
 
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            globalLayoutPortrait = view.findViewById(R.id.global_layout);
             rgBoutonsMode = (RadioGroup) view.findViewById(R.id.groupe_boutons_mode);
             rbAuto = (RadioButton) view.findViewById(R.id.radio_bouton_auto);
             rbArret = (RadioButton) view.findViewById(R.id.radio_bouton_arret);
@@ -67,6 +70,7 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
                     (ScrollView) view.findViewById(R.id.vertical_scroll),
                     (AbsoluteLayout) view.findViewById(R.id.layout));
 
+            globalLayoutPaysage = view.findViewById(R.id.horizontal_scroll);
             boutonRetour = (ImageButton) view.findViewById(R.id.bouton_retour);
             bouton3Etats = (ImageView) view.findViewById(R.id.bouton_3_etats);
             boutonAuto = (Button) view.findViewById(R.id.bouton_auto);
@@ -95,6 +99,12 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
 
     public void update() {
         if ((view != null) && isAdded()) {
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
+            } else {
+                globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());
+            }
+
             modeAEteModifie(Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Orp));
 
             asservissementAEteModifie(Donnees.instance().obtenirTypeAsservissement());

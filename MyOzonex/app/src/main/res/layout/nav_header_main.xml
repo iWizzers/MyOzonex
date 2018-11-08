@@ -16,10 +16,10 @@
         android:id="@+id/id_systeme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:layout_marginTop="@dimen/layout_widget_space"
         android:text="Système : XXXX-XXXX"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textSize="@dimen/texteTitre"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/texteSousTitre"
         android:textStyle="bold" />
 
     <LinearLayout
@@ -38,7 +38,8 @@
             android:layout_marginLeft="@dimen/layout_space"
             android:layout_gravity="center"
             android:text="@string/nav_header_subtitle"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+            android:textColor="@color/couleurTexteGeneral"
+            android:textSize="@dimen/texteGeneral" />
 
     </LinearLayout>
 

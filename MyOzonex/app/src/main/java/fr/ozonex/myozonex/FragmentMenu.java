@@ -20,6 +20,7 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
     View view = null;
 
     // Orientation paysage
+    HorizontalScrollView globalLayoutPaysage;
     ImageButton boutonRetour;
     ImageButton boutonPompeFiltration;
     ImageButton boutonFiltre;
@@ -51,6 +52,7 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
                     (ScrollView) view.findViewById(R.id.vertical_scroll),
                     (AbsoluteLayout) view.findViewById(R.id.layout));
 
+            globalLayoutPaysage = view.findViewById(R.id.horizontal_scroll);
             boutonRetour = (ImageButton) view.findViewById(R.id.bouton_retour);
             boutonPompeFiltration = (ImageButton) view.findViewById(R.id.bouton_pompe_filtration);
             boutonFiltre = (ImageButton) view.findViewById(R.id.bouton_filtre);
@@ -102,6 +104,7 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
     public void update() {
         if ((view != null) && isAdded()) {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());
                 boutonPompeFiltration.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PompeFiltration));
                 boutonFiltre.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Filtre));
                 boutonSurpresseur.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Surpresseur));

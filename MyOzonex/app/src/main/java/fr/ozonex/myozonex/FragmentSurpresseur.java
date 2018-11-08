@@ -55,12 +55,14 @@ public class FragmentSurpresseur extends Fragment implements View.OnClickListene
     Button boutonAjouterPlage;
 
     // Orientation portrait
+    LinearLayout globalLayoutPortrait;
     RadioGroup rgBoutonsMode;
     RadioButton rbAuto;
     RadioButton rbArret;
     RadioButton rbMarche;
 
     // Orientation paysage
+    HorizontalScrollView globalLayoutPaysage;
     ImageButton boutonRetour;
     ImageView bouton3Etats;
     Button boutonAuto;
@@ -75,6 +77,7 @@ public class FragmentSurpresseur extends Fragment implements View.OnClickListene
 
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            globalLayoutPortrait = view.findViewById(R.id.global_layout);
             rgBoutonsMode = (RadioGroup) view.findViewById(R.id.groupe_boutons_mode);
             rbAuto = (RadioButton) view.findViewById(R.id.radio_bouton_auto);
             rbArret = (RadioButton) view.findViewById(R.id.radio_bouton_arret);
@@ -88,6 +91,7 @@ public class FragmentSurpresseur extends Fragment implements View.OnClickListene
                     (ScrollView) view.findViewById(R.id.vertical_scroll),
                     (AbsoluteLayout) view.findViewById(R.id.layout));
 
+            globalLayoutPaysage = view.findViewById(R.id.horizontal_scroll);
             boutonRetour = (ImageButton) view.findViewById(R.id.bouton_retour);
             bouton3Etats = (ImageView) view.findViewById(R.id.bouton_3_etats);
             boutonAuto = (Button) view.findViewById(R.id.bouton_auto);
@@ -141,6 +145,12 @@ public class FragmentSurpresseur extends Fragment implements View.OnClickListene
 
     public void update() {
         if ((view != null) && isAdded()) {
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
+            } else {
+                globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());
+            }
+
             modeAEteModifie(Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Surpresseur));
 
             consoAEteModifie(Donnees.instance().obtenirDateDebutConso(Donnees.Equipement.Surpresseur),
@@ -313,10 +323,10 @@ public class FragmentSurpresseur extends Fragment implements View.OnClickListene
         }
 
         if (heureDebutPlage == null) {
-            intent.putExtra(ClavierActivity.EXTRA_QUESTION, "Donnez l'heure de début de la nouvelle plage séparée par un point");
+            intent.putExtra(ClavierActivity.EXTRA_QUESTION, "Donnez l'heure de début de la nouvelle plage séparée par une virgule");
             heureMinimumPlage = indexPlage > 0 ? Donnees.instance().obtenirPlage(Donnees.Equipement.Surpresseur, indexPlage - 1).split(" - ")[1] : "00h00";
         } else {
-            intent.putExtra(ClavierActivity.EXTRA_QUESTION, "Donnez l'heure de fin de la nouvelle plage séparée par un point");
+            intent.putExtra(ClavierActivity.EXTRA_QUESTION, "Donnez l'heure de fin de la nouvelle plage séparée par une virgule");
             heureMinimumPlage = heureDebutPlage;
         }
         heureMaximumPlage = "23h59";
@@ -381,10 +391,10 @@ public class FragmentSurpresseur extends Fragment implements View.OnClickListene
         }
 
         if (heureDebutPlage == null) {
-            intent.putExtra(ClavierActivity.EXTRA_QUESTION, "Donnez l'heure de début de la plage séparée par un point");
+            intent.putExtra(ClavierActivity.EXTRA_QUESTION, "Donnez l'heure de début de la plage séparée par une virgule");
             heureMinimumPlage = indexPlage > 0 ? Donnees.instance().obtenirPlage(Donnees.Equipement.Surpresseur, indexPlage - 1).split(" - ")[0] : "00h00";
         } else {
-            intent.putExtra(ClavierActivity.EXTRA_QUESTION, "Donnez l'heure de fin de la plage séparée par un point");
+            intent.putExtra(ClavierActivity.EXTRA_QUESTION, "Donnez l'heure de fin de la plage séparée par une virgule");
             heureMinimumPlage = heureDebutPlage;
         }
         heureMaximumPlage = indexPlage == (Global.MAX_PLAGES_EQUIPEMENTS - 1) ? (Donnees.instance().obtenirEtatPlage(Donnees.Equipement.Surpresseur, indexPlage + 1) ? Donnees.instance().obtenirPlage(Donnees.Equipement.Surpresseur, indexPlage + 1).split(" - ")[1] : "23h59") : "23h59";
@@ -416,7 +426,7 @@ public class FragmentSurpresseur extends Fragment implements View.OnClickListene
             if(resultCode == Activity.RESULT_OK){
                 String autre = data.getStringExtra(ClavierActivity.EXTRA_AUTRE);
                 String result = data.getStringExtra(ClavierActivity.EXTRA_RESULTAT);
-                result = result.replace('.', 'h');
+                result = result.replace(',', 'h');
                 if (result.split("h").length > 1) {
                     DecimalFormat df = new DecimalFormat("00");
                     result = df.format(Double.parseDouble(result.split("h")[0])) + 'h' + df.format(Double.parseDouble(result.split("h")[1]));

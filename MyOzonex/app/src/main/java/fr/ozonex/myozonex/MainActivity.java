@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity
 
         inst = this;
 
-        View decorView = getWindow().getDecorView();
+        /*View decorView = getWindow().getDecorView();
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             //requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                             | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        }
+        }*/
 
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -301,7 +301,7 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         activityResume = true;
 
-        if ((fragmentConnexion.getView() != null) && !fragmentConnexion.isAdded() && !isMyServiceRunning(httpService.getClass())) {
+        if ((fragmentConnexion.getView() == null) && !fragmentConnexion.isAdded() && !isMyServiceRunning(httpService.getClass())) {
             startService(serviceIntent);
         }
 
@@ -591,6 +591,7 @@ public class MainActivity extends AppCompatActivity
                         Donnees.instance().definirPlage(Donnees.Equipement.HeuresCreuses, 2, object.getString("plage_3"));
 
                         object = new JSONObject(jsonObject.getString("Système"));
+                        Donnees.instance().definirActiviteIHM(object.getString("alive"));
                         Donnees.instance().definirBackground(object.getInt("background"));
 
                         menu.findItem(R.id.nav_pompe_filtration_layout).setVisible(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PompeFiltration));

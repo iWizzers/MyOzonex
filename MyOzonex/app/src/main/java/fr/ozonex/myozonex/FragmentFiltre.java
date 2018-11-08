@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
@@ -28,9 +29,11 @@ public class FragmentFiltre extends Fragment implements View.OnClickListener {
     TextView texteConso;
 
     // Orientation portrait
+    LinearLayout globalLayoutPortrait;
     TextView texteDonneesConfiguration;
 
     // Orientation paysage
+    HorizontalScrollView globalLayoutPaysage;
     ImageButton boutonRetour;
 
     @Nullable
@@ -40,12 +43,14 @@ public class FragmentFiltre extends Fragment implements View.OnClickListener {
 
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            globalLayoutPortrait = view.findViewById(R.id.global_layout);
             texteDonneesConfiguration = (TextView) view.findViewById(R.id.texte_donnees_configuration);
         } else {
             new ScaleListener((HorizontalScrollView) view.findViewById(R.id.horizontal_scroll),
                     (ScrollView) view.findViewById(R.id.vertical_scroll),
                     (AbsoluteLayout) view.findViewById(R.id.layout));
 
+            globalLayoutPaysage = view.findViewById(R.id.horizontal_scroll);
             boutonRetour = (ImageButton) view.findViewById(R.id.bouton_retour);
 
             boutonRetour.setOnClickListener(this);
@@ -62,11 +67,15 @@ public class FragmentFiltre extends Fragment implements View.OnClickListener {
 
     public void update() {
         if ((view != null) && isAdded()) {
-            modifierDernierLavage();
-
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
+
                 modifierConfiguration();
+            } else {
+                globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());
             }
+
+            modifierDernierLavage();
         }
     }
 
