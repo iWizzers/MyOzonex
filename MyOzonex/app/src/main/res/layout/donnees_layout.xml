@@ -41,7 +41,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" >
                     <TextView
-                        android:id="@+id/texte_temperature_bassin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -52,7 +51,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/valeur_temperature_bassin"
+                        android:id="@+id/texte_valeur_temperature_bassin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|right"
@@ -69,7 +68,6 @@
                     android:layout_marginTop="@dimen/layout_widget_space"
                     android:orientation="horizontal" >
                     <TextView
-                        android:id="@+id/texte_temperature_interne"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -80,7 +78,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/valeur_temperature_interne"
+                        android:id="@+id/texte_valeur_temperature_interne"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|right"
@@ -97,7 +95,6 @@
                     android:layout_marginTop="@dimen/layout_widget_space"
                     android:orientation="horizontal" >
                     <TextView
-                        android:id="@+id/texte_humidite_interne"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -108,7 +105,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/valeur_humidite_interne"
+                        android:id="@+id/texte_valeur_humidite_interne"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|right"
@@ -125,7 +122,6 @@
                     android:layout_marginTop="@dimen/layout_widget_space"
                     android:orientation="horizontal" >
                     <TextView
-                        android:id="@+id/texte_pression_atm_interne"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -136,7 +132,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/valeur_pression_atm_interne"
+                        android:id="@+id/texte_valeur_pression_atm_interne"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|right"
@@ -153,7 +149,6 @@
                     android:layout_marginTop="@dimen/layout_widget_space"
                     android:orientation="horizontal" >
                     <TextView
-                        android:id="@+id/texte_temperature_externe"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -164,7 +159,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/valeur_temperature_externe"
+                        android:id="@+id/texte_valeur_temperature_externe"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|right"
@@ -181,7 +176,6 @@
                     android:layout_marginTop="@dimen/layout_widget_space"
                     android:orientation="horizontal" >
                     <TextView
-                        android:id="@+id/texte_humidite_externe"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -192,7 +186,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/valeur_humidite_externe"
+                        android:id="@+id/texte_valeur_humidite_externe"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|right"
@@ -209,7 +203,6 @@
                     android:layout_marginTop="@dimen/layout_widget_space"
                     android:orientation="horizontal" >
                     <TextView
-                        android:id="@+id/texte_pression_atm_externe"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -220,7 +213,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/valeur_pression_atm_externe"
+                        android:id="@+id/texte_valeur_pression_atm_externe"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|right"
@@ -237,7 +230,6 @@
                     android:layout_marginTop="@dimen/layout_widget_space"
                     android:orientation="horizontal" >
                     <TextView
-                        android:id="@+id/texte_ph"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -248,7 +240,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/valeur_ph"
+                        android:id="@+id/texte_valeur_ph"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|right"
@@ -265,7 +257,6 @@
                     android:layout_marginTop="@dimen/layout_widget_space"
                     android:orientation="horizontal" >
                     <TextView
-                        android:id="@+id/texte_orp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -276,7 +267,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/valeur_orp"
+                        android:id="@+id/texte_valeur_orp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|right"
@@ -293,7 +284,6 @@
                     android:layout_marginTop="@dimen/layout_widget_space"
                     android:orientation="horizontal" >
                     <TextView
-                        android:id="@+id/texte_pression"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -304,7 +294,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/valeur_pression"
+                        android:id="@+id/texte_valeur_pression"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|right"
@@ -321,7 +311,6 @@
                     android:layout_marginTop="@dimen/layout_widget_space"
                     android:orientation="horizontal" >
                     <TextView
-                        android:id="@+id/texte_ampero"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -332,7 +321,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/valeur_ampero"
+                        android:id="@+id/texte_valeur_ampero"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|right"
@@ -349,7 +338,6 @@
                     android:layout_marginTop="@dimen/layout_widget_space"
                     android:orientation="horizontal" >
                     <TextView
-                        android:id="@+id/texte_4_20_libre"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -360,7 +348,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/valeur_4_20_libre"
+                        android:id="@+id/texte_valeur_4_20_libre"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|right"

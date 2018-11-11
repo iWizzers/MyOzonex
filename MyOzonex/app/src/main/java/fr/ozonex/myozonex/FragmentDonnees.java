@@ -2,80 +2,67 @@ package fr.ozonex.myozonex;
 
 import android.app.Fragment;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-
-import static android.support.v4.view.MotionEventCompat.getPointerCount;
 
 public class FragmentDonnees extends Fragment implements View.OnClickListener {
     View view = null;
 
     // Tout orientations
     LinearLayout layoutPh;
+    TextView valeurPh;
+    LinearLayout layoutAmpero;
+    TextView valeurAmpero;
     LinearLayout layoutORP;
+    TextView valeurORP;
+    LinearLayout layoutTemperatureBassin;
+    LinearLayout layoutTemperatureExterne;
+    TextView valeurTemperatureBassin;
+    TextView valeurTemperatureExterne;
 
     // Orientation portrait
     LinearLayout globalLayoutPortrait;
     TextView texteAucunCapteurs;
-    LinearLayout layoutTemperatureBassin;
-    TextView texteTemperatureBassin;
-    TextView valeurTemperatureBassin;
     LinearLayout layoutTemperatureInterne;
-    TextView texteTemperatureInterne;
     TextView valeurTemperatureInterne;
     LinearLayout layoutHumiditeInterne;
-    TextView texteHumiditeInterne;
     TextView valeurHumiditeInterne;
     LinearLayout layoutPressionAtmInterne;
-    TextView textePressionAtmInterne;
     TextView valeurPressionAtmInterne;
-    LinearLayout layoutTemperatureExterne;
-    TextView texteTemperatureExterne;
-    TextView valeurTemperatureExterne;
     LinearLayout layoutHumiditeExterne;
-    TextView texteHumiditeExterne;
     TextView valeurHumiditeExterne;
     LinearLayout layoutPressionAtmExterne;
-    TextView textePressionAtmExterne;
     TextView valeurPressionAtmExterne;
-    TextView textePh;
-    TextView valeurPh;
-    TextView texteORP;
-    TextView valeurORP;
     LinearLayout layoutPression;
-    TextView textePression;
     TextView valeurPression;
-    LinearLayout layoutAmpero;
-    TextView texteAmpero;
-    TextView valeurAmpero;
     LinearLayout layout_4_20_Libre;
-    TextView texte_4_20_Libre;
     TextView valeur_4_20_Libre;
 
     // Orientation paysage
     HorizontalScrollView globalLayoutPaysage;
     Button boutonSynoptique;
+    TextView ledEtatPhPlus;
+    TextView texteEtatPhPlus;
+    TextView ledEtatPhMoins;
+    TextView texteEtatPhMoins;
     TextView texteDonneesPh;
-    TextView texteActifORP;
+    LinearLayout layoutChlore;
+    TextView ledEtatChlore;
+    TextView texteEtatChlore;
     TextView texteLibreActifAmpero;
     TextView texteDonneesAmpero;
-    View ligneSepORP;
+    View ligneSepChlore;
     TextView texteDonneesORP;
     LinearLayout layoutTemperatures;
     View ligneSepTemperatures;
@@ -89,42 +76,20 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             globalLayoutPortrait = view.findViewById(R.id.global_layout);
             texteAucunCapteurs = (TextView) view.findViewById(R.id.texte_aucun_capteurs);
-            layoutTemperatureBassin = view.findViewById(R.id.layout_temperature_bassin);
-            texteTemperatureBassin = (TextView) view.findViewById(R.id.texte_temperature_bassin);
-            valeurTemperatureBassin = (TextView) view.findViewById(R.id.valeur_temperature_bassin);
             layoutTemperatureInterne = view.findViewById(R.id.layout_temperature_interne);
-            texteTemperatureInterne = (TextView) view.findViewById(R.id.texte_temperature_interne);
-            valeurTemperatureInterne = (TextView) view.findViewById(R.id.valeur_temperature_interne);
+            valeurTemperatureInterne = (TextView) view.findViewById(R.id.texte_valeur_temperature_interne);
             layoutHumiditeInterne = view.findViewById(R.id.layout_humidite_interne);
-            texteHumiditeInterne = (TextView) view.findViewById(R.id.texte_humidite_interne);
-            valeurHumiditeInterne = (TextView) view.findViewById(R.id.valeur_humidite_interne);
+            valeurHumiditeInterne = (TextView) view.findViewById(R.id.texte_valeur_humidite_interne);
             layoutPressionAtmInterne = view.findViewById(R.id.layout_pression_atm_interne);
-            textePressionAtmInterne = (TextView) view.findViewById(R.id.texte_pression_atm_interne);
-            valeurPressionAtmInterne = (TextView) view.findViewById(R.id.valeur_pression_atm_interne);
-            layoutTemperatureExterne = view.findViewById(R.id.layout_temperature_externe);
-            texteTemperatureExterne = (TextView) view.findViewById(R.id.texte_temperature_externe);
-            valeurTemperatureExterne = (TextView) view.findViewById(R.id.valeur_temperature_externe);
+            valeurPressionAtmInterne = (TextView) view.findViewById(R.id.texte_valeur_pression_atm_interne);
             layoutHumiditeExterne = view.findViewById(R.id.layout_humidite_externe);
-            texteHumiditeExterne = (TextView) view.findViewById(R.id.texte_humidite_externe);
-            valeurHumiditeExterne = (TextView) view.findViewById(R.id.valeur_humidite_externe);
+            valeurHumiditeExterne = (TextView) view.findViewById(R.id.texte_valeur_humidite_externe);
             layoutPressionAtmExterne = view.findViewById(R.id.layout_pression_atm_externe);
-            textePressionAtmExterne = (TextView) view.findViewById(R.id.texte_pression_atm_externe);
-            valeurPressionAtmExterne = (TextView) view.findViewById(R.id.valeur_pression_atm_externe);
-            layoutPh = view.findViewById(R.id.layout_ph);
-            textePh = (TextView) view.findViewById(R.id.texte_ph);
-            valeurPh = (TextView) view.findViewById(R.id.valeur_ph);
-            layoutORP = view.findViewById(R.id.layout_orp);
-            texteORP = (TextView) view.findViewById(R.id.texte_orp);
-            valeurORP = (TextView) view.findViewById(R.id.valeur_orp);
+            valeurPressionAtmExterne = (TextView) view.findViewById(R.id.texte_valeur_pression_atm_externe);
             layoutPression = view.findViewById(R.id.layout_pression);
-            textePression = (TextView) view.findViewById(R.id.texte_pression);
-            valeurPression = (TextView) view.findViewById(R.id.valeur_pression);
-            layoutAmpero = view.findViewById(R.id.layout_ampero);
-            texteAmpero = (TextView) view.findViewById(R.id.texte_ampero);
-            valeurAmpero = (TextView) view.findViewById(R.id.valeur_ampero);
+            valeurPression = (TextView) view.findViewById(R.id.texte_valeur_pression);
             layout_4_20_Libre = view.findViewById(R.id.layout_4_20_libre);
-            texte_4_20_Libre = (TextView) view.findViewById(R.id.texte_4_20_libre);
-            valeur_4_20_Libre = (TextView) view.findViewById(R.id.valeur_4_20_libre);
+            valeur_4_20_Libre = (TextView) view.findViewById(R.id.texte_valeur_4_20_libre);
         } else {
             new ScaleListener((HorizontalScrollView) view.findViewById(R.id.horizontal_scroll),
                     (ScrollView) view.findViewById(R.id.vertical_scroll),
@@ -132,27 +97,34 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
 
             globalLayoutPaysage = view.findViewById(R.id.horizontal_scroll);
             boutonSynoptique = (Button) view.findViewById(R.id.bouton_synoptique);
-            layoutPh = (LinearLayout) view.findViewById(R.id.layout_ph);
-            valeurPh = (TextView) view.findViewById(R.id.texte_valeur_ph);
+            ledEtatPhPlus = view.findViewById(R.id.led_etat_ph_plus);
+            texteEtatPhPlus = view.findViewById(R.id.texte_etat_ph_plus);
+            ledEtatPhMoins = view.findViewById(R.id.led_etat_ph_moins);
+            texteEtatPhMoins = view.findViewById(R.id.texte_etat_ph_moins);
             texteDonneesPh = (TextView) view.findViewById(R.id.texte_donnees_ph);
-            layoutORP = (LinearLayout) view.findViewById(R.id.layout_orp);
-            texteActifORP = (TextView) view.findViewById(R.id.texte_actif_orp);
-            valeurAmpero = (TextView) view.findViewById(R.id.texte_valeur_ampero);
+            layoutChlore = (LinearLayout) view.findViewById(R.id.layout_chlore);
+            ledEtatChlore = view.findViewById(R.id.led_etat_chlore);
+            texteEtatChlore = view.findViewById(R.id.texte_etat_chlore);
             texteLibreActifAmpero = (TextView) view.findViewById(R.id.texte_valeur_libre_actif);
             texteDonneesAmpero = (TextView) view.findViewById(R.id.texte_donnees_ampero);
-            ligneSepORP = view.findViewById(R.id.ligne_sep_orp);
-            valeurORP = (TextView) view.findViewById(R.id.texte_valeur_orp);
+            ligneSepChlore = view.findViewById(R.id.ligne_sep_chlore);
             texteDonneesORP = (TextView) view.findViewById(R.id.texte_donnees_orp);
             layoutTemperatures = (LinearLayout) view.findViewById(R.id.layout_temperatures);
-            texteTemperatureBassin = (TextView) view.findViewById(R.id.texte_temp_bassin);
-            valeurTemperatureBassin = (TextView) view.findViewById(R.id.texte_valeur_temp_bassin);
             ligneSepTemperatures = view.findViewById(R.id.ligne_sep_temperatures);
-            texteTemperatureExterne = (TextView) view.findViewById(R.id.texte_temp_ext);
-            valeurTemperatureExterne = (TextView) view.findViewById(R.id.texte_valeur_temp_ext);
-
 
             boutonSynoptique.setOnClickListener(this);
         }
+
+        layoutPh = view.findViewById(R.id.layout_ph);
+        valeurPh = (TextView) view.findViewById(R.id.texte_valeur_ph);
+        layoutAmpero = view.findViewById(R.id.layout_ampero);
+        valeurAmpero = (TextView) view.findViewById(R.id.texte_valeur_ampero);
+        layoutORP = view.findViewById(R.id.layout_orp);
+        valeurORP = (TextView) view.findViewById(R.id.texte_valeur_orp);
+        layoutTemperatureBassin = view.findViewById(R.id.layout_temperature_bassin);
+        valeurTemperatureBassin = (TextView) view.findViewById(R.id.texte_valeur_temperature_bassin);
+        layoutTemperatureExterne = view.findViewById(R.id.layout_temperature_externe);
+        valeurTemperatureExterne = (TextView) view.findViewById(R.id.texte_valeur_temperature_externe);
 
 
         update();
@@ -175,68 +147,226 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
                         && !Donnees.instance().presence(Donnees.Capteur.Ampero)
                         && !Donnees.instance().presence(Donnees.Capteur._4_20_Libre) ? View.VISIBLE : View.GONE);
 
-                layoutTemperatureBassin.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
-                valeurTemperatureBassin.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin) + " °C");
-
                 layoutTemperatureInterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.CapteurInterne) ? View.VISIBLE : View.GONE);
-                valeurTemperatureInterne.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureInterne) + " °C");
+                valeurTemperatureInterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureInterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureInterne) + " °C" : "Err");
+                valeurTemperatureInterne.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureInterne) ? Color.WHITE : Color.RED);
 
                 layoutHumiditeInterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.CapteurInterne) ? View.VISIBLE : View.GONE);
-                valeurHumiditeInterne.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.HumiditeInterne) + " %");
+                valeurHumiditeInterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.HumiditeInterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.HumiditeInterne) + " %" : "Err");
+                valeurHumiditeInterne.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur.HumiditeInterne) ? Color.WHITE : Color.RED);
 
                 layoutPressionAtmInterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.CapteurInterne) ? View.VISIBLE : View.GONE);
-                valeurPressionAtmInterne.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.PressionAtmospheriqueInterne) + " hPa");
-
-                layoutTemperatureExterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.CapteurExterne) ? View.VISIBLE : View.GONE);
-                valeurTemperatureExterne.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureExterne) + " °C");
+                valeurPressionAtmInterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.PressionAtmospheriqueInterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.PressionAtmospheriqueInterne) + " hPa" : "Err");
+                valeurPressionAtmInterne.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur.PressionAtmospheriqueInterne) ? Color.WHITE : Color.RED);
 
                 layoutHumiditeExterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.CapteurExterne) ? View.VISIBLE : View.GONE);
-                valeurHumiditeExterne.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.HumiditeExterne) + " %");
+                valeurHumiditeExterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.HumiditeExterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.HumiditeExterne) + " %" : "Err");
+                valeurHumiditeExterne.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur.HumiditeExterne) ? Color.WHITE : Color.RED);
 
                 layoutPressionAtmExterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.CapteurExterne) ? View.VISIBLE : View.GONE);
-                valeurPressionAtmExterne.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.PressionAtmospheriqueExterne) + " hPa");
-
-                layoutPh.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ph) ? View.VISIBLE : View.GONE);
-                valeurPh.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.Ph));
-
-                layoutORP.setVisibility(Donnees.instance().presence(Donnees.Capteur.Redox) ? View.VISIBLE : View.GONE);
-                valeurORP.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.Redox) + " mV");
+                valeurPressionAtmExterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.PressionAtmospheriqueExterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.PressionAtmospheriqueExterne) + " hPa" : "Err");
+                valeurPressionAtmExterne.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur.PressionAtmospheriqueExterne) ? Color.WHITE : Color.RED);
 
                 layoutPression.setVisibility(Donnees.instance().presence(Donnees.Capteur.Pression) ? View.VISIBLE : View.GONE);
-                valeurPression.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.Pression) + " bar");
-
-                layoutAmpero.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ampero) ? View.VISIBLE : View.GONE);
-                valeurAmpero.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.Ampero) + " ppm");
+                valeurPression.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.Pression) ? Donnees.instance().obtenirValeur(Donnees.Capteur.Pression) + " bar" : "Err");
+                valeurPression.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur.Pression) ? Color.WHITE : Color.RED);
 
                 layout_4_20_Libre.setVisibility(Donnees.instance().presence(Donnees.Capteur._4_20_Libre) ? View.VISIBLE : View.GONE);
-                valeur_4_20_Libre.setText(Donnees.instance().obtenirValeur(Donnees.Capteur._4_20_Libre));
+                valeur_4_20_Libre.setText(Donnees.instance().obtenirEtat(Donnees.Capteur._4_20_Libre) ? Double.toString(Donnees.instance().obtenirValeur(Donnees.Capteur._4_20_Libre)) : "Err");
+                valeur_4_20_Libre.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur._4_20_Libre) ? Color.WHITE : Color.RED);
             } else {
                 globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());
 
-                layoutPh.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ph) ? View.VISIBLE : View.GONE);
-                valeurPh.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.Ph));
-                texteDonneesPh.setVisibility(View.GONE);
+                ledEtatPhPlus.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus) ? View.VISIBLE : View.GONE);
+                texteEtatPhPlus.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus) ? View.VISIBLE : View.GONE);
+                updateEtat(Donnees.Equipement.PhPlus, ledEtatPhPlus, texteEtatPhPlus, "pH+");
+                ledEtatPhMoins.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins) ? View.VISIBLE : View.GONE);
+                texteEtatPhMoins.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins) ? View.VISIBLE : View.GONE);
+                updateEtat(Donnees.Equipement.PhMoins, ledEtatPhMoins, texteEtatPhMoins, "pH-");
+                texteDonneesPh.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus) || Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins) ? View.VISIBLE : View.GONE);
+                if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins)) {
+                    texteDonneesPh.setText("Point de consigne : " + Donnees.instance().obtenirConsignePh() + "\nHystérésis : ↑" + Donnees.instance().obtenirHysteresisPhPlus() + " - ↓" + Donnees.instance().obtenirHysteresisPhMoins());
+                } else if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus)) {
+                    texteDonneesPh.setText("Point de consigne : " + Donnees.instance().obtenirConsignePh() + "\nHystérésis : ↑" + Donnees.instance().obtenirHysteresisPhPlus());
+                } else if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins)) {
+                    texteDonneesPh.setText("Point de consigne : " + Donnees.instance().obtenirConsignePh() + "\nHystérésis : ↓" + Donnees.instance().obtenirHysteresisPhMoins());
+                }
 
-                layoutORP.setVisibility(Donnees.instance().presence(Donnees.Capteur.Redox) || Donnees.instance().presence(Donnees.Capteur.Ampero) ? View.VISIBLE : View.GONE);
-                texteActifORP.setVisibility(View.GONE);
-                valeurAmpero.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ampero) ? View.VISIBLE : View.GONE);
-                valeurAmpero.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.Ampero) + " ppm");
-                texteLibreActifAmpero.setVisibility(View.GONE);
-                texteDonneesAmpero.setVisibility(View.GONE);
-                ligneSepORP.setVisibility(Donnees.instance().presence(Donnees.Capteur.Redox) && Donnees.instance().presence(Donnees.Capteur.Ampero) ? View.VISIBLE : View.GONE);
-                valeurORP.setVisibility(Donnees.instance().presence(Donnees.Capteur.Redox) ? View.VISIBLE : View.GONE);
-                valeurORP.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.Redox) + " mV");
-                texteDonneesORP.setVisibility(View.GONE);
+                layoutChlore.setVisibility(Donnees.instance().presence(Donnees.Capteur.Redox) || Donnees.instance().presence(Donnees.Capteur.Ampero) ? View.VISIBLE : View.GONE);
+                ledEtatChlore.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) ? View.VISIBLE : View.GONE);
+                texteEtatChlore.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) ? View.VISIBLE : View.GONE);
+                updateEtat(Donnees.Equipement.Orp, ledEtatChlore, texteEtatChlore, "Chlore");
+                texteLibreActifAmpero.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) ? View.VISIBLE : View.GONE);
+                texteLibreActifAmpero.setText("Chlore libre actif : " + Donnees.instance().obtenirChloreLibreActif() + " ppm");
+                texteDonneesAmpero.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) ? View.VISIBLE : View.GONE);
+                texteDonneesAmpero.setText("Point de consigne : " + Donnees.instance().obtenirConsigneAmpero() + " ppm\nHystérésis : ↑" + Donnees.instance().obtenirHysteresisAmpero());
+                ligneSepChlore.setVisibility(Donnees.instance().presence(Donnees.Capteur.Redox) && Donnees.instance().presence(Donnees.Capteur.Ampero) ? View.VISIBLE : View.GONE);
+                texteDonneesORP.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) ? View.VISIBLE : View.GONE);
+                texteDonneesORP.setText("Point de consigne : " + Donnees.instance().obtenirConsigneOrp() + " ppm\nHystérésis : ↑" + Donnees.instance().obtenirHysteresisOrp());
 
                 layoutTemperatures.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) || Donnees.instance().presence(Donnees.Capteur.CapteurExterne) ? View.VISIBLE : View.GONE);
-                texteTemperatureBassin.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
-                valeurTemperatureBassin.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
-                valeurTemperatureBassin.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin) + " °C");
                 ligneSepTemperatures.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) && Donnees.instance().presence(Donnees.Capteur.CapteurExterne) ? View.VISIBLE : View.GONE);
-                texteTemperatureExterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureExterne) ? View.VISIBLE : View.GONE);
-                valeurTemperatureExterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureExterne) ? View.VISIBLE : View.GONE);
-                valeurTemperatureExterne.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureExterne) + " °C");
             }
+
+            layoutPh.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ph) ? View.VISIBLE : View.GONE);
+            valeurPh.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.Ph) ? Double.toString(Donnees.instance().obtenirValeur(Donnees.Capteur.Ph)) : "Err");
+
+            layoutAmpero.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ampero) ? View.VISIBLE : View.GONE);
+            valeurAmpero.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.Ampero) ? Donnees.instance().obtenirValeur(Donnees.Capteur.Ampero) + " ppm" : "Err");
+
+            layoutORP.setVisibility(Donnees.instance().presence(Donnees.Capteur.Redox) ? View.VISIBLE : View.GONE);
+            valeurORP.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.Redox) ? Donnees.instance().obtenirValeur(Donnees.Capteur.Redox) + " mV" : "Err");
+
+            layoutTemperatureBassin.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
+            valeurTemperatureBassin.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureBassin) ? Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin) + " °C" : "Err");
+
+            layoutTemperatureExterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.CapteurExterne) ? View.VISIBLE : View.GONE);
+            valeurTemperatureExterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureExterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureExterne) + " °C" : "Err");
+
+            if (Donnees.instance().obtenirEtatLectureCapteurs()) {
+                if (Donnees.instance().obtenirEtat(Donnees.Capteur.Ph)) {
+                    if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins)) {
+                        if ((Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhPlus) == Donnees.AUTO_MARCHE)
+                                || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhPlus) == Donnees.MARCHE)
+                                || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhMoins) == Donnees.AUTO_MARCHE)
+                                || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhMoins) == Donnees.MARCHE)) {
+                            valeurPh.setTextColor(Color.parseColor("#FFAA00"));
+                        } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Ph) < (Donnees.instance().obtenirConsignePh() - Donnees.instance().obtenirHysteresisPhPlus())) {
+                            valeurPh.setTextColor(Color.RED);
+                        } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Ph) > (Donnees.instance().obtenirConsignePh() + Donnees.instance().obtenirHysteresisPhMoins())) {
+                            valeurPh.setTextColor(Color.RED);
+                        } else {
+                            valeurPh.setTextColor(Color.GREEN);
+                        }
+                    } else if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus)) {
+                        if ((Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhPlus) == Donnees.AUTO_MARCHE)
+                                || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhPlus) == Donnees.MARCHE)) {
+                            valeurPh.setTextColor(Color.parseColor("#FFAA00"));
+                        } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Ph) < (Donnees.instance().obtenirConsignePh() - Donnees.instance().obtenirHysteresisPhPlus())) {
+                            valeurPh.setTextColor(Color.RED);
+                        } else {
+                            valeurPh.setTextColor(Color.GREEN);
+                        }
+                    } else if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins)) {
+                        if ((Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhMoins) == Donnees.AUTO_MARCHE)
+                                || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhMoins) == Donnees.MARCHE)) {
+                            valeurPh.setTextColor(Color.parseColor("#FFAA00"));
+                        } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Ph) > (Donnees.instance().obtenirConsignePh() + Donnees.instance().obtenirHysteresisPhMoins())) {
+                            valeurPh.setTextColor(Color.RED);
+                        } else {
+                            valeurPh.setTextColor(Color.GREEN);
+                        }
+                    } else {
+                        valeurPh.setTextColor(Color.WHITE);
+                    }
+                } else {
+                    valeurPh.setTextColor(Color.RED);
+                }
+
+                if (Donnees.instance().presence(Donnees.Capteur.Ampero)) {
+                    if (Donnees.instance().obtenirEtat(Donnees.Capteur.Ampero)) {
+                        if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp)) {
+                            if ((Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Orp) == Donnees.AUTO_MARCHE)
+                                    || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Orp) == Donnees.MARCHE)) {
+                                valeurAmpero.setTextColor(Color.parseColor("#FFAA00"));
+                            } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Ampero) < (Donnees.instance().obtenirConsigneAmpero() - Donnees.instance().obtenirHysteresisAmpero())) {
+                                valeurAmpero.setTextColor(Color.RED);
+                            } else {
+                                valeurAmpero.setTextColor(Color.GREEN);
+                            }
+                        } else {
+                            valeurAmpero.setTextColor(Color.WHITE);
+                        }
+                    } else {
+                        valeurAmpero.setTextColor(Color.RED);
+                    }
+
+                    if (Donnees.instance().obtenirEtat(Donnees.Capteur.Redox)) {
+                        if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp)) {
+                            if (((Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Orp) == Donnees.AUTO_MARCHE)
+                                    || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Orp) == Donnees.MARCHE))
+                                    && !Donnees.instance().obtenirEtat(Donnees.Capteur.Ampero)) {
+                                valeurORP.setTextColor(Color.parseColor("#FFAA00"));
+                            } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Redox) < (Donnees.instance().obtenirConsigneOrp() - Donnees.instance().obtenirHysteresisOrp())) {
+                                valeurORP.setTextColor(Color.RED);
+                            } else {
+                                valeurORP.setTextColor(Color.GREEN);
+                            }
+                        } else {
+                            valeurORP.setTextColor(Color.WHITE);
+                        }
+                    } else {
+                        valeurORP.setTextColor(Color.RED);
+                    }
+                } else {
+                    if (Donnees.instance().obtenirEtat(Donnees.Capteur.Redox)) {
+                        if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp)) {
+                            if ((Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Orp) == Donnees.AUTO_MARCHE)
+                                    || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Orp) == Donnees.MARCHE)) {
+                                valeurORP.setTextColor(Color.parseColor("#FFAA00"));
+                            } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Redox) < (Donnees.instance().obtenirConsigneOrp() - Donnees.instance().obtenirHysteresisOrp())) {
+                                valeurORP.setTextColor(Color.RED);
+                            } else {
+                                valeurORP.setTextColor(Color.GREEN);
+                            }
+                        } else {
+                            valeurORP.setTextColor(Color.WHITE);
+                        }
+                    } else {
+                        valeurORP.setTextColor(Color.RED);
+                    }
+                }
+
+                if (Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureBassin)) {
+                    if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage)) {
+                        if ((Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Chauffage) == Donnees.MARCHE)
+                                || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Chauffage) == Donnees.AUTO_MARCHE)) {
+                            valeurTemperatureBassin.setTextColor(Color.parseColor("#FFAA00"));
+                        } else if (Donnees.instance().obtenirControlePompeFiltration() == Donnees.CONTROLE_PAR_POMPE_FILTRATION) {
+                            if ((Donnees.instance().obtenirTemperatureArret() <= Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin))
+                                    && (Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin) <= Donnees.instance().obtenirTemperatureEnclenchement())) {
+                                valeurTemperatureBassin.setTextColor(Color.GREEN);
+                            } else {
+                                valeurTemperatureBassin.setTextColor(Color.RED);
+                            }
+                        } else {
+                            if (Donnees.instance().obtenirTemperatureConsigne() <= Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin)) {
+                                valeurTemperatureBassin.setTextColor(Color.GREEN);
+                            } else {
+                                valeurTemperatureBassin.setTextColor(Color.RED);
+                            }
+                        }
+                    } else {
+                        valeurTemperatureBassin.setTextColor(Color.WHITE);
+                    }
+                } else {
+                    valeurTemperatureBassin.setTextColor(Color.RED);
+                }
+
+                valeurTemperatureExterne.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureExterne) ? Color.WHITE : Color.RED);
+            }
+        }
+    }
+
+    private void updateEtat(Donnees.Equipement equipement, TextView led, TextView textView, String strEquipement) {
+        int etat = Donnees.instance().obtenirModeFonctionnement(equipement);
+
+        if (etat == Donnees.AUTO_MARCHE) {
+            led.setActivated(true);
+            led.setEnabled(true);
+            led.setClickable(!Donnees.instance().obtenirTraitementEnCours(equipement));
+            led.setPressed(Donnees.instance().obtenirTraitementEnCours(equipement));
+            textView.setText(strEquipement + " actif");
+        } else if (etat == Donnees.MARCHE) {
+            led.setActivated(true);
+            led.setEnabled(false);
+            led.setClickable(false);
+            textView.setText(strEquipement + " actif");
+        } else {
+            led.setActivated(false);
+            led.setEnabled(false);
+            led.setClickable(false);
+            textView.setText(strEquipement + " inactif");
         }
     }
 
@@ -248,6 +378,50 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
                 break;
             default:
                 break;
+        }
+    }
+
+    public void clignotement() {
+        if ((view != null) && isAdded()) {
+            if (!Donnees.instance().obtenirEtatLectureCapteurs()) {
+                if (valeurPh.getCurrentTextColor() == Color.WHITE) {
+                    valeurPh.setTextColor(Color.LTGRAY);
+                    valeurAmpero.setTextColor(Color.LTGRAY);
+                    valeurORP.setTextColor(Color.LTGRAY);
+                    valeurTemperatureBassin.setTextColor(Color.LTGRAY);
+                } else {
+                    valeurPh.setTextColor(Color.WHITE);
+                    valeurAmpero.setTextColor(Color.WHITE);
+                    valeurORP.setTextColor(Color.WHITE);
+                    valeurTemperatureBassin.setTextColor(Color.WHITE);
+                }
+            }
+
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                if (ledEtatPhPlus.isClickable()) {
+                    if (ledEtatPhPlus.isPressed()) {
+                        ledEtatPhPlus.setPressed(false);
+                    } else {
+                        ledEtatPhPlus.setPressed(true);
+                    }
+                }
+
+                if (ledEtatPhMoins.isClickable()) {
+                    if (ledEtatPhMoins.isPressed()) {
+                        ledEtatPhMoins.setPressed(false);
+                    } else {
+                        ledEtatPhMoins.setPressed(true);
+                    }
+                }
+
+                if (ledEtatChlore.isClickable()) {
+                    if (ledEtatChlore.isPressed()) {
+                        ledEtatChlore.setPressed(false);
+                    } else {
+                        ledEtatChlore.setPressed(true);
+                    }
+                }
+            }
         }
     }
 }

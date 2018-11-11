@@ -128,9 +128,11 @@
                 android:layout_height="21dp"
                 android:layout_x="90dp"
                 android:layout_y="10dp"
+                android:gravity="center"
                 android:text="Température bassin : 24.3 °C"
-                android:textStyle="bold|italic"
-                android:gravity="center" />
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/texteGeneral"
+                android:textStyle="bold|italic" />
 
             <RelativeLayout
                 android:layout_width="2dp"
@@ -298,24 +300,32 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Type de régulation : TOR"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/texteGeneral"
                         android:textStyle="bold|italic" />
                     <TextView
                         android:id="@+id/texte_capteur_ph"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="pH : 7.20"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/texteGeneral"
                         android:textStyle="bold|italic" />
                     <TextView
                         android:id="@+id/texte_capteur_orp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="ORP : 630 mV"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/texteGeneral"
                         android:textStyle="bold|italic" />
                     <TextView
                         android:id="@+id/texte_capteur_ampero"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Ampéro : 1.20 ppm"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/texteGeneral"
                         android:textStyle="bold|italic" />
                 </LinearLayout>
             </LinearLayout>
@@ -1257,9 +1267,11 @@
                 android:layout_height="151dp"
                 android:layout_x="-20dp"
                 android:layout_y="-30dp"
-                android:text="24.3 °C"
-                android:textStyle="bold"
                 android:gravity="center"
+                android:text="24.3 °C"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/texteGeneral"
+                android:textStyle="bold"
                 android:background="@drawable/soleil" />
 
             <ImageView
@@ -1301,6 +1313,7 @@
                 android:layout_x="338dp"
                 android:layout_y="672dp"
                 android:text="MANUEL"
+                android:textSize="@dimen/texteGeneral"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:background="@drawable/back_manuel"
@@ -1325,6 +1338,7 @@
                 android:layout_x="274dp"
                 android:layout_y="440dp"
                 android:text="MANUEL"
+                android:textSize="@dimen/texteGeneral"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:background="@drawable/back_manuel"
@@ -1360,9 +1374,11 @@
                 android:layout_height="21dp"
                 android:layout_x="470dp"
                 android:layout_y="570dp"
+                android:gravity="center"
                 android:text="Pression : 0.90 bar"
-                android:textStyle="bold|italic"
-                android:gravity="center" />
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/texteGeneral"
+                android:textStyle="bold|italic" />
 
             <TextView
                 android:id="@+id/texte_mode_pac"
@@ -1371,6 +1387,7 @@
                 android:layout_x="914dp"
                 android:layout_y="569dp"
                 android:text="MANUEL"
+                android:textSize="@dimen/texteGeneral"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:background="@drawable/back_manuel"
@@ -1405,6 +1422,7 @@
                 android:layout_x="89dp"
                 android:layout_y="339dp"
                 android:text="MANUEL"
+                android:textSize="@dimen/texteGeneral"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:background="@drawable/back_manuel"
@@ -1429,6 +1447,7 @@
                 android:layout_x="1150dp"
                 android:layout_y="190dp"
                 android:text="MANUEL"
+                android:textSize="@dimen/texteGeneral"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:background="@drawable/back_manuel"
@@ -1454,6 +1473,7 @@
                 android:layout_x="979dp"
                 android:layout_y="60dp"
                 android:text="MANUEL"
+                android:textSize="@dimen/texteGeneral"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:background="@drawable/back_manuel"
@@ -1466,6 +1486,8 @@
                 android:layout_x="983dp"
                 android:layout_y="90dp"
                 android:text="Algicide"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/texteGeneral"
                 android:textStyle="bold|italic"
                 android:gravity="center"/>
 
@@ -1488,6 +1510,8 @@
                 android:layout_x="1035dp"
                 android:layout_y="270dp"
                 android:text="0.00 L"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/texteGeneral"
                 android:textStyle="bold|italic"
                 android:gravity="center" />
 
@@ -1508,6 +1532,7 @@
                 android:layout_x="857dp"
                 android:layout_y="60dp"
                 android:text="MANUEL"
+                android:textSize="@dimen/texteGeneral"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:background="@drawable/back_manuel"
@@ -1520,6 +1545,8 @@
                 android:layout_x="861dp"
                 android:layout_y="90dp"
                 android:text="ORP"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/texteGeneral"
                 android:textStyle="bold|italic"
                 android:gravity="center"/>
 
@@ -1542,6 +1569,8 @@
                 android:layout_x="913dp"
                 android:layout_y="270dp"
                 android:text="0.00 L"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/texteGeneral"
                 android:textStyle="bold|italic"
                 android:gravity="center" />
 
@@ -1562,6 +1591,7 @@
                 android:layout_x="735dp"
                 android:layout_y="60dp"
                 android:text="MANUEL"
+                android:textSize="@dimen/texteGeneral"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:background="@drawable/back_manuel"
@@ -1574,6 +1604,8 @@
                 android:layout_x="739dp"
                 android:layout_y="90dp"
                 android:text="pH-"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/texteGeneral"
                 android:textStyle="bold|italic"
                 android:gravity="center"/>
 
@@ -1596,6 +1628,8 @@
                 android:layout_x="791dp"
                 android:layout_y="270dp"
                 android:text="0.00 L"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/texteGeneral"
                 android:textStyle="bold|italic"
                 android:gravity="center" />
 
@@ -1616,6 +1650,7 @@
                 android:layout_x="613dp"
                 android:layout_y="60dp"
                 android:text="MANUEL"
+                android:textSize="@dimen/texteGeneral"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:background="@drawable/back_manuel"
@@ -1628,6 +1663,8 @@
                 android:layout_x="617dp"
                 android:layout_y="90dp"
                 android:text="pH+"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/texteGeneral"
                 android:textStyle="bold|italic"
                 android:gravity="center"/>
 
@@ -1650,6 +1687,8 @@
                 android:layout_x="669dp"
                 android:layout_y="270dp"
                 android:text="0.00 L"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/texteGeneral"
                 android:textStyle="bold|italic"
                 android:gravity="center" />
 

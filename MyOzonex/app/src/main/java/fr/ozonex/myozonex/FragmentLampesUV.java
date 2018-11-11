@@ -90,8 +90,14 @@ public class FragmentLampesUV extends Fragment implements View.OnClickListener {
         if ((view != null) && isAdded()) {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
+                rbAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
+                rbArret.setClickable(Donnees.instance().obtenirActiviteIHM());
+                rbMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
             } else {
                 globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());
+                boutonAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
+                boutonArret.setClickable(Donnees.instance().obtenirActiviteIHM());
+                boutonMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
             }
 
             modeAEteModifie(Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.LampesUV));

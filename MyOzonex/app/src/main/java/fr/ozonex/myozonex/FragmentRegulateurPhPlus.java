@@ -46,6 +46,7 @@ public class FragmentRegulateurPhPlus extends Fragment implements View.OnClickLi
     Button boutonAuto;
     Button boutonArret;
     Button boutonMarche;
+    TextView texteConsoInjections;
 
     @Nullable
     @Override
@@ -74,6 +75,7 @@ public class FragmentRegulateurPhPlus extends Fragment implements View.OnClickLi
             boutonAuto = (Button) view.findViewById(R.id.bouton_auto);
             boutonArret = (Button) view.findViewById(R.id.bouton_arret);
             boutonMarche = (Button) view.findViewById(R.id.bouton_marche);
+            texteConsoInjections = view.findViewById(R.id.texte_conso_injections);
 
             boutonRetour.setOnClickListener(this);
             boutonAuto.setOnClickListener(this);
@@ -97,8 +99,18 @@ public class FragmentRegulateurPhPlus extends Fragment implements View.OnClickLi
         if ((view != null) && isAdded()) {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
+                rbAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
+                rbArret.setClickable(Donnees.instance().obtenirActiviteIHM());
+                rbMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
             } else {
                 globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());
+                boutonAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
+                boutonArret.setClickable(Donnees.instance().obtenirActiviteIHM());
+                boutonMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
+                texteConsoInjections.setText("Produit injecté sur 1 /7 / 28 jours : "
+                        + Donnees.instance().obtenirConsoJour(Donnees.Equipement.PhPlus) + " / "
+                        + Donnees.instance().obtenirConsoSemaine(Donnees.Equipement.PhPlus) + " / "
+                        + Donnees.instance().obtenirConsoMois(Donnees.Equipement.PhPlus));
             }
 
             modeAEteModifie(Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhPlus));
@@ -108,7 +120,7 @@ public class FragmentRegulateurPhPlus extends Fragment implements View.OnClickLi
             consoAEteModifie(Donnees.instance().obtenirDateDebutConso(Donnees.Equipement.PhPlus),
                     Donnees.instance().obtenirConsoVolume(Donnees.Equipement.PhPlus),
                     Donnees.instance().obtenirConsoVolumeRestant(Donnees.Equipement.PhPlus));
-        }
+            }
     }
 
     @Override

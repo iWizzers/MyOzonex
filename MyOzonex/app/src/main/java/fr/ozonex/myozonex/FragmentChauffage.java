@@ -178,9 +178,33 @@ public class FragmentChauffage extends Fragment implements View.OnClickListener 
         if ((view != null) && isAdded()) {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
+                rbAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
+                rbArret.setClickable(Donnees.instance().obtenirActiviteIHM());
+                rbMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
             } else {
                 globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());
+                boutonAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
+                boutonArret.setClickable(Donnees.instance().obtenirActiviteIHM());
+                boutonMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
             }
+
+            radioButtonPlage.setClickable(Donnees.instance().obtenirActiviteIHM());
+            boutonMoinsArret.setClickable(Donnees.instance().obtenirActiviteIHM());
+            boutonPlusArret.setClickable(Donnees.instance().obtenirActiviteIHM());
+            boutonMoinsEnclenchement.setClickable(Donnees.instance().obtenirActiviteIHM());
+            boutonPlusEnclenchement.setClickable(Donnees.instance().obtenirActiviteIHM());
+            radioButtonConsigne.setClickable(Donnees.instance().obtenirActiviteIHM());
+            boutonMoinsConsigne.setClickable(Donnees.instance().obtenirActiviteIHM());
+            boutonPlusConsigne.setClickable(Donnees.instance().obtenirActiviteIHM());
+            boutonSupprimerPlage1.setClickable(Donnees.instance().obtenirActiviteIHM());
+            boutonModifierPlage1.setClickable(Donnees.instance().obtenirActiviteIHM());
+            boutonSupprimerPlage2.setClickable(Donnees.instance().obtenirActiviteIHM());
+            boutonModifierPlage2.setClickable(Donnees.instance().obtenirActiviteIHM());
+            boutonSupprimerPlage3.setClickable(Donnees.instance().obtenirActiviteIHM());
+            boutonModifierPlage3.setClickable(Donnees.instance().obtenirActiviteIHM());
+            boutonSupprimerPlage4.setClickable(Donnees.instance().obtenirActiviteIHM());
+            boutonModifierPlage4.setClickable(Donnees.instance().obtenirActiviteIHM());
+            boutonAjouterPlage.setClickable(Donnees.instance().obtenirActiviteIHM());
 
             modeAEteModifie(Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Chauffage));
 

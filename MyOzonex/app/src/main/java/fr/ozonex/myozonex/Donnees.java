@@ -129,6 +129,16 @@ public class Donnees {
     private double volumeRestantOrp = 0;
     private double volumeRestantAlgicide = 0;
 
+    private double consoJourPhMoins = 0;
+    private double consoJourPhPlus = 0;
+    private double consoJourOrp = 0;
+    private double consoSemainePhMoins = 0;
+    private double consoSemainePhPlus = 0;
+    private double consoSemaineOrp = 0;
+    private double consoMoisPhMoins = 0;
+    private double consoMoisPhPlus = 0;
+    private double consoMoisOrp = 0;
+
     private List<Object> listePlagePompeFiltration = new ArrayList<Object>();
     private List<Object> listePlageSurpresseur = new ArrayList<Object>();
     private List<Object> listePlageChauffage = new ArrayList<Object>();
@@ -153,6 +163,15 @@ public class Donnees {
     private double hysteresisInjectionPh = 0;
     private int hysteresisInjectionORP = 0;
     private double hysteresisInjectionAmpero = 0;
+
+    private double consignePh;
+    private double hysteresisPhPlus;
+    private double hysteresisPhMoins;
+    private double consigneOrp;
+    private double hysteresisOrp;
+    private double consigneAmpero;
+    private double hysteresisAmpero;
+    private double chloreLibreActif;
 
     private int traitementEnCoursPhMoins = 0;
     private int traitementEnCoursPhPlus = 0;
@@ -230,6 +249,7 @@ public class Donnees {
     private boolean activiteIHM = false;
     private int background;
     private int pageSource;
+    private boolean etatLectureCapteurs = false;
 
     static SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.instance());
 
@@ -252,12 +272,12 @@ public class Donnees {
         String heure = strDateHeure.split("-")[1];
 
         Calendar calendarIHM = Calendar.getInstance();
-        calendarIHM.set(Calendar.SECOND, 0);
-        calendarIHM.set(Calendar.MINUTE, Integer.parseInt(heure.split(":")[1]));
-        calendarIHM.set(Calendar.HOUR, Integer.parseInt(heure.split(":")[0]));
-        calendarIHM.set(Calendar.MONTH, Integer.parseInt(date.split("/")[1]) - 1);
         calendarIHM.set(Calendar.DAY_OF_MONTH, Integer.parseInt(date.split("/")[0]));
+        calendarIHM.set(Calendar.MONTH, Integer.parseInt(date.split("/")[1]) - 1);
         calendarIHM.set(Calendar.YEAR, Integer.parseInt(date.split("/")[2]));
+        calendarIHM.set(Calendar.HOUR_OF_DAY, Integer.parseInt(heure.split(":")[0]));
+        calendarIHM.set(Calendar.MINUTE, Integer.parseInt(heure.split(":")[1]));
+        calendarIHM.set(Calendar.SECOND, 0);
         calendarIHM.add(Calendar.MINUTE, -5);
 
         Calendar calendarIHMPlus = (Calendar) calendarIHM.clone();
@@ -328,6 +348,14 @@ public class Donnees {
 
     public void definirPageSource(int index) {
         pageSource = index;
+    }
+
+    public boolean obtenirEtatLectureCapteurs() {
+        return etatLectureCapteurs;
+    }
+
+    public void definirEtatLectureCapteurs(boolean etat) {
+        etatLectureCapteurs = etat;
     }
 
     public  boolean obtenirEquipementInstalle(Equipement equipement) {
@@ -716,6 +744,114 @@ public class Donnees {
         }
     }
 
+    public double obtenirConsoJour(Equipement equipement) {
+        double conso = 0;
+
+        switch (equipement) {
+            case PhMoins:
+                conso = consoJourPhMoins;
+                break;
+            case PhPlus:
+                conso = consoJourPhPlus;
+                break;
+            case Orp:
+                conso = consoJourOrp;
+                break;
+            default:
+                break;
+        }
+
+        return conso;
+    }
+
+    public void definirConsoJour(Equipement equipement, double conso) {
+        switch (equipement) {
+            case PhMoins:
+                consoJourPhMoins = conso;
+                break;
+            case PhPlus:
+                consoJourPhPlus = conso;
+                break;
+            case Orp:
+                consoJourOrp = conso;
+                break;
+            default:
+                break;
+        }
+    }
+
+    public double obtenirConsoSemaine(Equipement equipement) {
+        double conso = 0;
+
+        switch (equipement) {
+            case PhMoins:
+                conso = consoSemainePhMoins;
+                break;
+            case PhPlus:
+                conso = consoSemainePhPlus;
+                break;
+            case Orp:
+                conso = consoSemaineOrp;
+                break;
+            default:
+                break;
+        }
+
+        return conso;
+    }
+
+    public void definirConsoSemaine(Equipement equipement, double conso) {
+        switch (equipement) {
+            case PhMoins:
+                consoSemainePhMoins = conso;
+                break;
+            case PhPlus:
+                consoSemainePhPlus = conso;
+                break;
+            case Orp:
+                consoSemaineOrp = conso;
+                break;
+            default:
+                break;
+        }
+    }
+
+    public double obtenirConsoMois(Equipement equipement) {
+        double conso = 0;
+
+        switch (equipement) {
+            case PhMoins:
+                conso = consoMoisPhMoins;
+                break;
+            case PhPlus:
+                conso = consoMoisPhPlus;
+                break;
+            case Orp:
+                conso = consoMoisOrp;
+                break;
+            default:
+                break;
+        }
+
+        return conso;
+    }
+
+    public void definirConsoMois(Equipement equipement, double conso) {
+        switch (equipement) {
+            case PhMoins:
+                consoMoisPhMoins = conso;
+                break;
+            case PhPlus:
+                consoMoisPhPlus = conso;
+                break;
+            case Orp:
+                consoMoisOrp = conso;
+                break;
+            default:
+                break;
+        }
+    }
+
     public boolean obtenirEtatPlage(Equipement equipement, int index) {
         boolean etat = false;
 
@@ -952,6 +1088,70 @@ public class Donnees {
 
     public void definirHysteresisInjectionAmpero(double valeur) {
         hysteresisInjectionAmpero = valeur;
+    }
+
+    public double obtenirConsignePh() {
+        return consignePh;
+    }
+
+    public void definirConsignePh(double valeur) {
+        consignePh = valeur;
+    }
+
+    public double obtenirHysteresisPhPlus() {
+        return hysteresisPhPlus;
+    }
+
+    public void definirHysteresisPhPlus(double valeur) {
+        hysteresisPhPlus = valeur;
+    }
+
+    public double obtenirHysteresisPhMoins() {
+        return hysteresisPhMoins;
+    }
+
+    public void definirHysteresisPhMoins(double valeur) {
+        hysteresisPhMoins = valeur;
+    }
+
+    public double obtenirConsigneOrp() {
+        return consigneOrp;
+    }
+
+    public void definirConsigneOrp(double valeur) {
+        consigneOrp = valeur;
+    }
+
+    public double obtenirHysteresisOrp() {
+        return hysteresisOrp;
+    }
+
+    public void definirHysteresisOrp(double valeur) {
+        hysteresisOrp = valeur;
+    }
+
+    public double obtenirConsigneAmpero() {
+        return consigneAmpero;
+    }
+
+    public void definirConsigneAmpero(double valeur) {
+        consigneAmpero = valeur;
+    }
+
+    public double obtenirHysteresisAmpero() {
+        return hysteresisAmpero;
+    }
+
+    public void definirHysteresisAmpero(double valeur) {
+        hysteresisAmpero = valeur;
+    }
+
+    public double obtenirChloreLibreActif() {
+        return chloreLibreActif;
+    }
+
+    public void definirChloreLibreActif(double valeur) {
+        chloreLibreActif = valeur;
     }
 
     public boolean obtenirTraitementEnCours(Equipement equipement) {
@@ -1305,35 +1505,35 @@ public class Donnees {
     }
 
     public boolean obtenirEtat(Capteur capteur) {
-        boolean etat = false;
+        boolean defaut = true;
 
         if (capteur == Capteur.TemperatureBassin) {
-            etat = defautPt;
+            defaut = defautPt;
         } else if (capteur == Capteur.TemperatureInterne) {
-            etat = defautTemperatureInterne;
+            defaut = defautTemperatureInterne;
         } else if (capteur == Capteur.HumiditeInterne) {
-            etat = defautHumiditeInterne;
+            defaut = defautHumiditeInterne;
         } else if (capteur == Capteur.PressionAtmospheriqueInterne) {
-            etat = defautPressionAtmInterne;
+            defaut = defautPressionAtmInterne;
         } else if (capteur == Capteur.TemperatureExterne) {
-            etat = defautTemperatureExterne;
+            defaut = defautTemperatureExterne;
         } else if (capteur == Capteur.HumiditeExterne) {
-            etat = defautHumiditeExterne;
+            defaut = defautHumiditeExterne;
         } else if (capteur == Capteur.PressionAtmospheriqueExterne) {
-            etat = defautPressionAtmExterne;
+            defaut = defautPressionAtmExterne;
         } else if (capteur == Capteur.Ph) {
-            etat = defautPh;
+            defaut = defautPh;
         } else if (capteur == Capteur.Redox) {
-            etat = defautRedox;
+            defaut = defautRedox;
         } else if (capteur == Capteur.Pression) {
-            etat = defautPression;
+            defaut = defautPression;
         } else if (capteur == Capteur.Ampero) {
-            etat = defautAmpero;
+            defaut = defautAmpero;
         } else if (capteur == Capteur._4_20_Libre) {
-            etat = defaut_4_20_Libre;
+            defaut = defaut_4_20_Libre;
         }
 
-        return etat;
+        return !defaut;
     }
 
     public void definirEtat(Capteur capteur, String etat) {
@@ -1364,7 +1564,7 @@ public class Donnees {
         }
     }
 
-    public String obtenirValeur(Capteur capteur) {
+    public double obtenirValeur(Capteur capteur) {
         double valeur = 0;
 
         if (capteur == Capteur.TemperatureBassin) {
@@ -1393,7 +1593,7 @@ public class Donnees {
             valeur = valeur_4_20_Libre;
         }
 
-        return formatValeur(valeur);
+        return valeur;
     }
 
     public void definirValeur(Capteur capteur, double valeur) {

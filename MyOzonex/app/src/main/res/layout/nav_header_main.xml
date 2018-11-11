@@ -24,8 +24,40 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/layout_space"
+        android:layout_marginBottom="@dimen/layout_space" >
+        <TextView
+            android:id="@+id/led_etat_systeme"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:enabled="false"
+            android:background="@drawable/led_etat_systeme" />
 
+        <TextView
+            android:id="@+id/texte_etat_systeme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/layout_space"
+            android:layout_gravity="center"
+            android:text="Etat : déconnecté"
+            android:textColor="@color/couleurTexteGeneral"
+            android:textSize="@dimen/texteGeneral"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ligne"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layerType="software"
+        android:src="@drawable/dotted_line" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/layout_space" >
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -40,7 +72,5 @@
             android:text="@string/nav_header_subtitle"
             android:textColor="@color/couleurTexteGeneral"
             android:textSize="@dimen/texteGeneral" />
-
     </LinearLayout>
-
 </LinearLayout>

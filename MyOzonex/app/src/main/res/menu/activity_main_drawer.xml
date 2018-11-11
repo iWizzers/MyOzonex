@@ -15,6 +15,10 @@
         android:id="@+id/nav_menu_layout"
         android:icon="@drawable/ic_menu_show"
         android:title="@string/menu" />
+    <item
+        android:id="@+id/nav_bassin_layout"
+        android:icon="@drawable/ic_menu_show"
+        android:title="@string/bassin" />
 
     <item android:title="Equipements principaux">
         <menu>

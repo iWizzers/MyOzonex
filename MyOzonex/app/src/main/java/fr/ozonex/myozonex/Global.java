@@ -2,6 +2,7 @@ package fr.ozonex.myozonex;
 
 public class Global {
     public static final int TEMPO_RAFRAICHISSEMENT = 5000; // millisecondes
+    public static final int TEMPO_CLIGNOTEMENT_LED = 500; // millisecondes
 
     public static final int MAX_PLAGES_HEURES_CREUSES = 3;
     public static final int MAX_PLAGES_EQUIPEMENTS = 4;

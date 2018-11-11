@@ -20,7 +20,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -49,11 +48,16 @@ public class MainActivity extends AppCompatActivity
 
     private int page = 0;
 
+    boolean msgEtatSysteme = false;
+    TextView ledEtatSysteme;
+    TextView texteEtatSysteme;
+
     private ActionBarDrawerToggle toggle;
     private FragmentConnexion fragmentConnexion = new FragmentConnexion();
     private FragmentDonnees fragmentDonnees = new FragmentDonnees();
     private FragmentSynoptique fragmentSynoptique = new FragmentSynoptique();
     private FragmentMenu fragmentMenu = new FragmentMenu();
+    private FragmentBassin fragmentBassin = new FragmentBassin();
     private FragmentPompeFiltration fragmentPompeFiltration = new FragmentPompeFiltration();
     private FragmentFiltre fragmentFiltre = new FragmentFiltre();
     private FragmentSurpresseur fragmentSurpresseur = new FragmentSurpresseur();
@@ -67,6 +71,8 @@ public class MainActivity extends AppCompatActivity
 
     Bundle savedInstanceState;
 
+    private Handler clignotementLED;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +81,12 @@ public class MainActivity extends AppCompatActivity
 
         View decorView = getWindow().getDecorView();
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            decorView.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        } else {
             //requestWindowFeature(Window.FEATURE_NO_TITLE);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -90,11 +101,6 @@ public class MainActivity extends AppCompatActivity
                             // Hide the nav bar and status bar
                             | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_FULLSCREEN);
-        } else {
-            decorView.setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
 
         setContentView(R.layout.activity_main);
@@ -116,6 +122,8 @@ public class MainActivity extends AppCompatActivity
             View headerView = navigationView.getHeaderView(0);
             TextView idSysteme = (TextView) headerView.findViewById(R.id.id_systeme);
             idSysteme.setText("Système : " + Donnees.getPreferences(Donnees.ID_SYSTEME));
+            ledEtatSysteme = headerView.findViewById(R.id.led_etat_systeme);
+            texteEtatSysteme = headerView.findViewById(R.id.texte_etat_systeme);
         } else {
             getSupportActionBar().hide();
         }
@@ -129,11 +137,23 @@ public class MainActivity extends AppCompatActivity
 
         Handler update = new Handler();
         update.postDelayed(refresh,0);
+
+        clignotementLED = new Handler();
     }
 
     private final Runnable refresh = new Runnable() {
         public void run() {
             restoreMe(savedInstanceState);
+        }
+    };
+
+    private Runnable clignotement = new Runnable() {
+        @Override
+        public void run() {
+            fragmentDonnees.clignotement();
+            fragmentSynoptique.clignotement();
+
+            clignotementLED.postDelayed(this, Global.TEMPO_CLIGNOTEMENT_LED);
         }
     };
 
@@ -219,6 +239,12 @@ public class MainActivity extends AppCompatActivity
                             , fragmentMenu)
                     .commit();
             toolbar.setTitle(getString(R.string.menu));
+        } else if (id == R.id.nav_bassin_layout) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame
+                            , fragmentBassin)
+                    .commit();
+            toolbar.setTitle(getString(R.string.bassin));
         } else if (id == R.id.nav_pompe_filtration_layout) {
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame
@@ -293,6 +319,10 @@ public class MainActivity extends AppCompatActivity
     public void onPause() {
         super.onPause();
         activityResume = false;
+
+        if (clignotementLED != null) {
+            clignotementLED.removeCallbacks(clignotement);
+        }
     }
 
     @Override
@@ -302,6 +332,10 @@ public class MainActivity extends AppCompatActivity
 
         if ((fragmentConnexion.getView() == null) && !fragmentConnexion.isAdded() && !isMyServiceRunning(httpService.getClass())) {
             startService(serviceIntent);
+        }
+
+        if (clignotementLED != null) {
+            clignotementLED.postDelayed(clignotement,0);
         }
 
         Notification.instance().supprimer();
@@ -333,8 +367,7 @@ public class MainActivity extends AppCompatActivity
         } else {
             page = state.getInt("page");
 
-            if ((page == R.id.nav_synoptique_layout)
-                    || (page == R.id.nav_menu_layout)) {
+            if (page == R.id.nav_menu_layout) {
                 page = R.id.nav_donnees_layout;
             }
 
@@ -466,6 +499,7 @@ public class MainActivity extends AppCompatActivity
                         object = new JSONObject(jsonObject.getString("Pompe filtration"));
                         Donnees.instance().definirEquipementInstalle(Donnees.Equipement.PompeFiltration, object.getInt("installe") > 0);
                         Donnees.instance().definirModeFonctionnement(Donnees.Equipement.PompeFiltration, object.getInt("etat"));
+                        Donnees.instance().definirEtatLectureCapteurs(object.getInt("lecture_capteurs") > 0);
                         Donnees.instance().definirDateDebutConso(Donnees.Equipement.PompeFiltration, object.getString("date_consommation"));
                         Donnees.instance().definirConsoHP(Donnees.Equipement.PompeFiltration, object.getDouble("consommation_hp"));
                         Donnees.instance().definirConsoHC(Donnees.Equipement.PompeFiltration, object.getDouble("consommation_hc"));
@@ -530,12 +564,20 @@ public class MainActivity extends AppCompatActivity
                         Donnees.instance().definirConsoHP(Donnees.Equipement.Electrolyseur, object.getDouble("consommation_hp"));
                         Donnees.instance().definirConsoHC(Donnees.Equipement.Electrolyseur, object.getDouble("consommation_hc"));
 
+                        object = new JSONObject(jsonObject.getString("Régulateur pH"));
+                        Donnees.instance().definirConsignePh(object.getDouble("point_consigne"));
+                        Donnees.instance().definirHysteresisPhPlus(object.getDouble("hysteresis_plus"));
+                        Donnees.instance().definirHysteresisPhMoins(object.getDouble("hysteresis_moins"));
+
                         object = new JSONObject(jsonObject.getString("Régulateur pH-"));
                         Donnees.instance().definirEquipementInstalle(Donnees.Equipement.PhMoins, object.getInt("installe") > 0);
                         Donnees.instance().definirModeFonctionnement(Donnees.Equipement.PhMoins, object.getInt("etat"));
                         Donnees.instance().definirDateDebutConso(Donnees.Equipement.PhMoins, object.getString("date_consommation"));
                         Donnees.instance().definirConsoVolume(Donnees.Equipement.PhMoins, object.getDouble("volume"));
                         Donnees.instance().definirConsoVolumeRestant(Donnees.Equipement.PhMoins, object.getDouble("volume_restant"));
+                        Donnees.instance().definirConsoJour(Donnees.Equipement.PhMoins, object.getDouble("consommation_jour"));
+                        Donnees.instance().definirConsoSemaine(Donnees.Equipement.PhMoins, object.getDouble("consommation_semaine"));
+                        Donnees.instance().definirConsoMois(Donnees.Equipement.PhMoins, object.getDouble("consommation_mois"));
                         Donnees.instance().definirTraitementEnCours(Donnees.Equipement.PhMoins, object.getInt("injection"));
                         Donnees.instance().definirDureeCycle(Donnees.Equipement.PhMoins, object.getInt("duree_cycle"));
                         Donnees.instance().definirMultiplicateurDifference(Donnees.Equipement.PhMoins, object.getInt("multiplicateur_diff"));
@@ -550,6 +592,9 @@ public class MainActivity extends AppCompatActivity
                         Donnees.instance().definirDateDebutConso(Donnees.Equipement.PhPlus, object.getString("date_consommation"));
                         Donnees.instance().definirConsoVolume(Donnees.Equipement.PhPlus, object.getDouble("volume"));
                         Donnees.instance().definirConsoVolumeRestant(Donnees.Equipement.PhPlus, object.getDouble("volume_restant"));
+                        Donnees.instance().definirConsoJour(Donnees.Equipement.PhPlus, object.getDouble("consommation_jour"));
+                        Donnees.instance().definirConsoSemaine(Donnees.Equipement.PhPlus, object.getDouble("consommation_semaine"));
+                        Donnees.instance().definirConsoMois(Donnees.Equipement.PhPlus, object.getDouble("consommation_mois"));
                         Donnees.instance().definirTraitementEnCours(Donnees.Equipement.PhPlus, object.getInt("injection"));
                         Donnees.instance().definirDureeCycle(Donnees.Equipement.PhPlus, object.getInt("duree_cycle"));
                         Donnees.instance().definirMultiplicateurDifference(Donnees.Equipement.PhPlus, object.getInt("multiplicateur_diff"));
@@ -560,10 +605,18 @@ public class MainActivity extends AppCompatActivity
 
                         object = new JSONObject(jsonObject.getString("Régulateur ORP"));
                         Donnees.instance().definirEquipementInstalle(Donnees.Equipement.Orp, object.getInt("installe") > 0);
+                        Donnees.instance().definirConsigneOrp(object.getInt("point_consigne_orp"));
+                        Donnees.instance().definirHysteresisOrp(object.getInt("hysteresis_orp"));
+                        Donnees.instance().definirConsigneAmpero(object.getDouble("point_consigne_ampero"));
+                        Donnees.instance().definirHysteresisAmpero(object.getDouble("hysteresis_ampero"));
+                        Donnees.instance().definirChloreLibreActif(object.getDouble("chlore_libre_actif"));
                         Donnees.instance().definirModeFonctionnement(Donnees.Equipement.Orp, object.getInt("etat"));
                         Donnees.instance().definirDateDebutConso(Donnees.Equipement.Orp, object.getString("date_consommation"));
                         Donnees.instance().definirConsoVolume(Donnees.Equipement.Orp, object.getDouble("volume"));
                         Donnees.instance().definirConsoVolumeRestant(Donnees.Equipement.Orp, object.getDouble("volume_restant"));
+                        Donnees.instance().definirConsoJour(Donnees.Equipement.Orp, object.getDouble("consommation_jour"));
+                        Donnees.instance().definirConsoSemaine(Donnees.Equipement.Orp, object.getDouble("consommation_semaine"));
+                        Donnees.instance().definirConsoMois(Donnees.Equipement.Orp, object.getDouble("consommation_mois"));
                         Donnees.instance().definirTraitementEnCours(Donnees.Equipement.Orp, object.getInt("injection"));
                         Donnees.instance().definirDureeCycle(Donnees.Equipement.Orp, object.getInt("duree_cycle"));
                         Donnees.instance().definirMultiplicateurDifference(Donnees.Equipement.Orp, object.getInt("multiplicateur_diff"));
@@ -593,6 +646,23 @@ public class MainActivity extends AppCompatActivity
                         Donnees.instance().definirActiviteIHM(object.getString("alive"));
                         Donnees.instance().definirBackground(object.getInt("background"));
 
+                        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                            ledEtatSysteme.setActivated(Donnees.instance().obtenirActiviteIHM());
+                            texteEtatSysteme.setText(Donnees.instance().obtenirActiviteIHM() ? "Etat : connecté" : "Etat : déconnecté");
+                        }
+
+                        if (!Donnees.instance().obtenirActiviteIHM()) {
+                            if (!msgEtatSysteme) {
+                                msgEtatSysteme = true;
+                                Toast.makeText(this, "Le système s'est déconnecté du serveur", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            if (msgEtatSysteme) {
+                                msgEtatSysteme = false;
+                                Toast.makeText(this, "Le système s'est connecté au serveur", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
                         menu.findItem(R.id.nav_pompe_filtration_layout).setVisible(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PompeFiltration));
                         menu.findItem(R.id.nav_filtre_layout).setVisible(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Filtre));
                         menu.findItem(R.id.nav_surpresseur_layout).setVisible(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Surpresseur));
@@ -619,6 +689,7 @@ public class MainActivity extends AppCompatActivity
         fragmentDonnees.update();
         fragmentSynoptique.update();
         fragmentMenu.update();
+        fragmentBassin.update();
         fragmentPompeFiltration.update();
         fragmentFiltre.update();
         fragmentSurpresseur.update();

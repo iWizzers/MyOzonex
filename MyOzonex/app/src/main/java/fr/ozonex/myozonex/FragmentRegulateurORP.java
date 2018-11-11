@@ -48,6 +48,7 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
     Button boutonAuto;
     Button boutonArret;
     Button boutonMarche;
+    TextView texteConsoInjections;
 
     @Nullable
     @Override
@@ -76,6 +77,7 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
             boutonAuto = (Button) view.findViewById(R.id.bouton_auto);
             boutonArret = (Button) view.findViewById(R.id.bouton_arret);
             boutonMarche = (Button) view.findViewById(R.id.bouton_marche);
+            texteConsoInjections = view.findViewById(R.id.texte_conso_injections);
 
             boutonRetour.setOnClickListener(this);
             boutonAuto.setOnClickListener(this);
@@ -101,8 +103,18 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
         if ((view != null) && isAdded()) {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
+                rbAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
+                rbArret.setClickable(Donnees.instance().obtenirActiviteIHM());
+                rbMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
             } else {
                 globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());
+                boutonAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
+                boutonArret.setClickable(Donnees.instance().obtenirActiviteIHM());
+                boutonMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
+                texteConsoInjections.setText("Produit injecté sur 1 /7 / 28 jours : "
+                        + Donnees.instance().obtenirConsoJour(Donnees.Equipement.Orp) + " / "
+                        + Donnees.instance().obtenirConsoSemaine(Donnees.Equipement.Orp) + " / "
+                        + Donnees.instance().obtenirConsoMois(Donnees.Equipement.Orp));
             }
 
             modeAEteModifie(Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Orp));
@@ -112,7 +124,7 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
             consoAEteModifie(Donnees.instance().obtenirDateDebutConso(Donnees.Equipement.Orp),
                     Donnees.instance().obtenirConsoVolume(Donnees.Equipement.Orp),
                     Donnees.instance().obtenirConsoVolumeRestant(Donnees.Equipement.Orp));
-        }
+            }
     }
 
     @Override

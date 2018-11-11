@@ -117,7 +117,6 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
                 boutonRegulateurORP.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp));
                 boutonAlgicide.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Algicide));
                 boutonEclairage.setEnabled(false);
-                boutonBassin.setEnabled(false);
                 boutonCapteurs.setEnabled(false);
                 boutonCommunication.setEnabled(false);
                 boutonJournalEvenements.setEnabled(false);
@@ -169,7 +168,7 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
                 MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_algicide_layout));
                 break;
             case R.id.bouton_bassin:
-                //MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_pompe_filtration_layout));
+                MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_bassin_layout));
                 break;
             case R.id.bouton_capteurs:
                 //MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_pompe_filtration_layout));

@@ -11,6 +11,7 @@
     <string name="donnees">Données</string>
     <string name="synoptique">Synoptique</string>
     <string name="menu">Menu</string>
+    <string name="bassin">Bassin</string>
     <string name="pompe_filtration">Pompe filtration</string>
     <string name="filtre">Filtre</string>
     <string name="surpresseur">Surpresseur</string>
