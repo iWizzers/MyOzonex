@@ -655,11 +655,13 @@ public class MainActivity extends AppCompatActivity
                             if (!msgEtatSysteme) {
                                 msgEtatSysteme = true;
                                 Toast.makeText(this, "Le système s'est déconnecté du serveur", Toast.LENGTH_SHORT).show();
+                                Notification.instance().ajouter("Déconnexion", "Le système s'est déconnecté du serveur");
                             }
                         } else {
                             if (msgEtatSysteme) {
                                 msgEtatSysteme = false;
                                 Toast.makeText(this, "Le système s'est connecté au serveur", Toast.LENGTH_SHORT).show();
+                                Notification.instance().ajouter("Connexion", "Le système s'est connecté au serveur");
                             }
                         }
 
