@@ -909,10 +909,10 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
         if ((view != null) && isAdded()) {
             if (!Donnees.instance().obtenirEtatLectureCapteurs()) {
                 if (texteCapteurPh.getCurrentTextColor() == Color.BLACK) {
-                    texteCapteurPh.setTextColor(Color.LTGRAY);
-                    texteCapteurOrp.setTextColor(Color.LTGRAY);
-                    texteCapteurAmpero.setTextColor(Color.LTGRAY);
-                    texteCapteurPt.setTextColor(Color.LTGRAY);
+                    texteCapteurPh.setTextColor(Color.GRAY);
+                    texteCapteurOrp.setTextColor(Color.GRAY);
+                    texteCapteurAmpero.setTextColor(Color.GRAY);
+                    texteCapteurPt.setTextColor(Color.GRAY);
                 } else {
                     texteCapteurPh.setTextColor(Color.BLACK);
                     texteCapteurOrp.setTextColor(Color.BLACK);

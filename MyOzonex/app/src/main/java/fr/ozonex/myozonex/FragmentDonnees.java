@@ -385,10 +385,10 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
         if ((view != null) && isAdded()) {
             if (!Donnees.instance().obtenirEtatLectureCapteurs()) {
                 if (valeurPh.getCurrentTextColor() == Color.WHITE) {
-                    valeurPh.setTextColor(Color.LTGRAY);
-                    valeurAmpero.setTextColor(Color.LTGRAY);
-                    valeurORP.setTextColor(Color.LTGRAY);
-                    valeurTemperatureBassin.setTextColor(Color.LTGRAY);
+                    valeurPh.setTextColor(Color.GRAY);
+                    valeurAmpero.setTextColor(Color.GRAY);
+                    valeurORP.setTextColor(Color.GRAY);
+                    valeurTemperatureBassin.setTextColor(Color.GRAY);
                 } else {
                     valeurPh.setTextColor(Color.WHITE);
                     valeurAmpero.setTextColor(Color.WHITE);
