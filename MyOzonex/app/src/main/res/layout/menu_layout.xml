@@ -58,7 +58,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0"
                         android:maxLines="1"
-                        android:text="Menu"
+                        android:text="@string/menu"
                         android:textStyle="bold"
                         android:gravity="center"
                         android:textColor="@android:color/black"
@@ -598,34 +598,6 @@
                         android:layout_rowWeight="1" />
 
                     <ImageButton
-                        android:id="@+id/bouton_communication"
-                        android:layout_width="121dp"
-                        android:layout_height="121dp"
-                        android:layout_marginTop="@dimen/layout_container_space"
-                        android:layout_column="1"
-                        android:layout_row="4"
-                        android:layout_columnWeight="0"
-                        android:background="@drawable/background_button"
-                        android:contentDescription="TODO"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/communication"
-                        tools:ignore="MissingConstraints" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_column="0"
-                        android:layout_row="5"
-                        android:layout_columnSpan="3"
-                        android:layout_columnWeight="1"
-                        android:layout_gravity="top"
-                        android:text="Communication"
-                        android:gravity="center"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/black"
-                        android:textSize="@dimen/texteGeneral" />
-
-                    <ImageButton
                         android:id="@+id/bouton_journal_evenements"
                         android:layout_width="121dp"
                         android:layout_height="121dp"
@@ -648,34 +620,6 @@
                         android:layout_columnWeight="1"
                         android:layout_gravity="top"
                         android:text="Journal des\névènements"
-                        android:gravity="center"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/black"
-                        android:textSize="@dimen/texteGeneral" />
-
-                    <ImageButton
-                        android:id="@+id/bouton_valeurs_mesurees"
-                        android:layout_width="121dp"
-                        android:layout_height="121dp"
-                        android:layout_marginTop="@dimen/layout_container_space"
-                        android:layout_column="7"
-                        android:layout_row="4"
-                        android:layout_columnWeight="0"
-                        android:background="@drawable/background_button"
-                        android:contentDescription="TODO"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/icone_courbes"
-                        tools:ignore="MissingConstraints" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_column="6"
-                        android:layout_row="5"
-                        android:layout_columnSpan="3"
-                        android:layout_columnWeight="1"
-                        android:layout_gravity="top"
-                        android:text="Valeurs\nmesurées"
                         android:gravity="center"
                         android:textStyle="bold"
                         android:textColor="@android:color/black"

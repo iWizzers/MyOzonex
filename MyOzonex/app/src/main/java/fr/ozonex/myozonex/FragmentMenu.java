@@ -36,9 +36,7 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
     ImageButton boutonAlgicide;
     ImageButton boutonBassin;
     ImageButton boutonCapteurs;
-    ImageButton boutonCommunication;
     ImageButton boutonJournalEvenements;
-    ImageButton boutonValeursMesurees;
     ImageButton boutonDeconnexion;
 
     @Nullable
@@ -68,9 +66,7 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
             boutonAlgicide = (ImageButton) view.findViewById(R.id.bouton_algicide);
             boutonBassin = (ImageButton) view.findViewById(R.id.bouton_bassin);
             boutonCapteurs = (ImageButton) view.findViewById(R.id.bouton_capteurs);
-            boutonCommunication = (ImageButton) view.findViewById(R.id.bouton_communication);
             boutonJournalEvenements = (ImageButton) view.findViewById(R.id.bouton_journal_evenements);
-            boutonValeursMesurees = (ImageButton) view.findViewById(R.id.bouton_valeurs_mesurees);
             boutonDeconnexion = (ImageButton) view.findViewById(R.id.bouton_deconnexion);
 
             boutonRetour.setOnClickListener(this);
@@ -88,9 +84,7 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
             boutonAlgicide.setOnClickListener(this);
             boutonBassin.setOnClickListener(this);
             boutonCapteurs.setOnClickListener(this);
-            boutonCommunication.setOnClickListener(this);
             boutonJournalEvenements.setOnClickListener(this);
-            boutonValeursMesurees.setOnClickListener(this);
             boutonDeconnexion.setOnClickListener(this);
         }
 
@@ -111,16 +105,13 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
                 boutonChauffage.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage));
                 boutonLampesUV.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.LampesUV));
                 boutonOzonateur.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Ozone));
-                boutonElectrolyseur.setEnabled(false);
+                boutonElectrolyseur.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Electrolyseur));
                 boutonRegulateurPhMoins.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins));
                 boutonRegulateurPhPlus.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus));
                 boutonRegulateurORP.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp));
                 boutonAlgicide.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Algicide));
                 boutonEclairage.setEnabled(false);
                 boutonCapteurs.setEnabled(false);
-                boutonCommunication.setEnabled(false);
-                boutonJournalEvenements.setEnabled(false);
-                boutonValeursMesurees.setEnabled(false);
             }
         }
     }
@@ -173,14 +164,8 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
             case R.id.bouton_capteurs:
                 //MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_pompe_filtration_layout));
                 break;
-            case R.id.bouton_communication:
-                //MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_pompe_filtration_layout));
-                break;
             case R.id.bouton_journal_evenements:
-                //MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_pompe_filtration_layout));
-                break;
-            case R.id.bouton_valeurs_mesurees:
-                //MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_pompe_filtration_layout));
+                MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_events_layout));
                 break;
             case R.id.bouton_deconnexion:
                 MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_deconnexion_layout));

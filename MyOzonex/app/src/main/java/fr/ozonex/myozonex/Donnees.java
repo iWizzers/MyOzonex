@@ -251,6 +251,8 @@ public class Donnees {
     private int pageSource;
     private boolean etatLectureCapteurs = false;
 
+    private List<Event> events = new ArrayList<Event>();
+
     static SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.instance());
 
     public static String getPreferences(String key) {
@@ -340,6 +342,18 @@ public class Donnees {
 
     public void definirBackground(int index) {
         background = index;
+    }
+
+    public List<Event> obtenirListeEvents() {
+        return events;
+    }
+
+    public void ajouterEvent(String texte, int couleur, String dateHeure) {
+        events.add(new Event(texte, couleur, dateHeure));
+    }
+
+    public void supprimerEvents() {
+        events.clear();
     }
 
     public int obtenirPageSource() {

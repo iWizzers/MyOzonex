@@ -58,7 +58,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0"
                         android:maxLines="1"
-                        android:text="Filtre"
+                        android:text="@string/filtre"
                         android:textStyle="bold"
                         android:gravity="center"
                         android:textColor="@android:color/black"

@@ -25,7 +25,7 @@ import static android.support.v4.view.MotionEventCompat.getPointerCount;
 public class FragmentSynoptique extends Fragment implements View.OnClickListener {
     View view = null;
 
-    // Orientation paysage
+    // Tout orientations
     ProgressBar contenuBidonAlgicide;
     ProgressBar contenuBidonOrp;
     ProgressBar contenuBidonPhMoins;
@@ -359,7 +359,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             int couleurLigneInjection = pompeFiltrationActive ? ((Donnees.instance().obtenirTypeAsservissement().equals(Donnees.ASSERVISSEMENT_TOR) && chauffageActive) ? getResources().getColor(R.color.ligneInjectionActiveChaud) : getResources().getColor(R.color.ligneInjectionActive)) : getResources().getColor(R.color.ligneInjectionInactive);
 
             texteCapteurTempExterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.CapteurExterne) ? View.VISIBLE : View.GONE);
-            texteCapteurTempExterne.setText(Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureExterne) + " °C");
+            texteCapteurTempExterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureExterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureExterne) + " °C" : "Err");
 
             boutonPompeFiltration.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PompeFiltration));
             definirImageBouton(boutonPompeFiltration, Donnees.Equipement.PompeFiltration);
@@ -367,7 +367,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
 
             boutonFiltre.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Filtre));
             texteCapteurPression.setVisibility(Donnees.instance().presence(Donnees.Capteur.Pression) ? View.VISIBLE : View.GONE);
-            texteCapteurPression.setText("Pression : " + Donnees.instance().obtenirValeur(Donnees.Capteur.Pression) + " bar");
+            texteCapteurPression.setText("Pression : " + (Donnees.instance().obtenirEtat(Donnees.Capteur.Pression) ? Donnees.instance().obtenirValeur(Donnees.Capteur.Pression) + " bar" : "Err"));
 
             afficherElementsEquipement(Donnees.Equipement.Surpresseur,
                     texteModeSurpresseur,
@@ -480,7 +480,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             ligneCapteurPt3.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
             ligneCapteurPt4.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
             texteCapteurPt.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
-            texteCapteurPt.setText("Température bassin : " + Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin) + " °C");
+            texteCapteurPt.setText("Température bassin : " + (Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureBassin) ? Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin) + " °C" : "Err"));
 
             sondePh.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ph) ? View.VISIBLE : View.GONE);
             ligneCapteurPh.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ph) && (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins) || Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus)) ? View.VISIBLE : View.GONE);
@@ -515,11 +515,11 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
                 texteTypeRegulation.setVisibility(View.VISIBLE);
                 texteTypeRegulation.setText("Type de régulation : " + Donnees.instance().obtenirTypeAsservissement());
                 texteCapteurPh.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ph) ? View.VISIBLE : View.GONE);
-                texteCapteurPh.setText("pH : " + Donnees.instance().obtenirValeur(Donnees.Capteur.Ph));
+                texteCapteurPh.setText("pH : " + (Donnees.instance().obtenirEtat(Donnees.Capteur.Ph) ? Double.toString(Donnees.instance().obtenirValeur(Donnees.Capteur.Ph)) : "Err"));
                 texteCapteurOrp.setVisibility(Donnees.instance().presence(Donnees.Capteur.Redox) ? View.VISIBLE : View.GONE);
-                texteCapteurOrp.setText("ORP : " + Donnees.instance().obtenirValeur(Donnees.Capteur.Redox) + " mV");
+                texteCapteurOrp.setText("ORP : " + (Donnees.instance().obtenirEtat(Donnees.Capteur.Redox) ? Donnees.instance().obtenirValeur(Donnees.Capteur.Redox) + " mV" : "Err"));
                 texteCapteurAmpero.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ampero) ? View.VISIBLE : View.GONE);
-                texteCapteurAmpero.setText("Ampéro : " + Donnees.instance().obtenirValeur(Donnees.Capteur.Ampero) + " ppm");
+                texteCapteurAmpero.setText("Ampéro : " + (Donnees.instance().obtenirEtat(Donnees.Capteur.Ampero) ? Donnees.instance().obtenirValeur(Donnees.Capteur.Ampero) + " ppm" : "Err"));
 
                 if (Donnees.instance().presence(Donnees.Capteur.Ph)) {
                     conteneurDonneesCapteurs.setX(sondePh.getX() + sondePh.getWidth() / 2);
@@ -545,8 +545,8 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             // Couleur capteurs
             if (Donnees.instance().obtenirEtatLectureCapteurs()) {
                 if (Donnees.instance().obtenirEtat(Donnees.Capteur.Pression)) {
-                    if ((Donnees.instance().obtenirSeuilBasPression() <= Donnees.instance().obtenirValeur(Donnees.Capteur.Ph))
-                            && (Donnees.instance().obtenirValeur(Donnees.Capteur.Ph) <= Donnees.instance().obtenirSeuilHautPression())) {
+                    if ((Donnees.instance().obtenirSeuilBasPression() <= Donnees.instance().obtenirValeur(Donnees.Capteur.Pression))
+                            && (Donnees.instance().obtenirValeur(Donnees.Capteur.Pression) <= Donnees.instance().obtenirSeuilHautPression())) {
                         texteCapteurPression.setTextColor(Color.GREEN);
                     } else {
                         texteCapteurPression.setTextColor(Color.RED);

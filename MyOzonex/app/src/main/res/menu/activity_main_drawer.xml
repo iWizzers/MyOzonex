@@ -79,6 +79,15 @@
         </menu>
     </item>
 
+    <item android:title="Autres">
+        <menu>
+            <item
+                android:id="@+id/nav_events_layout"
+                android:icon="@drawable/ic_menu_show"
+                android:title="@string/events" />
+        </menu>
+    </item>
+
     <item android:title="Application">
         <menu>
             <item

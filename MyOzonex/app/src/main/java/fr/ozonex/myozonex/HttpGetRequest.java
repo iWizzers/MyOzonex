@@ -29,6 +29,7 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
     public enum PageHTTP {
         PageLogin,
         PageData,
+        PageEvents,
         PageHorlogerie,
         PageBassin,
         PageCapteurs,
@@ -48,6 +49,7 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
     private static String pageString[] = {
         "login",
         "data",
+        "events",
         "horlogerie",
         "bassin",
         "capteurs",

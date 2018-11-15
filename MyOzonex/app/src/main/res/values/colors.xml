@@ -41,4 +41,9 @@
 
     <color name="couleurBoutonValider">#00AA00</color>
     <color name="couleurBoutonAnnuler">#FF0000</color>
+
+    <color name="couleurBlanc">#FFFFFF</color>
+    <color name="couleurJaune">#FFFF00</color>
+    <color name="couleurOrange">#FF7F00</color>
+    <color name="couleurRouge">#FF0000</color>
 </resources>
