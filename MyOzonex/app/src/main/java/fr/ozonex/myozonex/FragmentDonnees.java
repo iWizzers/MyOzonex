@@ -226,10 +226,8 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
             if (Donnees.instance().obtenirEtatLectureCapteurs()) {
                 if (Donnees.instance().obtenirEtat(Donnees.Capteur.Ph)) {
                     if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins)) {
-                        if ((Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhPlus) == Donnees.AUTO_MARCHE)
-                                || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhPlus) == Donnees.MARCHE)
-                                || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhMoins) == Donnees.AUTO_MARCHE)
-                                || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhMoins) == Donnees.MARCHE)) {
+                        if (Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.PhPlus)
+                                || Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.PhMoins)) {
                             valeurPh.setTextColor(Color.parseColor("#FFAA00"));
                         } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Ph) < (Donnees.instance().obtenirConsignePh() - Donnees.instance().obtenirHysteresisPhPlus())) {
                             valeurPh.setTextColor(Color.RED);
@@ -239,8 +237,7 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
                             valeurPh.setTextColor(Color.GREEN);
                         }
                     } else if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus)) {
-                        if ((Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhPlus) == Donnees.AUTO_MARCHE)
-                                || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhPlus) == Donnees.MARCHE)) {
+                        if (Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.PhPlus)) {
                             valeurPh.setTextColor(Color.parseColor("#FFAA00"));
                         } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Ph) < (Donnees.instance().obtenirConsignePh() - Donnees.instance().obtenirHysteresisPhPlus())) {
                             valeurPh.setTextColor(Color.RED);
@@ -248,8 +245,7 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
                             valeurPh.setTextColor(Color.GREEN);
                         }
                     } else if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins)) {
-                        if ((Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhMoins) == Donnees.AUTO_MARCHE)
-                                || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhMoins) == Donnees.MARCHE)) {
+                        if (Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.PhMoins)) {
                             valeurPh.setTextColor(Color.parseColor("#FFAA00"));
                         } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Ph) > (Donnees.instance().obtenirConsignePh() + Donnees.instance().obtenirHysteresisPhMoins())) {
                             valeurPh.setTextColor(Color.RED);
@@ -266,8 +262,7 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
                 if (Donnees.instance().presence(Donnees.Capteur.Ampero)) {
                     if (Donnees.instance().obtenirEtat(Donnees.Capteur.Ampero)) {
                         if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp)) {
-                            if ((Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Orp) == Donnees.AUTO_MARCHE)
-                                    || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Orp) == Donnees.MARCHE)) {
+                            if (Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.Orp)) {
                                 valeurAmpero.setTextColor(Color.parseColor("#FFAA00"));
                             } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Ampero) < (Donnees.instance().obtenirConsigneAmpero() - Donnees.instance().obtenirHysteresisAmpero())) {
                                 valeurAmpero.setTextColor(Color.RED);
@@ -283,8 +278,7 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
 
                     if (Donnees.instance().obtenirEtat(Donnees.Capteur.Redox)) {
                         if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp)) {
-                            if (((Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Orp) == Donnees.AUTO_MARCHE)
-                                    || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Orp) == Donnees.MARCHE))
+                            if (Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.Orp)
                                     && !Donnees.instance().obtenirEtat(Donnees.Capteur.Ampero)) {
                                 valeurORP.setTextColor(Color.parseColor("#FFAA00"));
                             } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Redox) < (Donnees.instance().obtenirConsigneOrp() - Donnees.instance().obtenirHysteresisOrp())) {
@@ -301,8 +295,7 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
                 } else {
                     if (Donnees.instance().obtenirEtat(Donnees.Capteur.Redox)) {
                         if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp)) {
-                            if ((Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Orp) == Donnees.AUTO_MARCHE)
-                                    || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Orp) == Donnees.MARCHE)) {
+                            if (Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.Orp)) {
                                 valeurORP.setTextColor(Color.parseColor("#FFAA00"));
                             } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Redox) < (Donnees.instance().obtenirConsigneOrp() - Donnees.instance().obtenirHysteresisOrp())) {
                                 valeurORP.setTextColor(Color.RED);
@@ -319,8 +312,8 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
 
                 if (Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureBassin)) {
                     if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage)) {
-                        if ((Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Chauffage) == Donnees.MARCHE)
-                                || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Chauffage) == Donnees.AUTO_MARCHE)) {
+                        if ((Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Chauffage) == Donnees.AUTO_MARCHE)
+                                || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Chauffage) == Donnees.MARCHE)) {
                             valeurTemperatureBassin.setTextColor(Color.parseColor("#FFAA00"));
                         } else if (Donnees.instance().obtenirControlePompeFiltration() == Donnees.CONTROLE_PAR_POMPE_FILTRATION) {
                             if ((Donnees.instance().obtenirTemperatureArret() <= Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin))
@@ -350,23 +343,27 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
 
     private void updateEtat(Donnees.Equipement equipement, TextView led, TextView textView, String strEquipement) {
         int etat = Donnees.instance().obtenirModeFonctionnement(equipement);
+        boolean traitementEnCours = Donnees.instance().obtenirTraitementEnCours(equipement);
 
-        if (etat == Donnees.AUTO_MARCHE) {
-            led.setActivated(true);
-            led.setEnabled(true);
-            led.setClickable(!Donnees.instance().obtenirTraitementEnCours(equipement));
-            led.setPressed(Donnees.instance().obtenirTraitementEnCours(equipement));
+        if (traitementEnCours) {
             textView.setText(strEquipement + " actif");
-        } else if (etat == Donnees.MARCHE) {
             led.setActivated(true);
-            led.setEnabled(false);
-            led.setClickable(false);
-            textView.setText(strEquipement + " actif");
+
+            if ((etat == Donnees.AUTO_MARCHE)
+                    || (etat == Donnees.MARCHE)) {
+                led.setEnabled(false);
+                led.setClickable(false);
+                led.setPressed(false);
+            } else {
+                led.setEnabled(true);
+                led.setClickable(true);
+                led.setPressed(false);
+            }
         } else {
+            textView.setText(strEquipement + " inactif");
             led.setActivated(false);
             led.setEnabled(false);
             led.setClickable(false);
-            textView.setText(strEquipement + " inactif");
         }
     }
 
