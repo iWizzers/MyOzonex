@@ -3,7 +3,7 @@
     android:id="@+id/background_event"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
+    android:padding="@dimen/layout_container_space"
     android:background="#FFA000" >
     <TextView
         android:id="@+id/texte_event"

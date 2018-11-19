@@ -14,13 +14,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class FragmentEvents extends Fragment implements View.OnClickListener {
     View view = null;
 
-    List<Event> events = new ArrayList<Event>();
+    ListView listView;
+    int tailleListe = 0;
     EventsAdapter eventsAdapter;
 
     // Orientation portrait
@@ -48,8 +46,8 @@ public class FragmentEvents extends Fragment implements View.OnClickListener {
             boutonRetour.setOnClickListener(this);
         }
 
-        ListView listView = (ListView) view.findViewById(R.id.listView);
-        eventsAdapter = new EventsAdapter(MainActivity.instance(), events);
+        listView = (ListView) view.findViewById(R.id.listView);
+        eventsAdapter = new EventsAdapter(MainActivity.instance(), Donnees.instance().obtenirListeEvents());
         listView.setAdapter(eventsAdapter);
 
 
@@ -67,13 +65,11 @@ public class FragmentEvents extends Fragment implements View.OnClickListener {
                 globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());
             }
 
-            events.clear();
-            for (int i = 0; i < Donnees.instance().obtenirListeEvents().size(); i++) {
-                events.add(new Event(Donnees.instance().obtenirListeEvents().get(i).getTexte(),
-                        Donnees.instance().obtenirListeEvents().get(i).getCouleur(),
-                        Donnees.instance().obtenirListeEvents().get(i).getDateHeure()));
+            if (tailleListe != Donnees.instance().obtenirListeEvents().size()) {
+                tailleListe = Donnees.instance().obtenirListeEvents().size();
+                eventsAdapter.notifyDataSetChanged();
+                listView.smoothScrollToPositionFromTop(0, 0, 500);
             }
-            eventsAdapter.notifyDataSetChanged();
         }
     }
 

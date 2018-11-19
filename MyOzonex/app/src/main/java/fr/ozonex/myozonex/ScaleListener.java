@@ -3,6 +3,7 @@ package fr.ozonex.myozonex;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Point;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -32,9 +33,13 @@ public class ScaleListener {
         final float mScaleFactor;
         Display display = MainActivity.instance().getWindowManager().getDefaultDisplay();
         Point size = new Point();
-        display.getSize(size);
-        float screenWidth = convertPixelsToDp(size.x);
-        float screenHeight = convertPixelsToDp(size.y);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            display.getRealSize(size);
+        } else {
+            display.getSize(size);
+        }
+        final float screenWidth = convertPixelsToDp(size.x);
+        final float screenHeight = convertPixelsToDp(size.y);
         final float diff_width = 1280 - screenWidth;
         final float diff_height = 800 - screenHeight;
 
@@ -53,11 +58,11 @@ public class ScaleListener {
             @Override
             public void onScrollChanged() {
                 if (diff_height < diff_width) {
-                    if (verticalScrollView.getScrollY() >= ((800 - 800 * mScaleFactor) / 2)) {
-                        verticalScrollView.scrollTo(0, (int) ((800 - 800 * mScaleFactor) / 2));
+                    if (convertPixelsToDp(verticalScrollView.getScrollY()) >= (800 * mScaleFactor - screenHeight)) {
+                        verticalScrollView.smoothScrollTo(0, (int) convertDpToPixel(800 * mScaleFactor - screenHeight));
                     }
                 } else {
-                    verticalScrollView.scrollTo(0, 0);
+                    verticalScrollView.smoothScrollTo(0, 0);
                 }
             }
         });
@@ -66,10 +71,10 @@ public class ScaleListener {
             @Override
             public void onScrollChanged() {
                 if (diff_height < diff_width) {
-                    horizontalScrollView.scrollTo(0, 0);
+                    horizontalScrollView.smoothScrollTo(0, 0);
                 } else {
-                    if (horizontalScrollView.getScrollX() >= ((1280 - 1280 * mScaleFactor) / 2)) {
-                        horizontalScrollView.scrollTo((int) ((1280 - 1280 * mScaleFactor) / 2), 0);
+                    if (convertPixelsToDp(horizontalScrollView.getScrollX()) >= (1280 * mScaleFactor - screenWidth)) {
+                        horizontalScrollView.smoothScrollTo((int) convertDpToPixel(1280 * mScaleFactor - screenWidth), 0);
                     }
                 }
             }
