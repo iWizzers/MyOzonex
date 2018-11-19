@@ -1,6 +1,7 @@
 package fr.ozonex.myozonex;
 
 import android.app.Fragment;
+import android.appwidget.AppWidgetManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,7 +13,9 @@ import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import static android.support.v4.view.MotionEventCompat.getPointerCount;
 
@@ -112,8 +115,30 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
                 boutonAlgicide.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Algicide));
                 boutonEclairage.setEnabled(false);
                 boutonCapteurs.setEnabled(false);
+
+                definirCouleur(R.id.texte_pompe_filtration);
+                definirCouleur(R.id.texte_filtre);
+                definirCouleur(R.id.texte_surpresseur);
+                definirCouleur(R.id.texte_chauffage);
+                definirCouleur(R.id.texte_lampes_uv);
+                definirCouleur(R.id.texte_electrolyseur);
+                definirCouleur(R.id.texte_ozonateur);
+                definirCouleur(R.id.texte_eclairage);
+                definirCouleur(R.id.texte_reg_ph_plus);
+                definirCouleur(R.id.texte_reg_ph_moins);
+                definirCouleur(R.id.texte_reg_orp);
+                definirCouleur(R.id.texte_algicide);
+                definirCouleur(R.id.texte_bassin);
+                definirCouleur(R.id.texte_capteurs);
+                definirCouleur(R.id.texte_events);
+                definirCouleur(R.id.texte_deconnexion);
             }
         }
+    }
+
+    private void definirCouleur(int id) {
+        TextView textView = view.findViewById(id);
+        textView.setTextColor(Donnees.instance().obtenirCouleurTexte());
     }
 
     @Override

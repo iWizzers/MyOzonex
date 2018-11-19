@@ -145,8 +145,25 @@
                     android:layout_marginRight="@dimen/layout_widget_space"
                     android:text="Depuis : 26/05/2014\nVolume : X L\nVolume restant : X L"
                     android:textColor="@color/couleurTexteGeneral"
-                    android:textSize="@dimen/texteGeneral"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/texteGeneral" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginLeft="@dimen/layout_widget_space"
+                    android:layout_marginRight="@dimen/layout_widget_space"
+                    android:layerType="software"
+                    android:src="@drawable/dotted_line" />
+
+                <TextView
+                    android:id="@+id/texte_conso_injections"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/layout_widget_space"
+                    android:layout_marginRight="@dimen/layout_widget_space"
+                    android:text="Produit injecté sur 1 /7 / 28 jours : %1 / %2 / %3"
+                    android:textColor="@color/couleurTexteGeneral"
+                    android:textSize="@dimen/texteGeneral" />
             </LinearLayout>
 
             <LinearLayout
@@ -239,8 +256,7 @@
                     android:layout_marginRight="@dimen/layout_widget_space"
                     android:text="Durée cycle : X minutes\nMultiplicateur de différence : X\nDurée injection : X minutes\nTemps de réponse après injection : X minutes\nTemps d'injection journalier maximum : X minutes"
                     android:textColor="@color/couleurTexteGeneral"
-                    android:textSize="@dimen/texteGeneral"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/texteGeneral" />
 
                 <ImageView
                     android:id="@+id/ligne"
@@ -272,8 +288,7 @@
                     android:layout_marginRight="@dimen/layout_widget_space"
                     android:text="Fréquence : X semaines\nX mV ajouté (X mV)\nProchaine dans X jours"
                     android:textColor="@color/couleurTexteGeneral"
-                    android:textSize="@dimen/texteGeneral"
-                    android:textStyle="bold" />
+                    android:textSize="@dimen/texteGeneral" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

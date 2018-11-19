@@ -36,6 +36,7 @@ public class FragmentChauffage extends Fragment implements View.OnClickListener 
 
     // Tout orientations
     TextView texteConso;
+    LinearLayout layoutGestionTemp;
     RadioButton radioButtonPlage;
     RadioButton radioButtonConsigne;
     Button boutonMoinsArret;
@@ -44,6 +45,7 @@ public class FragmentChauffage extends Fragment implements View.OnClickListener 
     Button boutonPlusEnclenchement;
     Button boutonMoinsConsigne;
     Button boutonPlusConsigne;
+    LinearLayout layoutPlagesFct;
     GridLayout widgetPlage1;
     ImageButton boutonSupprimerPlage1;
     ImageButton boutonModifierPlage1;
@@ -120,6 +122,7 @@ public class FragmentChauffage extends Fragment implements View.OnClickListener 
         }
 
         texteConso = (TextView) view.findViewById(R.id.texte_donnees_conso);
+        layoutGestionTemp = view.findViewById(R.id.layout_gestion_temp);
         radioButtonPlage = (RadioButton) view.findViewById(R.id.radio_button_plage);
         radioButtonConsigne = (RadioButton) view.findViewById(R.id.radio_button_consigne);
         boutonMoinsArret = (Button) view.findViewById(R.id.bouton_moins_arret);
@@ -131,6 +134,7 @@ public class FragmentChauffage extends Fragment implements View.OnClickListener 
         texteArret = (TextView)  view.findViewById(R.id.texte_arret);
         texteEnclenchement = (TextView)  view.findViewById(R.id.texte_enclenchement);
         texteConsigne = (TextView)  view.findViewById(R.id.texte_consigne);
+        layoutPlagesFct = view.findViewById(R.id.layout_plages_fct);
         widgetPlage1 = (GridLayout) view.findViewById(R.id.widget_plage_1);
         boutonSupprimerPlage1 = (ImageButton) view.findViewById(R.id.bouton_supprimer_plage_1);
         boutonModifierPlage1 = (ImageButton) view.findViewById(R.id.bouton_modifier_plage_1);
@@ -176,18 +180,24 @@ public class FragmentChauffage extends Fragment implements View.OnClickListener 
 
     public void update() {
         if ((view != null) && isAdded()) {
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
-                rbAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
-                rbArret.setClickable(Donnees.instance().obtenirActiviteIHM());
-                rbMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
-            } else {
-                globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());
-                boutonAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
-                boutonArret.setClickable(Donnees.instance().obtenirActiviteIHM());
-                boutonMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
+            if (!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage)) {
+                MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_synoptique_layout));
             }
 
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
+                rbAuto.setClickable(Donnees.instance().obtenirActiviteIHM() && Donnees.instance().presence(Donnees.Capteur.TemperatureBassin));
+                rbArret.setClickable(Donnees.instance().obtenirActiviteIHM() && Donnees.instance().presence(Donnees.Capteur.TemperatureBassin));
+                rbMarche.setClickable(Donnees.instance().obtenirActiviteIHM() && Donnees.instance().presence(Donnees.Capteur.TemperatureBassin));
+            } else {
+                globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());
+                boutonAuto.setClickable(Donnees.instance().obtenirActiviteIHM() && Donnees.instance().presence(Donnees.Capteur.TemperatureBassin));
+                boutonArret.setClickable(Donnees.instance().obtenirActiviteIHM() && Donnees.instance().presence(Donnees.Capteur.TemperatureBassin));
+                boutonMarche.setClickable(Donnees.instance().obtenirActiviteIHM() && Donnees.instance().presence(Donnees.Capteur.TemperatureBassin));
+                view.findViewById(R.id.ligne_sep_donnees).setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
+            }
+
+            layoutGestionTemp.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
             radioButtonPlage.setClickable(Donnees.instance().obtenirActiviteIHM());
             boutonMoinsArret.setClickable(Donnees.instance().obtenirActiviteIHM());
             boutonPlusArret.setClickable(Donnees.instance().obtenirActiviteIHM());
@@ -369,6 +379,8 @@ public class FragmentChauffage extends Fragment implements View.OnClickListener 
                 boutonMarche.setLayoutParams(paramEtatNok);
             }
         }
+
+        layoutPlagesFct.setVisibility((mode == Donnees.MARCHE && Donnees.instance().presence(Donnees.Capteur.TemperatureBassin)) ? View.GONE : View.VISIBLE);
     }
 
     private void modifierGestionTemperature(int idRadioButton) {

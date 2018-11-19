@@ -68,6 +68,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_regulations"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/layout_widget_space"
@@ -92,7 +93,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:maxLines="1"
-                        android:text="Asservissement"
+                        android:text="Régulations (pH / ORP)"
                         android:textStyle="bold"
                         android:gravity="center"
                         android:textColor="@color/couleurSousTitre"
@@ -108,7 +109,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/texte_donnees_asservissement"
+                    android:id="@+id/texte_donnees_regulations"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/layout_widget_space"

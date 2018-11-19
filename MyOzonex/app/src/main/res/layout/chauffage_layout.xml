@@ -150,6 +150,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_gestion_temp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/layout_widget_space"
@@ -327,6 +328,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_plages_fct"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/layout_widget_space"

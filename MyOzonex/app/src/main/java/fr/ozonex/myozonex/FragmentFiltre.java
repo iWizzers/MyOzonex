@@ -30,6 +30,7 @@ public class FragmentFiltre extends Fragment implements View.OnClickListener {
 
     // Orientation portrait
     LinearLayout globalLayoutPortrait;
+    LinearLayout layoutConfiguration;
     TextView texteDonneesConfiguration;
 
     // Orientation paysage
@@ -44,6 +45,7 @@ public class FragmentFiltre extends Fragment implements View.OnClickListener {
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             globalLayoutPortrait = view.findViewById(R.id.global_layout);
+            layoutConfiguration = view.findViewById(R.id.layout_configuration);
             texteDonneesConfiguration = (TextView) view.findViewById(R.id.texte_donnees_configuration);
         } else {
             new ScaleListener((HorizontalScrollView) view.findViewById(R.id.horizontal_scroll),
@@ -69,7 +71,7 @@ public class FragmentFiltre extends Fragment implements View.OnClickListener {
         if ((view != null) && isAdded()) {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
-
+                layoutConfiguration.setVisibility(Donnees.instance().presence(Donnees.Capteur.Pression) ? View.VISIBLE : View.GONE);
                 modifierConfiguration();
             } else {
                 globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());

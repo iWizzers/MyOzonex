@@ -28,6 +28,7 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
 
     // Tout orientations
     TextView texteConso;
+    TextView texteConsoInjections;
     RadioButton rbTOR;
     RadioButton rbLineaire;
     TextView texteDonneesAsservissement;
@@ -48,7 +49,6 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
     Button boutonAuto;
     Button boutonArret;
     Button boutonMarche;
-    TextView texteConsoInjections;
 
     @Nullable
     @Override
@@ -77,7 +77,6 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
             boutonAuto = (Button) view.findViewById(R.id.bouton_auto);
             boutonArret = (Button) view.findViewById(R.id.bouton_arret);
             boutonMarche = (Button) view.findViewById(R.id.bouton_marche);
-            texteConsoInjections = view.findViewById(R.id.texte_conso_injections);
 
             boutonRetour.setOnClickListener(this);
             boutonAuto.setOnClickListener(this);
@@ -86,6 +85,7 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
         }
 
         texteConso = (TextView) view.findViewById(R.id.texte_donnees_conso);
+        texteConsoInjections = view.findViewById(R.id.texte_conso_injections);
         rbTOR = (RadioButton) view.findViewById(R.id.radio_bouton_tor);
         rbLineaire = (RadioButton) view.findViewById(R.id.radio_bouton_lineaire);
         texteDonneesAsservissement = (TextView) view.findViewById(R.id.texte_donnees_asservissement);
@@ -101,6 +101,10 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
 
     public void update() {
         if ((view != null) && isAdded()) {
+            if (!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp)) {
+                MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_synoptique_layout));
+            }
+
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
                 rbAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
@@ -111,10 +115,6 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
                 boutonAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
                 boutonArret.setClickable(Donnees.instance().obtenirActiviteIHM());
                 boutonMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
-                texteConsoInjections.setText("Produit injecté sur 1 /7 / 28 jours : "
-                        + Donnees.instance().obtenirConsoJour(Donnees.Equipement.Orp) + " / "
-                        + Donnees.instance().obtenirConsoSemaine(Donnees.Equipement.Orp) + " / "
-                        + Donnees.instance().obtenirConsoMois(Donnees.Equipement.Orp));
             }
 
             modeAEteModifie(Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Orp));
@@ -124,7 +124,11 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
             consoAEteModifie(Donnees.instance().obtenirDateDebutConso(Donnees.Equipement.Orp),
                     Donnees.instance().obtenirConsoVolume(Donnees.Equipement.Orp),
                     Donnees.instance().obtenirConsoVolumeRestant(Donnees.Equipement.Orp));
-            }
+            MainActivity.instance().setHtmlText(texteConsoInjections, "Produit injecté sur 1 /7 / 28 jours : "
+                    + "<b>" + Donnees.instance().obtenirConsoJour(Donnees.Equipement.Orp) + "</b> / "
+                    + "<b>" + Donnees.instance().obtenirConsoSemaine(Donnees.Equipement.Orp) + "</b> / "
+                    + "<b>" + Donnees.instance().obtenirConsoMois(Donnees.Equipement.Orp) + "</b>");
+        }
     }
 
     @Override

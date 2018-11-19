@@ -36,6 +36,7 @@ public class FragmentSurpresseur extends Fragment implements View.OnClickListene
 
     // Tout orientations
     TextView texteConso;
+    LinearLayout layoutPlagesFct;
     GridLayout widgetPlage1;
     ImageButton boutonSupprimerPlage1;
     ImageButton boutonModifierPlage1;
@@ -108,6 +109,7 @@ public class FragmentSurpresseur extends Fragment implements View.OnClickListene
         }
 
         texteConso = (TextView) view.findViewById(R.id.texte_donnees_conso);
+        layoutPlagesFct = view.findViewById(R.id.layout_plages_fct);
         widgetPlage1 = (GridLayout) view.findViewById(R.id.widget_plage_1);
         boutonSupprimerPlage1 = (ImageButton) view.findViewById(R.id.bouton_supprimer_plage_1);
         boutonModifierPlage1 = (ImageButton) view.findViewById(R.id.bouton_modifier_plage_1);
@@ -145,6 +147,10 @@ public class FragmentSurpresseur extends Fragment implements View.OnClickListene
 
     public void update() {
         if ((view != null) && isAdded()) {
+            if (!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Surpresseur)) {
+                MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_synoptique_layout));
+            }
+
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
                 rbAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
@@ -315,6 +321,8 @@ public class FragmentSurpresseur extends Fragment implements View.OnClickListene
                 boutonMarche.setLayoutParams(paramEtatNok);
             }
         }
+
+        layoutPlagesFct.setVisibility(mode == Donnees.MARCHE ? View.GONE : View.VISIBLE);
     }
 
     private void consoAEteModifie(String date, double consoHP, double consoHC) {

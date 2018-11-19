@@ -36,6 +36,7 @@ public class FragmentBassin extends Fragment implements View.OnClickListener {
 
     // Tout orientations
     TextView texteDonnees;
+    LinearLayout layoutAsservissement;
     TextView texteDonneesAsservissement;
 
     // Orientation portrait
@@ -65,7 +66,8 @@ public class FragmentBassin extends Fragment implements View.OnClickListener {
         }
 
         texteDonnees = view.findViewById(R.id.texte_donnees);
-        texteDonneesAsservissement = view.findViewById(R.id.texte_donnees_asservissement);
+        layoutAsservissement = view.findViewById(R.id.layout_regulations);
+        texteDonneesAsservissement = view.findViewById(R.id.texte_donnees_regulations);
 
 
         update();
@@ -83,6 +85,9 @@ public class FragmentBassin extends Fragment implements View.OnClickListener {
             }
 
             texteDonnees.setText("Volume : " + Donnees.instance().obtenirVolumeBassin() + " m3");
+            layoutAsservissement.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ph)
+                    || Donnees.instance().presence(Donnees.Capteur.Redox)
+                    || Donnees.instance().presence(Donnees.Capteur.Ampero) ? View.VISIBLE : View.GONE);
             texteDonneesAsservissement.setText("Type de refoulements : " + Donnees.instance().obtenirTypeRefoulement() +
                     "\nType de régulation : " + Donnees.instance().obtenirTypeAsservissement());
 

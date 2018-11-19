@@ -28,6 +28,7 @@ public class FragmentRegulateurPhMoins extends Fragment implements View.OnClickL
 
     // Tout orientations
     TextView texteConso;
+    TextView texteConsoInjections;
     RadioButton rbTOR;
     RadioButton rbLineaire;
     TextView texteDonneesAsservissement;
@@ -46,7 +47,6 @@ public class FragmentRegulateurPhMoins extends Fragment implements View.OnClickL
     Button boutonAuto;
     Button boutonArret;
     Button boutonMarche;
-    TextView texteConsoInjections;
 
     @Nullable
     @Override
@@ -75,7 +75,6 @@ public class FragmentRegulateurPhMoins extends Fragment implements View.OnClickL
             boutonAuto = (Button) view.findViewById(R.id.bouton_auto);
             boutonArret = (Button) view.findViewById(R.id.bouton_arret);
             boutonMarche = (Button) view.findViewById(R.id.bouton_marche);
-            texteConsoInjections = view.findViewById(R.id.texte_conso_injections);
 
             boutonRetour.setOnClickListener(this);
             boutonAuto.setOnClickListener(this);
@@ -84,6 +83,7 @@ public class FragmentRegulateurPhMoins extends Fragment implements View.OnClickL
         }
 
         texteConso = (TextView) view.findViewById(R.id.texte_donnees_conso);
+        texteConsoInjections = view.findViewById(R.id.texte_conso_injections);
         rbTOR = (RadioButton) view.findViewById(R.id.radio_bouton_tor);
         rbLineaire = (RadioButton) view.findViewById(R.id.radio_bouton_lineaire);
         texteDonneesAsservissement = (TextView) view.findViewById(R.id.texte_donnees_asservissement);
@@ -97,6 +97,10 @@ public class FragmentRegulateurPhMoins extends Fragment implements View.OnClickL
 
     public void update() {
         if ((view != null) && isAdded()) {
+            if (!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins)) {
+                MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_synoptique_layout));
+            }
+
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
                 rbAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
@@ -107,10 +111,6 @@ public class FragmentRegulateurPhMoins extends Fragment implements View.OnClickL
                 boutonAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
                 boutonArret.setClickable(Donnees.instance().obtenirActiviteIHM());
                 boutonMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
-                texteConsoInjections.setText("Produit injecté sur 1 /7 / 28 jours : "
-                        + Donnees.instance().obtenirConsoJour(Donnees.Equipement.PhMoins) + " / "
-                        + Donnees.instance().obtenirConsoSemaine(Donnees.Equipement.PhMoins) + " / "
-                        + Donnees.instance().obtenirConsoMois(Donnees.Equipement.PhMoins));
             }
 
             modeAEteModifie(Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhMoins));
@@ -120,6 +120,10 @@ public class FragmentRegulateurPhMoins extends Fragment implements View.OnClickL
             consoAEteModifie(Donnees.instance().obtenirDateDebutConso(Donnees.Equipement.PhMoins),
                     Donnees.instance().obtenirConsoVolume(Donnees.Equipement.PhMoins),
                     Donnees.instance().obtenirConsoVolumeRestant(Donnees.Equipement.PhMoins));
+            MainActivity.instance().setHtmlText(texteConsoInjections, "Produit injecté sur 1 /7 / 28 jours : "
+                    + "<b>" + Donnees.instance().obtenirConsoJour(Donnees.Equipement.PhMoins) + "</b> / "
+                    + "<b>" + Donnees.instance().obtenirConsoSemaine(Donnees.Equipement.PhMoins) + "</b> / "
+                    + "<b>" + Donnees.instance().obtenirConsoMois(Donnees.Equipement.PhMoins) + "</b>");
         }
     }
 
@@ -256,34 +260,44 @@ public class FragmentRegulateurPhMoins extends Fragment implements View.OnClickL
 
         if (typeAsservissement.equals(Donnees.ASSERVISSEMENT_TOR)) {
             data += "Durée injection : ";
-            data += Donnees.instance().obtenirDureeInjection(Donnees.Equipement.PhMoins);
-            data += "\nTemps de réponse après injection : ";
-            data += Donnees.instance().obtenirTempsReponse(Donnees.Equipement.PhMoins);
+            data += "<b>" + Donnees.instance().obtenirDureeInjection(Donnees.Equipement.PhMoins) + "</b>";
+            data += "<br />Temps de réponse après injection : ";
+            data += "<b>" + Donnees.instance().obtenirTempsReponse(Donnees.Equipement.PhMoins) + "</b>";
         } else {
             data += "Durée cycle : ";
-            data += Donnees.instance().obtenirDureeCycle(Donnees.Equipement.PhMoins) + " seconde(s)";
-            data += "\nMultiplicateur de différence : ";
-            data += Donnees.instance().obtenirMultiplicateurDifference(Donnees.Equipement.PhMoins);
+            data += "<b>" + Donnees.instance().obtenirDureeCycle(Donnees.Equipement.PhMoins) + " seconde(s)</b>";
+            data += "<br />Multiplicateur de différence : ";
+            data += "<b>" + Donnees.instance().obtenirMultiplicateurDifference(Donnees.Equipement.PhMoins) + "</b>";
 
             if (Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.PhMoins)) {
-                data += "\nDurée injection : ";
-                data += Donnees.instance().obtenirDureeInjection(Donnees.Equipement.PhMoins);
-                data += "\nTemps de réponse après injection : ";
-                data += Donnees.instance().obtenirTempsReponse(Donnees.Equipement.PhMoins);
+                data += "<br />Durée injection : ";
+                data += "<b>" + Donnees.instance().obtenirDureeInjection(Donnees.Equipement.PhMoins) + "</b>";
+                data += "<br />Temps de réponse après injection : ";
+                data += "<b>" + Donnees.instance().obtenirTempsReponse(Donnees.Equipement.PhMoins) + "</b>";
             }
         }
 
-        data += "\nTemps d'injection journalier maximum : ";
-        data += Donnees.instance().obtenirTempsInjectionJournalierMax(Donnees.Equipement.PhMoins) + " minute(s)";
-        data += "\nTemps d'injection journalier maximum restant : ";
-        data += Donnees.instance().obtenirTempsInjectionJournalierMaxRestant(Donnees.Equipement.PhMoins) + " minute(s)";
+        data += "<br />Temps d'injection journalier maximum : ";
+        data += "<b>" + Donnees.instance().obtenirTempsInjectionJournalierMax(Donnees.Equipement.PhMoins) + " minute(s)</b>";
+        data += "<br /><font color=\"" + (Donnees.instance().obtenirTempsInjectionJournalierMaxRestant(Donnees.Equipement.PhMoins) > 0 ? "#00FF00" : "orange") + "\"><i>Temps d'injection journalier maximum restant : ";
+        data += "<b>" + Donnees.instance().obtenirTempsInjectionJournalierMaxRestant(Donnees.Equipement.PhMoins) + " minute(s)</b></i></font>";
 
-        texteDonneesAsservissement.setText(data);
+        MainActivity.instance().setHtmlText(texteDonneesAsservissement, data);
     }
 
     private void consoAEteModifie(String date, double consoVolume, double consoVolumeRestant) {
-        texteConso.setText("Depuis : " + date +
-                "\nVolume : " + consoVolume + " L" +
-                "\nVolume restant : " + consoVolumeRestant + " L");
+        String color;
+
+        if (consoVolumeRestant < (consoVolume * Global.HYSTERESIS_BIDON_VIDE / 100.0)) {
+            color = "red";
+        } else if (consoVolumeRestant < (consoVolume * Global.HYSTERESIS_BIDON_PRESQUE_VIDE / 100.0)) {
+            color = "orange";
+        } else {
+            color = "#00FF00";
+        }
+
+        MainActivity.instance().setHtmlText(texteConso, "Depuis : " + date +
+                "<br />Volume : <b>" + consoVolume + " L</b>" +
+                "<br /><font color=\"" + color + "\"><i>Volume restant : <b>" + consoVolumeRestant + " L</b></i></font>");
     }
 }

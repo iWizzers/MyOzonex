@@ -36,6 +36,7 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
 
     // Tout orientations
     TextView texteConso;
+    LinearLayout layoutPlagesFct;
     GridLayout widgetPlage1;
     ImageButton boutonSupprimerPlage1;
     ImageButton boutonModifierPlage1;
@@ -112,6 +113,7 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
         }
 
         texteConso = (TextView) view.findViewById(R.id.texte_donnees_conso);
+        layoutPlagesFct = view.findViewById(R.id.layout_plages_fct);
         widgetPlage1 = (GridLayout) view.findViewById(R.id.widget_plage_1);
         boutonSupprimerPlage1 = (ImageButton) view.findViewById(R.id.bouton_supprimer_plage_1);
         boutonModifierPlage1 = (ImageButton) view.findViewById(R.id.bouton_modifier_plage_1);
@@ -319,6 +321,8 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
                 boutonMarche.setLayoutParams(paramEtatNok);
             }
         }
+
+        layoutPlagesFct.setVisibility(mode == Donnees.MARCHE ? View.GONE : View.VISIBLE);
     }
 
     private void consoAEteModifie(String date, double consoHP, double consoHC) {

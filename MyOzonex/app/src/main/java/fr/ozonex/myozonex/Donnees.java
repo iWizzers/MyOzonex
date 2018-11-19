@@ -2,6 +2,7 @@ package fr.ozonex.myozonex;
 
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -294,6 +295,21 @@ public class Donnees {
         } else {
             activiteIHM = false;
         }
+    }
+
+    public int obtenirCouleurTexte() {
+        int couleur;
+
+        if ((background == 2)
+                || (background == 3)
+                || (background == 4)
+                || (background == 6)) {
+            couleur = Color.WHITE;
+        } else {
+            couleur = Color.BLACK;
+        }
+
+        return couleur;
     }
 
     public int obtenirBackground() {

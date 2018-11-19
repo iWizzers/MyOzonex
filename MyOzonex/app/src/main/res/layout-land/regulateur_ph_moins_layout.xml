@@ -130,7 +130,6 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="Depuis :\nVolume :\nVolume restant :"
-                                    android:textStyle="bold"
                                     android:textColor="@color/couleurTexteGeneral"
                                     android:textSize="@dimen/texteGeneral" />
 
@@ -145,7 +144,6 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="Produit injecté sur 1 /7 / 28 jours : %1 / %2 / %3"
-                                    android:textStyle="bold"
                                     android:textColor="@color/couleurTexteGeneral"
                                     android:textSize="@dimen/texteGeneral" />
                             </LinearLayout>
@@ -227,7 +225,6 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="Durée cycle : X minutes\nMultiplicateur de différence : X\nDurée injection : X minutes\nTemps de réponse après injection : X minutes\nTemps d'injection journalier maximum : X minutes"
-                                    android:textStyle="bold"
                                     android:textColor="@color/couleurTexteGeneral"
                                     android:textSize="@dimen/texteGeneral" />
                             </LinearLayout>

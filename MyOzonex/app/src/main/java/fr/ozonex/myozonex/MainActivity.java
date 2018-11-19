@@ -140,6 +140,8 @@ public class MainActivity extends AppCompatActivity
         clignotementLED = new Handler();
     }
 
+
+
     private final Runnable refresh = new Runnable() {
         public void run() {
             restoreMe(savedInstanceState);

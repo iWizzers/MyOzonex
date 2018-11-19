@@ -137,6 +137,7 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/layout_regulations"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
@@ -158,7 +159,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="0"
                                     android:maxLines="1"
-                                    android:text="Asservissement"
+                                    android:text="Régulations (pH / ORP)"
                                     android:textStyle="bold"
                                     android:gravity="center"
                                     android:textColor="@color/couleurSousTitre"
@@ -180,7 +181,7 @@
                                 android:paddingLeft="@dimen/layout_widget_space"
                                 android:paddingRight="@dimen/layout_widget_space">
                                 <TextView
-                                    android:id="@+id/texte_donnees_asservissement"
+                                    android:id="@+id/texte_donnees_regulations"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="Type de refoulements : X\nType de régulation : TOR\nTemps sécurité injection : 45 minute(s)\nHystéresis sécurité injection pH : 0.15\nHystéresis sécurité injection ORP : 100 mV\nHystéresis sécurité injection ampéro : 0.40"

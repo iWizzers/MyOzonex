@@ -106,13 +106,14 @@
                         android:layout_column="1"
                         android:layout_row="0"
                         android:layout_columnWeight="0"
-                        android:background="@drawable/background_button"
+                        android:background="@drawable/background_bouton_menu"
                         android:contentDescription="TODO"
                         android:scaleType="fitCenter"
                         app:srcCompat="@drawable/pompe_filtration_inactif"
                         tools:ignore="MissingConstraints" />
 
                     <TextView
+                        android:id="@+id/texte_pompe_filtration"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="0"
@@ -147,13 +148,14 @@
                         android:layout_column="4"
                         android:layout_row="0"
                         android:layout_columnWeight="0"
-                        android:background="@drawable/background_button"
+                        android:background="@drawable/background_bouton_menu"
                         android:contentDescription="TODO"
                         android:scaleType="fitCenter"
                         app:srcCompat="@drawable/filtre"
                         tools:ignore="MissingConstraints" />
 
                     <TextView
+                        android:id="@+id/texte_filtre"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="3"
@@ -188,13 +190,14 @@
                         android:layout_column="7"
                         android:layout_row="0"
                         android:layout_columnWeight="0"
-                        android:background="@drawable/background_button"
+                        android:background="@drawable/background_bouton_menu"
                         android:contentDescription="TODO"
                         android:scaleType="fitCenter"
                         app:srcCompat="@drawable/surpresseur_inactif"
                         tools:ignore="MissingConstraints" />
 
                     <TextView
+                        android:id="@+id/texte_surpresseur"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="6"
@@ -229,13 +232,14 @@
                         android:layout_column="10"
                         android:layout_row="0"
                         android:layout_columnWeight="0"
-                        android:background="@drawable/background_button"
+                        android:background="@drawable/background_bouton_menu"
                         android:contentDescription="TODO"
                         android:scaleType="fitCenter"
                         app:srcCompat="@drawable/thermometre"
                         tools:ignore="MissingConstraints" />
 
                     <TextView
+                        android:id="@+id/texte_chauffage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="9"
@@ -270,13 +274,14 @@
                         android:layout_column="13"
                         android:layout_row="0"
                         android:layout_columnWeight="0"
-                        android:background="@drawable/background_button"
+                        android:background="@drawable/background_bouton_menu"
                         android:contentDescription="TODO"
                         android:scaleType="fitCenter"
                         app:srcCompat="@drawable/lampes_uv_inactif"
                         tools:ignore="MissingConstraints" />
 
                     <TextView
+                        android:id="@+id/texte_lampes_uv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="12"
@@ -311,13 +316,14 @@
                         android:layout_column="16"
                         android:layout_row="0"
                         android:layout_columnWeight="0"
-                        android:background="@drawable/background_button"
+                        android:background="@drawable/background_bouton_menu"
                         android:contentDescription="TODO"
                         android:scaleType="fitCenter"
                         app:srcCompat="@drawable/electrolyseur_inactif"
                         tools:ignore="MissingConstraints" />
 
                     <TextView
+                        android:id="@+id/texte_electrolyseur"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="15"
@@ -352,13 +358,14 @@
                         android:layout_column="19"
                         android:layout_row="0"
                         android:layout_columnWeight="0"
-                        android:background="@drawable/background_button"
+                        android:background="@drawable/background_bouton_menu"
                         android:contentDescription="TODO"
                         android:scaleType="fitCenter"
                         app:srcCompat="@drawable/ozone"
                         tools:ignore="MissingConstraints" />
 
                     <TextView
+                        android:id="@+id/texte_ozonateur"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="18"
@@ -393,13 +400,14 @@
                         android:layout_column="22"
                         android:layout_row="0"
                         android:layout_columnWeight="0"
-                        android:background="@drawable/background_button"
+                        android:background="@drawable/background_bouton_menu"
                         android:contentDescription="TODO"
                         android:scaleType="fitCenter"
                         app:srcCompat="@drawable/ampoule"
                         tools:ignore="MissingConstraints" />
 
                     <TextView
+                        android:id="@+id/texte_eclairage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="21"
@@ -429,13 +437,14 @@
                         android:layout_column="1"
                         android:layout_row="2"
                         android:layout_columnWeight="0"
-                        android:background="@drawable/background_button"
+                        android:background="@drawable/background_bouton_menu"
                         android:contentDescription="TODO"
                         android:scaleType="fitCenter"
                         app:srcCompat="@drawable/ph"
                         tools:ignore="MissingConstraints" />
 
                     <TextView
+                        android:id="@+id/texte_reg_ph_plus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="0"
@@ -457,13 +466,14 @@
                         android:layout_column="4"
                         android:layout_row="2"
                         android:layout_columnWeight="0"
-                        android:background="@drawable/background_button"
+                        android:background="@drawable/background_bouton_menu"
                         android:contentDescription="TODO"
                         android:scaleType="fitCenter"
                         app:srcCompat="@drawable/ph"
                         tools:ignore="MissingConstraints" />
 
                     <TextView
+                        android:id="@+id/texte_reg_ph_moins"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="3"
@@ -485,13 +495,14 @@
                         android:layout_column="7"
                         android:layout_row="2"
                         android:layout_columnWeight="0"
-                        android:background="@drawable/background_button"
+                        android:background="@drawable/background_bouton_menu"
                         android:contentDescription="TODO"
                         android:scaleType="fitCenter"
                         app:srcCompat="@drawable/desinfection"
                         tools:ignore="MissingConstraints" />
 
                     <TextView
+                        android:id="@+id/texte_reg_orp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="6"
@@ -513,13 +524,14 @@
                         android:layout_column="10"
                         android:layout_row="2"
                         android:layout_columnWeight="0"
-                        android:background="@drawable/background_button"
+                        android:background="@drawable/background_bouton_menu"
                         android:contentDescription="TODO"
                         android:scaleType="fitCenter"
                         app:srcCompat="@drawable/algues"
                         tools:ignore="MissingConstraints" />
 
                     <TextView
+                        android:id="@+id/texte_algicide"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="9"
@@ -541,13 +553,14 @@
                         android:layout_column="19"
                         android:layout_row="2"
                         android:layout_columnWeight="0"
-                        android:background="@drawable/background_button"
+                        android:background="@drawable/background_bouton_menu"
                         android:contentDescription="TODO"
                         android:scaleType="fitCenter"
                         app:srcCompat="@drawable/logo_bassin"
                         tools:ignore="MissingConstraints" />
 
                     <TextView
+                        android:id="@+id/texte_bassin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="18"
@@ -569,13 +582,14 @@
                         android:layout_column="22"
                         android:layout_row="2"
                         android:layout_columnWeight="0"
-                        android:background="@drawable/background_button"
+                        android:background="@drawable/background_bouton_menu"
                         android:contentDescription="TODO"
                         android:scaleType="fitCenter"
                         app:srcCompat="@drawable/capteurs"
                         tools:ignore="MissingConstraints" />
 
                     <TextView
+                        android:id="@+id/texte_capteurs"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="21"
@@ -605,13 +619,14 @@
                         android:layout_column="4"
                         android:layout_row="4"
                         android:layout_columnWeight="0"
-                        android:background="@drawable/background_button"
+                        android:background="@drawable/background_bouton_menu"
                         android:contentDescription="TODO"
                         android:scaleType="fitCenter"
                         app:srcCompat="@drawable/journal"
                         tools:ignore="MissingConstraints" />
 
                     <TextView
+                        android:id="@+id/texte_events"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="3"
@@ -633,13 +648,14 @@
                         android:layout_column="22"
                         android:layout_row="4"
                         android:layout_columnWeight="0"
-                        android:background="@drawable/background_button"
+                        android:background="@drawable/background_bouton_menu"
                         android:contentDescription="TODO"
                         android:scaleType="fitCenter"
                         app:srcCompat="@drawable/shutdown"
                         tools:ignore="MissingConstraints" />
 
                     <TextView
+                        android:id="@+id/texte_deconnexion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="21"
