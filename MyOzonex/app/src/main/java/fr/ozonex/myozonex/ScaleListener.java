@@ -38,8 +38,8 @@ public class ScaleListener {
         } else {
             display.getSize(size);
         }
-        final float screenWidth = convertPixelsToDp(size.x);
-        final float screenHeight = convertPixelsToDp(size.y);
+        final float screenWidth = Convertisseur.convertPixelsToDp(size.x);
+        final float screenHeight = Convertisseur.convertPixelsToDp(size.y);
         final float diff_width = 1280 - screenWidth;
         final float diff_height = 800 - screenHeight;
 
@@ -51,15 +51,15 @@ public class ScaleListener {
 
         layout.setScaleX(mScaleFactor);
         layout.setScaleY(mScaleFactor);
-        layout.setTranslationX(-convertDpToPixel(diff_width / 2));
-        layout.setTranslationY(-convertDpToPixel((800 - 800 * mScaleFactor) / 2));
+        layout.setTranslationX(-Convertisseur.convertDpToPixel(diff_width / 2));
+        layout.setTranslationY(-Convertisseur.convertDpToPixel((800 - 800 * mScaleFactor) / 2));
 
         verticalScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
             public void onScrollChanged() {
                 if (diff_height < diff_width) {
-                    if (convertPixelsToDp(verticalScrollView.getScrollY()) >= (800 * mScaleFactor - screenHeight)) {
-                        verticalScrollView.smoothScrollTo(0, (int) convertDpToPixel(800 * mScaleFactor - screenHeight));
+                    if (Convertisseur.convertPixelsToDp(verticalScrollView.getScrollY()) >= (800 * mScaleFactor - screenHeight)) {
+                        verticalScrollView.smoothScrollTo(0, (int) Convertisseur.convertDpToPixel(800 * mScaleFactor - screenHeight));
                     }
                 } else {
                     verticalScrollView.smoothScrollTo(0, 0);
@@ -73,34 +73,11 @@ public class ScaleListener {
                 if (diff_height < diff_width) {
                     horizontalScrollView.smoothScrollTo(0, 0);
                 } else {
-                    if (convertPixelsToDp(horizontalScrollView.getScrollX()) >= (1280 * mScaleFactor - screenWidth)) {
-                        horizontalScrollView.smoothScrollTo((int) convertDpToPixel(1280 * mScaleFactor - screenWidth), 0);
+                    if (Convertisseur.convertPixelsToDp(horizontalScrollView.getScrollX()) >= (1280 * mScaleFactor - screenWidth)) {
+                        horizontalScrollView.smoothScrollTo((int) Convertisseur.convertDpToPixel(1280 * mScaleFactor - screenWidth), 0);
                     }
                 }
             }
         });
-    }
-
-    /**
-     * This method converts dp unit to equivalent pixels, depending on device density.
-     *
-     * @param dp A value in dp (density independent pixels) unit. Which we need to convert into pixels
-     * @return A float value to represent px equivalent to dp depending on device density
-     */
-    public static float convertDpToPixel(float dp){
-        Resources resources = MainActivity.instance().getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
-        return px;
-    }
-
-    /**
-     * This method converts device specific pixels to density independent pixels.
-     *
-     * @param px A value in px (pixels) unit. Which we need to convert into db
-     * @return A float value to represent dp equivalent to px value
-     */
-    public static float convertPixelsToDp(float px){
-        return px / ((float) MainActivity.instance().getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
 }

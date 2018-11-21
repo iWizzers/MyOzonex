@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -25,6 +26,12 @@ import static android.support.v4.view.MotionEventCompat.getPointerCount;
 
 public class FragmentSynoptique extends Fragment implements View.OnClickListener {
     View view = null;
+
+    AnimationInjection animationInjectionOzone;
+    AnimationInjection animationInjectionRegPhPlus;
+    AnimationInjection animationInjectionRegPhMoins;
+    AnimationInjection animationInjectionRegORP;
+    AnimationInjection animationInjectionAlgicide;
 
     // Tout orientations
     ProgressBar contenuBidonAlgicide;
@@ -341,6 +348,12 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
         boutonAccueil.setOnClickListener(this);
         boutonMenu.setOnClickListener(this);
 
+        animationInjectionOzone = new AnimationInjection((RelativeLayout) view.findViewById(R.id.layout_sortie_ozone), ligneSortieOzone, true, Donnees.Equipement.Ozone, R.color.ozone);
+        animationInjectionRegPhPlus = new AnimationInjection((RelativeLayout) view.findViewById(R.id.layout_sortie_reg_ph_plus), ligneInjectionPhPlus, false, Donnees.Equipement.PhPlus, R.color.phPlus);
+        animationInjectionRegPhMoins = new AnimationInjection((RelativeLayout) view.findViewById(R.id.layout_sortie_reg_ph_moins), ligneInjectionPhMoins, false, Donnees.Equipement.PhMoins, R.color.phMoins);
+        animationInjectionRegORP = new AnimationInjection((RelativeLayout) view.findViewById(R.id.layout_sortie_reg_orp), ligneInjectionOrp, false, Donnees.Equipement.Orp, R.color.orp);
+        animationInjectionAlgicide = new AnimationInjection((RelativeLayout) view.findViewById(R.id.layout_sortie_algicide), ligneInjectionAlgicide, false, Donnees.Equipement.Algicide, R.color.algicide);
+
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             new ScaleListener((HorizontalScrollView) view.findViewById(R.id.horizontal_scroll),
@@ -423,6 +436,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
                     sondeOzone);
             definirImageBouton(boutonOzonateur, Donnees.Equipement.Ozone);
             definirTexteMode(texteModeOzonateur, Donnees.Equipement.Ozone);
+            definirInjection(Donnees.Equipement.Ozone);
 
             afficherElementsEquipement(Donnees.Equipement.LampesUV,
                     texteModeLampesUV,
@@ -448,6 +462,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             definirImageBouton(boutonAlgicide, Donnees.Equipement.Algicide);
             definirTexteMode(texteModeAlgicide, Donnees.Equipement.Algicide);
             definirConsoRegulation(texteConsoAlgicide, contenuBidonAlgicide, Donnees.Equipement.Algicide);
+            definirInjection(Donnees.Equipement.Algicide);
 
             afficherElementsEquipement(Donnees.Equipement.Orp,
                     texteModeRegulateurOrp,
@@ -460,6 +475,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             definirImageBouton(boutonRegulateurOrp, Donnees.Equipement.Orp);
             definirTexteMode(texteModeRegulateurOrp, Donnees.Equipement.Orp);
             definirConsoRegulation(texteConsoOrp, contenuBidonOrp, Donnees.Equipement.Orp);
+            definirInjection(Donnees.Equipement.Orp);
 
             afficherElementsEquipement(Donnees.Equipement.PhMoins,
                     texteModeRegulateurPhMoins,
@@ -472,6 +488,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             definirImageBouton(boutonRegulateurPhMoins, Donnees.Equipement.PhMoins);
             definirTexteMode(texteModeRegulateurPhMoins, Donnees.Equipement.PhMoins);
             definirConsoRegulation(texteConsoPhMoins, contenuBidonPhMoins, Donnees.Equipement.PhMoins);
+            definirInjection(Donnees.Equipement.PhMoins);
 
             afficherElementsEquipement(Donnees.Equipement.PhPlus,
                     texteModeRegulateurPhPlus,
@@ -484,6 +501,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             definirImageBouton(boutonRegulateurPhPlus, Donnees.Equipement.PhPlus);
             definirTexteMode(texteModeRegulateurPhPlus, Donnees.Equipement.PhPlus);
             definirConsoRegulation(texteConsoPhPlus, contenuBidonPhPlus, Donnees.Equipement.PhPlus);
+            definirInjection(Donnees.Equipement.PhPlus);
 
             sondePt.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
             ligneCapteurPt1.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
@@ -886,6 +904,30 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
 
         textView.setTextColor(couleurTexte);
         textView.setBackgroundResource(couleurContour);
+    }
+
+    private void definirInjection(Donnees.Equipement equipement) {
+        AnimationInjection animationInjection = null;
+
+        if (equipement == Donnees.Equipement.Ozone) {
+            animationInjection = animationInjectionOzone;
+        } else if (equipement == Donnees.Equipement.PhPlus) {
+            animationInjection = animationInjectionRegPhPlus;
+        } else if (equipement == Donnees.Equipement.PhMoins) {
+            animationInjection = animationInjectionRegPhMoins;
+        } else if (equipement == Donnees.Equipement.Orp) {
+            animationInjection = animationInjectionRegORP;
+        } else if (equipement == Donnees.Equipement.Algicide) {
+            animationInjection = animationInjectionAlgicide;
+        }
+
+        if ((animationInjection != null)
+                && ((Donnees.instance().obtenirModeFonctionnement(equipement) == Donnees.AUTO_MARCHE)
+                || (Donnees.instance().obtenirModeFonctionnement(equipement) == Donnees.MARCHE))) {
+            animationInjection.ajouterInjection();
+        } else {
+            animationInjection.arreterTimer();
+        }
     }
 
     private void afficherElementsEquipement(Donnees.Equipement equipement, View... views) {

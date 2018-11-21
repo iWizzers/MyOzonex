@@ -26,6 +26,7 @@
     <color name="orp">#FFFF00</color>
     <color name="phMoins">#FF0000</color>
     <color name="phPlus">#800080</color>
+    <color name="ozone">#00AAFF</color>
 
     <color name="bouton3EtatSelectionne">#00FF00</color>
     <color name="bouton3EtatNonSelectionne">#FFFFFF</color>
