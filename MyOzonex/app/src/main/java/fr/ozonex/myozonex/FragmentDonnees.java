@@ -222,6 +222,7 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
 
             layoutTemperatureExterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.CapteurExterne) ? View.VISIBLE : View.GONE);
             valeurTemperatureExterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureExterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureExterne) + " °C" : "Err");
+            valeurTemperatureExterne.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureExterne) ? Color.WHITE : Color.RED);
 
             if (Donnees.instance().obtenirEtatLectureCapteurs()) {
                 if (Donnees.instance().obtenirEtat(Donnees.Capteur.Ph)) {
@@ -335,8 +336,6 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
                 } else {
                     valeurTemperatureBassin.setTextColor(Color.RED);
                 }
-
-                valeurTemperatureExterne.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureExterne) ? Color.WHITE : Color.RED);
             }
         }
     }

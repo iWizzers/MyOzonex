@@ -43,6 +43,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/layout_space"
                         android:layout_weight="1"
                         android:layout_gravity="center_vertical|left"
                         android:text="Température bassin"
@@ -70,6 +71,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/layout_space"
                         android:layout_weight="1"
                         android:layout_gravity="center_vertical|left"
                         android:text="Température interne"
@@ -97,6 +99,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/layout_space"
                         android:layout_weight="1"
                         android:layout_gravity="center_vertical|left"
                         android:text="Humidité interne"
@@ -124,6 +127,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/layout_space"
                         android:layout_weight="1"
                         android:layout_gravity="center_vertical|left"
                         android:text="Pression atmosphérique interne"
@@ -151,6 +155,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/layout_space"
                         android:layout_weight="1"
                         android:layout_gravity="center_vertical|left"
                         android:text="Température externe"
@@ -178,6 +183,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/layout_space"
                         android:layout_weight="1"
                         android:layout_gravity="center_vertical|left"
                         android:text="Humidité externe"
@@ -205,6 +211,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/layout_space"
                         android:layout_weight="1"
                         android:layout_gravity="center_vertical|left"
                         android:text="Pression atmosphérique externe"
@@ -232,6 +239,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/layout_space"
                         android:layout_weight="1"
                         android:layout_gravity="center_vertical|left"
                         android:text="pH"
@@ -259,6 +267,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/layout_space"
                         android:layout_weight="1"
                         android:layout_gravity="center_vertical|left"
                         android:text="ORP"
@@ -286,6 +295,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/layout_space"
                         android:layout_weight="1"
                         android:layout_gravity="center_vertical|left"
                         android:text="Pression"
@@ -313,6 +323,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/layout_space"
                         android:layout_weight="1"
                         android:layout_gravity="center_vertical|left"
                         android:text="Ampéro"
@@ -340,6 +351,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/layout_space"
                         android:layout_weight="1"
                         android:layout_gravity="center_vertical|left"
                         android:text="4-20 Libre"

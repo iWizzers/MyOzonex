@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -31,9 +32,6 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
     ProgressBar contenuBidonPhMoins;
     ProgressBar contenuBidonPhPlus;
     View ligneCapteurPt1;
-    View ligneCapteurPt2;
-    View ligneCapteurPt3;
-    View ligneCapteurPt4;
     TextView texteCapteurPt;
     View ligneCapteurPh;
     View ligneCapteurPhMoins1;
@@ -93,13 +91,11 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
     ImageView tuyauSortieFiltre2;
     ImageView tuyauSortieTFiltre;
     ImageView tuyauSortieFiltreSurpresseur1;
-    ImageView tuyauSortieFiltreSurpresseur2;
     ImageView tuyauSortieFiltreChauffage1;
     ImageView tuyauSortieFiltreChauffage2;
     ImageView tuyauSortieFiltreChauffage3;
     ImageView tuyauSortieFiltreChauffage4;
     ImageView tuyauSortieTFiltreChauffage;
-    ImageView tuyauEntreeSurpresseur1;
     ImageView tuyauEntreeSurpresseur2;
     ImageView tuyauEntreeSurpresseur3;
     ImageView tuyauEntreeChauffage1;
@@ -132,7 +128,14 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
     ImageView sondePh;
     ImageView sondeOrp;
     ImageView sondeAmpero;
-    TextView texteCapteurTempExterne;
+    GridLayout layoutCapteurInterne;
+    TextView texteValeurTempInterne;
+    TextView texteValeurHumiditeInterne;
+    TextView texteValeurPressionAtmInterne;
+    GridLayout layoutCapteurExterne;
+    TextView texteValeurTempExterne;
+    TextView texteValeurHumiditeExterne;
+    TextView texteValeurPressionAtmExterne;
     ImageButton boutonPompeFiltration;
     TextView texteModePompeFiltration;
     ImageButton boutonOzonateur;
@@ -181,9 +184,6 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
         contenuBidonPhMoins = (ProgressBar) view.findViewById(R.id.contenu_bidon_ph_moins);
         contenuBidonPhPlus = (ProgressBar) view.findViewById(R.id.contenu_bidon_ph_plus);
         ligneCapteurPt1 = view.findViewById(R.id.ligne_capteur_pt_1);
-        ligneCapteurPt2 = view.findViewById(R.id.ligne_capteur_pt_2);
-        ligneCapteurPt3 = view.findViewById(R.id.ligne_capteur_pt_3);
-        ligneCapteurPt4 = view.findViewById(R.id.ligne_capteur_pt_4);
         texteCapteurPt = (TextView) view.findViewById(R.id.texte_capteur_pt);
         ligneCapteurPh = view.findViewById(R.id.ligne_capteur_ph);
         ligneCapteurPhMoins1 = view.findViewById(R.id.ligne_capteur_ph_moins_1);
@@ -243,13 +243,11 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
         tuyauSortieFiltre2 = (ImageView) view.findViewById(R.id.tuyau_sortie_filtre_2);
         tuyauSortieTFiltre = (ImageView) view.findViewById(R.id.tuyau_sortie_t_filtre);
         tuyauSortieFiltreSurpresseur1 = (ImageView) view.findViewById(R.id.tuyau_sortie_filtre_surpresseur_1);
-        tuyauSortieFiltreSurpresseur2 = (ImageView) view.findViewById(R.id.tuyau_sortie_filtre_surpresseur_2);
         tuyauSortieFiltreChauffage1 = (ImageView) view.findViewById(R.id.tuyau_sortie_filtre_chauffage_1);
         tuyauSortieFiltreChauffage2 = (ImageView) view.findViewById(R.id.tuyau_sortie_filtre_chauffage_2);
         tuyauSortieFiltreChauffage3 = (ImageView) view.findViewById(R.id.tuyau_sortie_filtre_chauffage_3);
         tuyauSortieFiltreChauffage4 = (ImageView) view.findViewById(R.id.tuyau_sortie_filtre_chauffage_4);
         tuyauSortieTFiltreChauffage = (ImageView) view.findViewById(R.id.tuyau_sortie_t_filtre_chauffage);
-        tuyauEntreeSurpresseur1 = (ImageView) view.findViewById(R.id.tuyau_entree_surpresseur_1);
         tuyauEntreeSurpresseur2 = (ImageView) view.findViewById(R.id.tuyau_entree_surpresseur_2);
         tuyauEntreeSurpresseur3 = (ImageView) view.findViewById(R.id.tuyau_entree_surpresseur_3);
         tuyauEntreeChauffage1 = (ImageView) view.findViewById(R.id.tuyau_entree_chauffage_1);
@@ -282,7 +280,14 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
         sondePh = (ImageView) view.findViewById(R.id.sonde_ph);
         sondeOrp = (ImageView) view.findViewById(R.id.sonde_orp);
         sondeAmpero = (ImageView) view.findViewById(R.id.sonde_ampero);
-        texteCapteurTempExterne = (TextView) view.findViewById(R.id.texte_capteur_temp_externe);
+        layoutCapteurInterne = view.findViewById(R.id.layout_capteur_interne);
+        texteValeurTempInterne = (TextView) view.findViewById(R.id.texte_valeur_temperature_interne);
+        texteValeurHumiditeInterne = (TextView) view.findViewById(R.id.texte_valeur_humidite_interne);
+        texteValeurPressionAtmInterne = (TextView) view.findViewById(R.id.texte_valeur_pression_atm_interne);
+        layoutCapteurExterne = view.findViewById(R.id.layout_capteur_externe);
+        texteValeurTempExterne = (TextView) view.findViewById(R.id.texte_valeur_temperature_externe);
+        texteValeurHumiditeExterne = (TextView) view.findViewById(R.id.texte_valeur_humidite_externe);
+        texteValeurPressionAtmExterne = (TextView) view.findViewById(R.id.texte_valeur_pression_atm_externe);
         boutonPompeFiltration = (ImageButton) view.findViewById(R.id.pompe_filtration);
         texteModePompeFiltration = (TextView) view.findViewById(R.id.texte_mode_pompe_filtration);
         boutonOzonateur = (ImageButton) view.findViewById(R.id.ozonateur);
@@ -358,8 +363,15 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             boolean ozoneActive = (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Ozone) == Donnees.AUTO_MARCHE) || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Ozone) == Donnees.MARCHE);
             int couleurLigneInjection = pompeFiltrationActive ? ((Donnees.instance().obtenirTypeAsservissement().equals(Donnees.ASSERVISSEMENT_TOR) && chauffageActive) ? getResources().getColor(R.color.ligneInjectionActiveChaud) : getResources().getColor(R.color.ligneInjectionActive)) : getResources().getColor(R.color.ligneInjectionInactive);
 
-            texteCapteurTempExterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.CapteurExterne) ? View.VISIBLE : View.GONE);
-            texteCapteurTempExterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureExterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureExterne) + " °C" : "Err");
+            layoutCapteurInterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.CapteurInterne) ? View.VISIBLE : View.GONE);
+            texteValeurTempInterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureInterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureInterne) + " °C" : "Err");
+            texteValeurHumiditeInterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.HumiditeInterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.HumiditeInterne) + " %" : "Err");
+            texteValeurPressionAtmInterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.PressionAtmospheriqueInterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.PressionAtmospheriqueInterne) + " hPa" : "Err");
+
+            layoutCapteurExterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.CapteurExterne) ? View.VISIBLE : View.GONE);
+            texteValeurTempExterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureExterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureExterne) + " °C" : "Err");
+            texteValeurHumiditeExterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.HumiditeExterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.HumiditeExterne) + " %" : "Err");
+            texteValeurPressionAtmExterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.PressionAtmospheriqueExterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.PressionAtmospheriqueExterne) + " hPa" : "Err");
 
             boutonPompeFiltration.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PompeFiltration));
             definirImageBouton(boutonPompeFiltration, Donnees.Equipement.PompeFiltration);
@@ -373,9 +385,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
                     texteModeSurpresseur,
                     boutonSurpresseur,
                     tuyauSortieFiltreSurpresseur1,
-                    tuyauSortieFiltreSurpresseur2,
                     vanneEntreeSurpresseur,
-                    tuyauEntreeSurpresseur1,
                     tuyauEntreeSurpresseur2,
                     tuyauEntreeSurpresseur3,
                     tuyauSortieSurpresseur,
@@ -411,6 +421,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
                     boutonOzonateur,
                     ligneSortieOzone,
                     sondeOzone);
+            definirImageBouton(boutonOzonateur, Donnees.Equipement.Ozone);
             definirTexteMode(texteModeOzonateur, Donnees.Equipement.Ozone);
 
             afficherElementsEquipement(Donnees.Equipement.LampesUV,
@@ -476,9 +487,6 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
 
             sondePt.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
             ligneCapteurPt1.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
-            ligneCapteurPt2.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
-            ligneCapteurPt3.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
-            ligneCapteurPt4.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
             texteCapteurPt.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
             texteCapteurPt.setText("Température bassin : " + (Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureBassin) ? Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin) + " °C" : "Err"));
 
@@ -543,6 +551,14 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             }
 
             // Couleur capteurs
+            texteValeurTempInterne.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureInterne) ? Color.BLACK : Color.RED);
+            texteValeurHumiditeInterne.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur.HumiditeInterne) ? Color.BLACK : Color.RED);
+            texteValeurPressionAtmInterne.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur.PressionAtmospheriqueInterne) ? Color.BLACK : Color.RED);
+
+            texteValeurTempExterne.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureExterne) ? Color.BLACK : Color.RED);
+            texteValeurHumiditeExterne.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur.HumiditeExterne) ? Color.BLACK : Color.RED);
+            texteValeurPressionAtmExterne.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur.PressionAtmospheriqueExterne) ? Color.BLACK : Color.RED);
+
             if (Donnees.instance().obtenirEtatLectureCapteurs()) {
                 if (Donnees.instance().obtenirEtat(Donnees.Capteur.Pression)) {
                     if ((Donnees.instance().obtenirSeuilBasPression() <= Donnees.instance().obtenirValeur(Donnees.Capteur.Pression))
@@ -666,8 +682,6 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
                 } else {
                     texteCapteurPt.setTextColor(Color.RED);
                 }
-
-                texteCapteurTempExterne.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureExterne) ? Color.BLACK : Color.RED);
             } else {
                 texteCapteurPression.setTextColor(Color.BLACK);
             }
@@ -694,8 +708,6 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             tuyauSortieFiltre2.setImageResource(pompeFiltrationActive ? R.drawable.tuyau_vertical_actif : R.drawable.tuyau_vertical_inactif);
             tuyauSortieTFiltre.setImageResource(pompeFiltrationActive ? R.drawable.tuyau_3_6_9_actif : R.drawable.tuyau_3_6_9_inactif);
             tuyauSortieFiltreSurpresseur1.setImageResource(pompeFiltrationActive ? R.drawable.tuyau_3_9_12_actif : R.drawable.tuyau_3_9_12_inactif);
-            tuyauSortieFiltreSurpresseur2.setImageResource(pompeFiltrationActive ? R.drawable.tuyau_vertical_actif : R.drawable.tuyau_vertical_inactif);
-            tuyauEntreeSurpresseur1.setImageResource(pompeFiltrationActive ? R.drawable.tuyau_vertical_actif : R.drawable.tuyau_vertical_inactif);
             tuyauEntreeSurpresseur2.setImageResource(pompeFiltrationActive ? R.drawable.tuyau_6_9_actif : R.drawable.tuyau_6_9_inactif);
             tuyauEntreeSurpresseur3.setImageResource(pompeFiltrationActive ? R.drawable.tuyau_horizontal_actif : R.drawable.tuyau_horizontal_inactif);
             tuyauSortieSurpresseur.setImageResource((pompeFiltrationActive && surpresseurActive) ? R.drawable.tuyau_vertical_actif : R.drawable.tuyau_vertical_inactif);
@@ -818,6 +830,10 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             case LampesUV:
                 imageActif = R.drawable.lampes_uv_actif;
                 imageInactif = R.drawable.lampes_uv_inactif;
+                break;
+            case Ozone:
+                imageActif = R.drawable.ozone_actif;
+                imageInactif = R.drawable.ozone_inactif;
                 break;
             case Algicide: case Orp: case PhMoins: case PhPlus:
                 imageActif = R.drawable.pomperegulation_actif;

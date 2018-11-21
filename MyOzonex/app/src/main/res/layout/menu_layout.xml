@@ -361,7 +361,7 @@
                         android:background="@drawable/background_bouton_menu"
                         android:contentDescription="TODO"
                         android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/ozone"
+                        app:srcCompat="@drawable/ozone_inactif"
                         tools:ignore="MissingConstraints" />
 
                     <TextView
