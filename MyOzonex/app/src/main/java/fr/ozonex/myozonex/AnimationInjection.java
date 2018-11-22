@@ -2,7 +2,7 @@ package fr.ozonex.myozonex;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
+import android.animation.ObjectAnimator;
 import android.os.Handler;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -71,19 +71,11 @@ public class AnimationInjection {
         injection.setLayoutParams(params);
         container.addView(injection);
 
-        ValueAnimator animation = ValueAnimator.ofFloat(startTop ? -width : height, startTop ? height : -width);
+        ObjectAnimator animation = ObjectAnimator.ofFloat(injection, "translationY",startTop ? -width : height, startTop ? height : -width);
         animation.setDuration(10 * height);
-        animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float progress = (float) animation.getAnimatedValue();
-                injection.setTranslationY(progress);
-            }
-        });
         animation.addListener(new AnimatorListenerAdapter() {
             @Override
-            public void onAnimationEnd(Animator animation)
-            {
+            public void onAnimationEnd(Animator animation) {
                 container.removeView(injection);
             }
         });

@@ -32,6 +32,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
     AnimationInjection animationInjectionRegPhMoins;
     AnimationInjection animationInjectionRegORP;
     AnimationInjection animationInjectionAlgicide;
+    AnimationRefoulement animationRefoulement;
 
     // Tout orientations
     ProgressBar contenuBidonAlgicide;
@@ -353,7 +354,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
         animationInjectionRegPhMoins = new AnimationInjection((RelativeLayout) view.findViewById(R.id.layout_sortie_reg_ph_moins), ligneInjectionPhMoins, false, Donnees.Equipement.PhMoins, R.color.phMoins);
         animationInjectionRegORP = new AnimationInjection((RelativeLayout) view.findViewById(R.id.layout_sortie_reg_orp), ligneInjectionOrp, false, Donnees.Equipement.Orp, R.color.orp);
         animationInjectionAlgicide = new AnimationInjection((RelativeLayout) view.findViewById(R.id.layout_sortie_algicide), ligneInjectionAlgicide, false, Donnees.Equipement.Algicide, R.color.algicide);
-
+        animationRefoulement = new AnimationRefoulement((RelativeLayout) view.findViewById(R.id.layout_contenu_refoulement));
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             new ScaleListener((HorizontalScrollView) view.findViewById(R.id.horizontal_scroll),
@@ -502,6 +503,8 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             definirTexteMode(texteModeRegulateurPhPlus, Donnees.Equipement.PhPlus);
             definirConsoRegulation(texteConsoPhPlus, contenuBidonPhPlus, Donnees.Equipement.PhPlus);
             definirInjection(Donnees.Equipement.PhPlus);
+
+            definirRefoulement();
 
             sondePt.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
             ligneCapteurPt1.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
@@ -927,6 +930,15 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             animationInjection.ajouterInjection();
         } else {
             animationInjection.arreterTimer();
+        }
+    }
+
+    private void definirRefoulement() {
+        if ((Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PompeFiltration) == Donnees.AUTO_MARCHE)
+                || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PompeFiltration) == Donnees.MARCHE)) {
+            animationRefoulement.ajouterInjection();
+        } else {
+            animationRefoulement.arreterTimer();
         }
     }
 

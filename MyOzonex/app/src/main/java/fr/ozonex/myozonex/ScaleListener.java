@@ -1,20 +1,11 @@
 package fr.ozonex.myozonex;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Build;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.widget.AbsoluteLayout;
 import android.widget.HorizontalScrollView;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 public class ScaleListener {
