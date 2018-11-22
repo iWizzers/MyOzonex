@@ -22,6 +22,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ClavierActivity" />
+
         <service
             android:name=".HttpService"
             android:enabled="true" >
@@ -31,9 +33,6 @@
             android:name="HttpRestarterBroadcastReceiver"
             android:enabled="true"
             android:exported="true" >
-            <intent-filter>
-                <action android:name="RestartHttp"/>
-            </intent-filter>
         </receiver>
 
     </application>

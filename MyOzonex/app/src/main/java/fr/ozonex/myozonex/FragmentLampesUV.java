@@ -5,20 +5,18 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
-
-import static android.support.v4.view.MotionEventCompat.getPointerCount;
 
 public class FragmentLampesUV extends Fragment implements View.OnClickListener {
     View view = null;
@@ -27,14 +25,14 @@ public class FragmentLampesUV extends Fragment implements View.OnClickListener {
     TextView texteConso;
 
     // Orientation portrait
+    LinearLayout globalLayoutPortrait;
     RadioGroup rgBoutonsMode;
     RadioButton rbAuto;
     RadioButton rbArret;
     RadioButton rbMarche;
 
     // Orientation paysage
-    private ScaleGestureDetector mScaleGestureDetector;
-    AbsoluteLayout layout;
+    HorizontalScrollView globalLayoutPaysage;
     ImageButton boutonRetour;
     ImageView bouton3Etats;
     Button boutonAuto;
@@ -48,6 +46,7 @@ public class FragmentLampesUV extends Fragment implements View.OnClickListener {
 
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            globalLayoutPortrait = view.findViewById(R.id.global_layout);
             rgBoutonsMode = (RadioGroup) view.findViewById(R.id.groupe_boutons_mode);
             rbAuto = (RadioButton) view.findViewById(R.id.radio_bouton_auto);
             rbArret = (RadioButton) view.findViewById(R.id.radio_bouton_arret);
@@ -57,33 +56,11 @@ public class FragmentLampesUV extends Fragment implements View.OnClickListener {
             rbArret.setOnClickListener(this);
             rbMarche.setOnClickListener(this);
         } else {
-            layout = (AbsoluteLayout) view.findViewById(R.id.layout);
-            mScaleGestureDetector = new ScaleGestureDetector(MainActivity.instance(), new ScaleListener(layout));
-            view.findViewById(R.id.horizontal_scroll).setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (getPointerCount(event) == 2) {
-                        mScaleGestureDetector.onTouchEvent(event);
-                    } else {
-                        return false;
-                    }
+            new ScaleListener((HorizontalScrollView) view.findViewById(R.id.horizontal_scroll),
+                    (ScrollView) view.findViewById(R.id.vertical_scroll),
+                    (AbsoluteLayout) view.findViewById(R.id.layout));
 
-                    return true;
-                }
-            });
-            view.findViewById(R.id.vertical_scroll).setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (getPointerCount(event) == 2) {
-                        mScaleGestureDetector.onTouchEvent(event);
-                    } else {
-                        return false;
-                    }
-
-                    return true;
-                }
-            });
-
+            globalLayoutPaysage = view.findViewById(R.id.horizontal_scroll);
             boutonRetour = (ImageButton) view.findViewById(R.id.bouton_retour);
             bouton3Etats = (ImageView) view.findViewById(R.id.bouton_3_etats);
             boutonAuto = (Button) view.findViewById(R.id.bouton_auto);
@@ -107,6 +84,22 @@ public class FragmentLampesUV extends Fragment implements View.OnClickListener {
 
     public void update() {
         if ((view != null) && isAdded()) {
+            if (!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.LampesUV)) {
+                MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_synoptique_layout));
+            }
+
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
+                rbAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
+                rbArret.setClickable(Donnees.instance().obtenirActiviteIHM());
+                rbMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
+            } else {
+                globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());
+                boutonAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
+                boutonArret.setClickable(Donnees.instance().obtenirActiviteIHM());
+                boutonMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
+            }
+
             modeAEteModifie(Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.LampesUV));
 
             consoAEteModifie(Donnees.instance().obtenirDateDebutConso(Donnees.Equipement.LampesUV),
@@ -142,7 +135,7 @@ public class FragmentLampesUV extends Fragment implements View.OnClickListener {
 
     private void modifierMode(RadioButton rb) {
         int etat = Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.LampesUV);
-        String data = "state=";
+        String data = "etat=";
 
         if (rb == rbAuto) {
             etat = (etat == Donnees.AUTO_MARCHE) ? Donnees.AUTO_MARCHE : Donnees.AUTO_ARRET;
@@ -159,13 +152,13 @@ public class FragmentLampesUV extends Fragment implements View.OnClickListener {
                 "",
                 "",
                 HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.UV_lamps),
+                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageLampesUV),
                 data + String.valueOf(etat));
     }
 
     private void modifierMode(Button bouton) {
         int etat = Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.LampesUV);
-        String data = "state=";
+        String data = "etat=";
 
         if (bouton == boutonAuto) {
             etat = (etat == Donnees.AUTO_MARCHE) ? Donnees.AUTO_MARCHE : Donnees.AUTO_ARRET;
@@ -182,7 +175,7 @@ public class FragmentLampesUV extends Fragment implements View.OnClickListener {
                 "",
                 "",
                 HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.UV_lamps),
+                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageLampesUV),
                 data + String.valueOf(etat));
     }
 

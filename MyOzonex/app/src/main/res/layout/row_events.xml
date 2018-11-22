@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/background_event"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/layout_container_space"
+    android:background="#FFA000" >
+    <TextView
+        android:id="@+id/texte_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Amorçage pompe filtration non abouti"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/texteGeneral"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/date_heure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/texte_event"
+        android:text="Défaut apparu le 15/11/2018 à 10h44"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/texteGeneral"
+        android:textStyle="italic" />
+</RelativeLayout >

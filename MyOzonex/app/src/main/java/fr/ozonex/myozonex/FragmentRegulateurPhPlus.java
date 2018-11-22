@@ -5,40 +5,38 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
-
-import static android.support.v4.view.MotionEventCompat.getPointerCount;
 
 public class FragmentRegulateurPhPlus extends Fragment implements View.OnClickListener {
     View view = null;
 
     // Tout orientations
     TextView texteConso;
+    TextView texteConsoInjections;
     RadioButton rbTOR;
     RadioButton rbLineaire;
     TextView texteDonneesAsservissement;
 
     // Orientation portrait
+    LinearLayout globalLayoutPortrait;
     RadioGroup rgBoutonsMode;
     RadioButton rbAuto;
     RadioButton rbArret;
     RadioButton rbMarche;
 
     // Orientation paysage
-    private ScaleGestureDetector mScaleGestureDetector;
-    AbsoluteLayout layout;
+    HorizontalScrollView globalLayoutPaysage;
     ImageButton boutonRetour;
     ImageView bouton3Etats;
     Button boutonAuto;
@@ -52,6 +50,7 @@ public class FragmentRegulateurPhPlus extends Fragment implements View.OnClickLi
 
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            globalLayoutPortrait = view.findViewById(R.id.global_layout);
             rgBoutonsMode = (RadioGroup) view.findViewById(R.id.groupe_boutons_mode);
             rbAuto = (RadioButton) view.findViewById(R.id.radio_bouton_auto);
             rbArret = (RadioButton) view.findViewById(R.id.radio_bouton_arret);
@@ -61,33 +60,11 @@ public class FragmentRegulateurPhPlus extends Fragment implements View.OnClickLi
             rbArret.setOnClickListener(this);
             rbMarche.setOnClickListener(this);
         } else {
-            layout = (AbsoluteLayout) view.findViewById(R.id.layout);
-            mScaleGestureDetector = new ScaleGestureDetector(MainActivity.instance(), new ScaleListener(layout));
-            view.findViewById(R.id.horizontal_scroll).setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (getPointerCount(event) == 2) {
-                        mScaleGestureDetector.onTouchEvent(event);
-                    } else {
-                        return false;
-                    }
+            new ScaleListener((HorizontalScrollView) view.findViewById(R.id.horizontal_scroll),
+                    (ScrollView) view.findViewById(R.id.vertical_scroll),
+                    (AbsoluteLayout) view.findViewById(R.id.layout));
 
-                    return true;
-                }
-            });
-            view.findViewById(R.id.vertical_scroll).setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (getPointerCount(event) == 2) {
-                        mScaleGestureDetector.onTouchEvent(event);
-                    } else {
-                        return false;
-                    }
-
-                    return true;
-                }
-            });
-
+            globalLayoutPaysage = view.findViewById(R.id.horizontal_scroll);
             boutonRetour = (ImageButton) view.findViewById(R.id.bouton_retour);
             bouton3Etats = (ImageView) view.findViewById(R.id.bouton_3_etats);
             boutonAuto = (Button) view.findViewById(R.id.bouton_auto);
@@ -101,6 +78,7 @@ public class FragmentRegulateurPhPlus extends Fragment implements View.OnClickLi
         }
 
         texteConso = (TextView) view.findViewById(R.id.texte_donnees_conso);
+        texteConsoInjections = view.findViewById(R.id.texte_conso_injections);
         rbTOR = (RadioButton) view.findViewById(R.id.radio_bouton_tor);
         rbLineaire = (RadioButton) view.findViewById(R.id.radio_bouton_lineaire);
         texteDonneesAsservissement = (TextView) view.findViewById(R.id.texte_donnees_asservissement);
@@ -114,14 +92,33 @@ public class FragmentRegulateurPhPlus extends Fragment implements View.OnClickLi
 
     public void update() {
         if ((view != null) && isAdded()) {
+            if (!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus)) {
+                MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_synoptique_layout));
+            }
+
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
+                rbAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
+                rbArret.setClickable(Donnees.instance().obtenirActiviteIHM());
+                rbMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
+            } else {
+                globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());
+                boutonAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
+                boutonArret.setClickable(Donnees.instance().obtenirActiviteIHM());
+                boutonMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
+            }
+
             modeAEteModifie(Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhPlus));
 
-            asservissementAEteModifie(Donnees.instance().obtenirTypeAsservissement(),
-                    Donnees.instance().obtenirReglageAuto(Donnees.Equipement.PhPlus));
+            asservissementAEteModifie(Donnees.instance().obtenirTypeAsservissement());
 
             consoAEteModifie(Donnees.instance().obtenirDateDebutConso(Donnees.Equipement.PhPlus),
                     Donnees.instance().obtenirConsoVolume(Donnees.Equipement.PhPlus),
                     Donnees.instance().obtenirConsoVolumeRestant(Donnees.Equipement.PhPlus));
+            MainActivity.instance().setHtmlText(texteConsoInjections, "Produit injecté sur 1 /7 / 28 jours : "
+                    + "<b>" + Donnees.instance().obtenirConsoJour(Donnees.Equipement.PhPlus) + "</b> / "
+                    + "<b>" + Donnees.instance().obtenirConsoSemaine(Donnees.Equipement.PhPlus) + "</b> / "
+                    + "<b>" + Donnees.instance().obtenirConsoMois(Donnees.Equipement.PhPlus) + "</b>");
         }
     }
 
@@ -152,7 +149,7 @@ public class FragmentRegulateurPhPlus extends Fragment implements View.OnClickLi
 
     private void modifierMode(RadioButton rb) {
         int etat = Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhPlus);
-        String data = "state=";
+        String data = "etat=";
 
         if (rb == rbAuto) {
             etat = (etat == Donnees.AUTO_MARCHE) ? Donnees.AUTO_MARCHE : Donnees.AUTO_ARRET;
@@ -169,13 +166,13 @@ public class FragmentRegulateurPhPlus extends Fragment implements View.OnClickLi
                 "",
                 "",
                 HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.Ph_Plus),
+                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageRegulateurPhPlus),
                 data + String.valueOf(etat));
     }
 
     private void modifierMode(Button bouton) {
         int etat = Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhPlus);
-        String data = "state=";
+        String data = "etat=";
 
         if (bouton == boutonAuto) {
             etat = (etat == Donnees.AUTO_MARCHE) ? Donnees.AUTO_MARCHE : Donnees.AUTO_ARRET;
@@ -192,7 +189,7 @@ public class FragmentRegulateurPhPlus extends Fragment implements View.OnClickLi
                 "",
                 "",
                 HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.Ph_Plus),
+                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageRegulateurPhPlus),
                 data + String.valueOf(etat));
     }
 
@@ -250,7 +247,7 @@ public class FragmentRegulateurPhPlus extends Fragment implements View.OnClickLi
         }
     }
 
-    private void asservissementAEteModifie(String typeAsservissement, boolean auto) {
+    private void asservissementAEteModifie(String typeAsservissement) {
         String data = "";
 
         rbTOR.setChecked(typeAsservissement.equals(Donnees.ASSERVISSEMENT_TOR));
@@ -258,34 +255,44 @@ public class FragmentRegulateurPhPlus extends Fragment implements View.OnClickLi
 
         if (typeAsservissement.equals(Donnees.ASSERVISSEMENT_TOR)) {
             data += "Durée injection : ";
-            data += Donnees.instance().obtenirDureeInjection(Donnees.Equipement.PhPlus);
-            data += "\nTemps de réponse après injection : ";
-            data += Donnees.instance().obtenirTempsReponse(Donnees.Equipement.PhPlus);
+            data += "<b>" + Donnees.instance().obtenirDureeInjection(Donnees.Equipement.PhPlus) + "</b>";
+            data += "<br />Temps de réponse après injection : ";
+            data += "<b>" + Donnees.instance().obtenirTempsReponse(Donnees.Equipement.PhPlus) + "</b>";
         } else {
             data += "Durée cycle : ";
-            data += Donnees.instance().obtenirDureeCycle(Donnees.Equipement.PhPlus) + " seconde(s)";
-            data += "\nMultiplicateur de différence : ";
-            data += Donnees.instance().obtenirMultiplicateurDifference(Donnees.Equipement.PhPlus);
+            data += "<b>" + Donnees.instance().obtenirDureeCycle(Donnees.Equipement.PhPlus) + " seconde(s)</b>";
+            data += "<br />Multiplicateur de différence : ";
+            data += "<b>" + Donnees.instance().obtenirMultiplicateurDifference(Donnees.Equipement.PhPlus) + "</b>";
 
             if (Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.PhPlus)) {
-                data += "\nDurée injection : ";
-                data += Donnees.instance().obtenirDureeInjection(Donnees.Equipement.PhPlus);
-                data += "\nTemps de réponse après injection : ";
-                data += Donnees.instance().obtenirTempsReponse(Donnees.Equipement.PhPlus);
+                data += "<br />Durée injection : ";
+                data += "<b>" + Donnees.instance().obtenirDureeInjection(Donnees.Equipement.PhPlus) + "</b>";
+                data += "<br />Temps de réponse après injection : ";
+                data += "<b>" + Donnees.instance().obtenirTempsReponse(Donnees.Equipement.PhPlus) + "</b>";
             }
         }
 
-        data += "\nTemps d'injection journalier maximum : ";
-        data += Donnees.instance().obtenirTempsInjectionJournalierMax(Donnees.Equipement.PhPlus) + " minute(s)";
-        data += "\nTemps d'injection journalier maximum restant : ";
-        data += Donnees.instance().obtenirTempsInjectionJournalierMaxRestant(Donnees.Equipement.PhPlus) + " minute(s)";
+        data += "<br />Temps d'injection journalier maximum : ";
+        data += "<b>" + Donnees.instance().obtenirTempsInjectionJournalierMax(Donnees.Equipement.PhPlus) + " minute(s)</b>";
+        data += "<br /><font color=\"" + (Donnees.instance().obtenirTempsInjectionJournalierMaxRestant(Donnees.Equipement.PhPlus) > 0 ? "#00FF00" : "orange") + "\"><i>Temps d'injection journalier maximum restant : ";
+        data += "<b>" + Donnees.instance().obtenirTempsInjectionJournalierMaxRestant(Donnees.Equipement.PhPlus) + " minute(s)</b></i></font>";
 
-        texteDonneesAsservissement.setText(data);
+        MainActivity.instance().setHtmlText(texteDonneesAsservissement, data);
     }
 
     private void consoAEteModifie(String date, double consoVolume, double consoVolumeRestant) {
-        texteConso.setText("Depuis : " + date +
-                "\nVolume : " + consoVolume + " L" +
-                "\nVolume restant : " + consoVolumeRestant + " L");
+        String color;
+
+        if (consoVolumeRestant < (consoVolume * Global.HYSTERESIS_BIDON_VIDE / 100.0)) {
+            color = "red";
+        } else if (consoVolumeRestant < (consoVolume * Global.HYSTERESIS_BIDON_PRESQUE_VIDE / 100.0)) {
+            color = "orange";
+        } else {
+            color = "#00FF00";
+        }
+
+        MainActivity.instance().setHtmlText(texteConso, "Depuis : " + date +
+                "<br />Volume : <b>" + consoVolume + " L</b>" +
+                "<br /><font color=\"" + color + "\"><i>Volume restant : <b>" + consoVolumeRestant + " L</b></i></font>");
     }
 }

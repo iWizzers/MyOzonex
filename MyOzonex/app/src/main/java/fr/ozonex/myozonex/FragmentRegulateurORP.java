@@ -5,27 +5,26 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
-
-import static android.support.v4.view.MotionEventCompat.getPointerCount;
 
 public class FragmentRegulateurORP extends Fragment implements View.OnClickListener {
     View view = null;
 
     // Tout orientations
     TextView texteConso;
+    TextView texteConsoInjections;
     RadioButton rbTOR;
     RadioButton rbLineaire;
     TextView texteDonneesAsservissement;
@@ -33,14 +32,14 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
     TextView texteDonneesSurchloration;
 
     // Orientation portrait
+    LinearLayout globalLayoutPortrait;
     RadioGroup rgBoutonsMode;
     RadioButton rbAuto;
     RadioButton rbArret;
     RadioButton rbMarche;
 
     // Orientation paysage
-    private ScaleGestureDetector mScaleGestureDetector;
-    AbsoluteLayout layout;
+    HorizontalScrollView globalLayoutPaysage;
     ImageButton boutonRetour;
     ImageView bouton3Etats;
     Button boutonAuto;
@@ -54,6 +53,7 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
 
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            globalLayoutPortrait = view.findViewById(R.id.global_layout);
             rgBoutonsMode = (RadioGroup) view.findViewById(R.id.groupe_boutons_mode);
             rbAuto = (RadioButton) view.findViewById(R.id.radio_bouton_auto);
             rbArret = (RadioButton) view.findViewById(R.id.radio_bouton_arret);
@@ -63,33 +63,11 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
             rbArret.setOnClickListener(this);
             rbMarche.setOnClickListener(this);
         } else {
-            layout = (AbsoluteLayout) view.findViewById(R.id.layout);
-            mScaleGestureDetector = new ScaleGestureDetector(MainActivity.instance(), new ScaleListener(layout));
-            view.findViewById(R.id.horizontal_scroll).setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (getPointerCount(event) == 2) {
-                        mScaleGestureDetector.onTouchEvent(event);
-                    } else {
-                        return false;
-                    }
+            new ScaleListener((HorizontalScrollView) view.findViewById(R.id.horizontal_scroll),
+                    (ScrollView) view.findViewById(R.id.vertical_scroll),
+                    (AbsoluteLayout) view.findViewById(R.id.layout));
 
-                    return true;
-                }
-            });
-            view.findViewById(R.id.vertical_scroll).setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (getPointerCount(event) == 2) {
-                        mScaleGestureDetector.onTouchEvent(event);
-                    } else {
-                        return false;
-                    }
-
-                    return true;
-                }
-            });
-
+            globalLayoutPaysage = view.findViewById(R.id.horizontal_scroll);
             boutonRetour = (ImageButton) view.findViewById(R.id.bouton_retour);
             bouton3Etats = (ImageView) view.findViewById(R.id.bouton_3_etats);
             boutonAuto = (Button) view.findViewById(R.id.bouton_auto);
@@ -103,6 +81,7 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
         }
 
         texteConso = (TextView) view.findViewById(R.id.texte_donnees_conso);
+        texteConsoInjections = view.findViewById(R.id.texte_conso_injections);
         rbTOR = (RadioButton) view.findViewById(R.id.radio_bouton_tor);
         rbLineaire = (RadioButton) view.findViewById(R.id.radio_bouton_lineaire);
         texteDonneesAsservissement = (TextView) view.findViewById(R.id.texte_donnees_asservissement);
@@ -118,14 +97,33 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
 
     public void update() {
         if ((view != null) && isAdded()) {
+            if (!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp)) {
+                MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_synoptique_layout));
+            }
+
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
+                rbAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
+                rbArret.setClickable(Donnees.instance().obtenirActiviteIHM());
+                rbMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
+            } else {
+                globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());
+                boutonAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
+                boutonArret.setClickable(Donnees.instance().obtenirActiviteIHM());
+                boutonMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
+            }
+
             modeAEteModifie(Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Orp));
 
-            asservissementAEteModifie(Donnees.instance().obtenirTypeAsservissement(),
-                    Donnees.instance().obtenirReglageAuto(Donnees.Equipement.Orp));
+            asservissementAEteModifie(Donnees.instance().obtenirTypeAsservissement());
 
             consoAEteModifie(Donnees.instance().obtenirDateDebutConso(Donnees.Equipement.Orp),
                     Donnees.instance().obtenirConsoVolume(Donnees.Equipement.Orp),
                     Donnees.instance().obtenirConsoVolumeRestant(Donnees.Equipement.Orp));
+            MainActivity.instance().setHtmlText(texteConsoInjections, "Produit injecté sur 1 /7 / 28 jours : "
+                    + "<b>" + Donnees.instance().obtenirConsoJour(Donnees.Equipement.Orp) + "</b> / "
+                    + "<b>" + Donnees.instance().obtenirConsoSemaine(Donnees.Equipement.Orp) + "</b> / "
+                    + "<b>" + Donnees.instance().obtenirConsoMois(Donnees.Equipement.Orp) + "</b>");
         }
     }
 
@@ -156,7 +154,7 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
 
     private void modifierMode(RadioButton rb) {
         int etat = Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Orp);
-        String data = "state=";
+        String data = "etat=";
 
         if (rb == rbAuto) {
             etat = (etat == Donnees.AUTO_MARCHE) ? Donnees.AUTO_MARCHE : Donnees.AUTO_ARRET;
@@ -173,13 +171,13 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
                 "",
                 "",
                 HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.Orp),
+                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageRegulateurORP),
                 data + String.valueOf(etat));
     }
 
     private void modifierMode(Button bouton) {
         int etat = Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Orp);
-        String data = "state=";
+        String data = "etat=";
 
         if (bouton == boutonAuto) {
             etat = (etat == Donnees.AUTO_MARCHE) ? Donnees.AUTO_MARCHE : Donnees.AUTO_ARRET;
@@ -196,7 +194,7 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
                 "",
                 "",
                 HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.Orp),
+                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageRegulateurORP),
                 data + String.valueOf(etat));
     }
 
@@ -254,7 +252,7 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
         }
     }
 
-    private void asservissementAEteModifie(String typeAsservissement, boolean auto) {
+    private void asservissementAEteModifie(String typeAsservissement) {
         String data = "";
 
         rbTOR.setChecked(typeAsservissement.equals(Donnees.ASSERVISSEMENT_TOR));

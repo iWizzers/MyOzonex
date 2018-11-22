@@ -5,19 +5,14 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
-import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
-
-import static android.support.v4.view.MotionEventCompat.getPointerCount;
 
 public class FragmentFiltre extends Fragment implements View.OnClickListener {
     View view = null;
@@ -26,11 +21,12 @@ public class FragmentFiltre extends Fragment implements View.OnClickListener {
     TextView texteConso;
 
     // Orientation portrait
+    LinearLayout globalLayoutPortrait;
+    LinearLayout layoutConfiguration;
     TextView texteDonneesConfiguration;
 
     // Orientation paysage
-    private ScaleGestureDetector mScaleGestureDetector;
-    AbsoluteLayout layout;
+    HorizontalScrollView globalLayoutPaysage;
     ImageButton boutonRetour;
 
     @Nullable
@@ -40,35 +36,15 @@ public class FragmentFiltre extends Fragment implements View.OnClickListener {
 
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            globalLayoutPortrait = view.findViewById(R.id.global_layout);
+            layoutConfiguration = view.findViewById(R.id.layout_configuration);
             texteDonneesConfiguration = (TextView) view.findViewById(R.id.texte_donnees_configuration);
         } else {
-            layout = (AbsoluteLayout) view.findViewById(R.id.layout);
-            mScaleGestureDetector = new ScaleGestureDetector(MainActivity.instance(), new ScaleListener(layout));
-            view.findViewById(R.id.horizontal_scroll).setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (getPointerCount(event) == 2) {
-                        mScaleGestureDetector.onTouchEvent(event);
-                    } else {
-                        return false;
-                    }
+            new ScaleListener((HorizontalScrollView) view.findViewById(R.id.horizontal_scroll),
+                    (ScrollView) view.findViewById(R.id.vertical_scroll),
+                    (AbsoluteLayout) view.findViewById(R.id.layout));
 
-                    return true;
-                }
-            });
-            view.findViewById(R.id.vertical_scroll).setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (getPointerCount(event) == 2) {
-                        mScaleGestureDetector.onTouchEvent(event);
-                    } else {
-                        return false;
-                    }
-
-                    return true;
-                }
-            });
-
+            globalLayoutPaysage = view.findViewById(R.id.horizontal_scroll);
             boutonRetour = (ImageButton) view.findViewById(R.id.bouton_retour);
 
             boutonRetour.setOnClickListener(this);
@@ -85,11 +61,15 @@ public class FragmentFiltre extends Fragment implements View.OnClickListener {
 
     public void update() {
         if ((view != null) && isAdded()) {
-            modifierDernierLavage();
-
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
+                layoutConfiguration.setVisibility(Donnees.instance().presence(Donnees.Capteur.Pression) ? View.VISIBLE : View.GONE);
                 modifierConfiguration();
+            } else {
+                globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());
             }
+
+            modifierDernierLavage();
         }
     }
 

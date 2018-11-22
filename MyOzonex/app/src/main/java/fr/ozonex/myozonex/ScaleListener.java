@@ -1,50 +1,74 @@
 package fr.ozonex.myozonex;
 
-import android.content.Context;
 import android.graphics.Point;
-import android.util.DisplayMetrics;
-import android.util.Log;
+import android.os.Build;
 import android.view.Display;
-import android.view.ScaleGestureDetector;
-import android.view.WindowManager;
+import android.view.ViewTreeObserver;
 import android.widget.AbsoluteLayout;
+import android.widget.HorizontalScrollView;
+import android.widget.ScrollView;
 
-public class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
-    private float mScaleFactor = 1.0f;
+public class ScaleListener {
+    private HorizontalScrollView horizontalScrollView;
+    private ScrollView verticalScrollView;
     private AbsoluteLayout layout;
 
-    ScaleListener(AbsoluteLayout layout) {
+    ScaleListener(HorizontalScrollView horizontalScrollView, ScrollView verticalScrollView, AbsoluteLayout layout) {
+        this.horizontalScrollView = horizontalScrollView;
+        this.verticalScrollView = verticalScrollView;
         this.layout = layout;
+        scale();
     }
 
-    @Override
-    public boolean onScale(ScaleGestureDetector scaleGestureDetector) {
-        /*Display display = MainActivity.instance().getWindowManager().getDefaultDisplay();
+    private void scale() {
+        final float mScaleFactor;
+        Display display = MainActivity.instance().getWindowManager().getDefaultDisplay();
         Point size = new Point();
-        display.getSize(size);
-        float screenWidth = size.x;
-        float screenHeight = size.y;
-        Log.d("TEST", String.valueOf(screenWidth));
-        Log.d("TEST", String.valueOf(screenHeight));
-        screenWidth = convertPixelsToDp(screenWidth, MainActivity.instance());
-        screenHeight = convertPixelsToDp(screenHeight, MainActivity.instance());
-        Log.d("TEST", String.valueOf(screenWidth));
-        Log.d("TEST", String.valueOf(screenHeight));*/
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            display.getRealSize(size);
+        } else {
+            display.getSize(size);
+        }
+        final float screenWidth = Convertisseur.convertPixelsToDp(size.x);
+        final float screenHeight = Convertisseur.convertPixelsToDp(size.y);
+        final float diff_width = 1280 - screenWidth;
+        final float diff_height = 800 - screenHeight;
 
-        mScaleFactor *= scaleGestureDetector.getScaleFactor();
-        mScaleFactor = Math.max(0.1f,
-                Math.min(mScaleFactor, 10.0f));
-
-        if (mScaleFactor > 1) {
-            mScaleFactor = 1;
+        if (diff_height < diff_width) {
+            mScaleFactor = screenWidth / 1280;
+        } else {
+            mScaleFactor = screenHeight / 800;
         }
 
         layout.setScaleX(mScaleFactor);
         layout.setScaleY(mScaleFactor);
-        return true;
-    }
+        layout.setTranslationX(-Convertisseur.convertDpToPixel(diff_width / 2));
+        layout.setTranslationY(-Convertisseur.convertDpToPixel((800 - 800 * mScaleFactor) / 2));
 
-    public static float convertPixelsToDp(float px, Context context){
-        return px / ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        verticalScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                if (diff_height < diff_width) {
+                    if (Convertisseur.convertPixelsToDp(verticalScrollView.getScrollY()) >= (800 * mScaleFactor - screenHeight)) {
+                        verticalScrollView.smoothScrollTo(0, (int) Convertisseur.convertDpToPixel(800 * mScaleFactor - screenHeight));
+                    }
+                } else {
+                    verticalScrollView.smoothScrollTo(0, 0);
+                }
+            }
+        });
+
+        horizontalScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                if (diff_height < diff_width) {
+                    horizontalScrollView.smoothScrollTo(0, 0);
+                } else {
+                    if (Convertisseur.convertPixelsToDp(horizontalScrollView.getScrollX()) >= (1280 * mScaleFactor - screenWidth)) {
+                        horizontalScrollView.smoothScrollTo((int) Convertisseur.convertDpToPixel(1280 * mScaleFactor - screenWidth), 0);
+                    }
+                }
+            }
+        });
     }
 }

@@ -1,182 +1,283 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/global_layout"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    android:background="@drawable/fond_portrait_2">
     <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:fillViewport="false"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp">
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="false">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="@dimen/layout_widget_space"
+            android:paddingBottom="@dimen/layout_widget_space"
             android:orientation="vertical">
-
-            <FrameLayout
-                android:layout_width="fill_parent"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/dotted_border">
-
+                android:paddingBottom="@dimen/layout_widget_space"
+                android:background="@color/transparentBackground"
+                android:orientation="vertical">
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:maxLines="1"
                         android:text="Mode de fonctionnement"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/holo_blue_light"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textColor="@color/couleurSousTitre"
+                        android:textSize="@dimen/texteSousTitre" />
 
-                    <RadioGroup
-                        android:id="@+id/groupe_boutons_mode"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <RadioButton
-                            android:id="@+id/radio_bouton_auto"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Auto"
-                            android:textColor="@android:color/black" />
-
-                        <RadioButton
-                            android:id="@+id/radio_bouton_arret"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Arrêt"
-                            android:textColor="@android:color/black" />
-
-                        <RadioButton
-                            android:id="@+id/radio_bouton_marche"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Marche"
-                            android:textColor="@android:color/black" />
-                    </RadioGroup>
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
                 </LinearLayout>
-            </FrameLayout>
 
-            <FrameLayout
-                android:layout_width="fill_parent"
+                <RadioGroup
+                    android:id="@+id/groupe_boutons_mode"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/layout_widget_space"
+                    android:layout_marginRight="@dimen/layout_widget_space"
+                    android:orientation="horizontal">
+                    <RadioButton
+                        android:id="@+id/radio_bouton_auto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Auto"
+                        android:textColor="@color/couleurTexteGeneral"
+                        android:textSize="@dimen/texteGeneral"
+                        android:textStyle="bold"
+                        android:buttonTint="#00FFFF" />
+
+                    <RadioButton
+                        android:id="@+id/radio_bouton_arret"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Arrêt"
+                        android:textColor="@color/couleurTexteGeneral"
+                        android:textSize="@dimen/texteGeneral"
+                        android:textStyle="bold"
+                        android:buttonTint="#00FFFF" />
+
+                    <RadioButton
+                        android:id="@+id/radio_bouton_marche"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Marche"
+                        android:textColor="@color/couleurTexteGeneral"
+                        android:textSize="@dimen/texteGeneral"
+                        android:textStyle="bold"
+                        android:buttonTint="#00FFFF" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/dotted_border">
+                android:layout_marginTop="@dimen/layout_widget_space"
+                android:paddingBottom="@dimen/layout_widget_space"
+                android:background="@color/transparentBackground"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:maxLines="1"
+                        android:text="Consommations"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textColor="@color/couleurSousTitre"
+                        android:textSize="@dimen/texteSousTitre" />
+
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/texte_donnees_conso"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/layout_widget_space"
+                    android:layout_marginRight="@dimen/layout_widget_space"
+                    android:text="Depuis : 26/05/2014\nHeures pleines : X kWh\nHeures creuses : X kWh"
+                    android:textColor="@color/couleurTexteGeneral"
+                    android:textSize="@dimen/texteGeneral"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_gestion_temp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/layout_widget_space"
+                android:paddingBottom="@dimen/layout_widget_space"
+                android:background="@color/transparentBackground"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:maxLines="1"
+                        android:text="Gestion température du bassin"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textColor="@color/couleurSousTitre"
+                        android:textSize="@dimen/texteSousTitre" />
+
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/layout_widget_space"
+                    android:layout_marginRight="@dimen/layout_widget_space"
                     android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Consommation"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/holo_blue_light"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/texte_donnees_conso"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Depuis : 26/05/2014\nHeures pleines : X kWh\nHeures creuses : X kWh"
-                        android:textColor="@android:color/black" />
-                </LinearLayout>
-
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/dotted_border">
-                <GridLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:columnCount="3"
-                    android:rowCount="7">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_columnSpan="3"
-                        android:text="Gestion température du bassin"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/holo_blue_light"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
                     <RadioButton
                         android:id="@+id/radio_button_plage"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_columnSpan="3"
-                        android:text="Plage température (commandé par la filtration)" />
+                        android:text="Plage température (commandé par la filtration)"
+                        android:textColor="@color/couleurTexteGeneral"
+                        android:textSize="@dimen/texteGeneral"
+                        android:textStyle="bold"
+                        android:buttonTint="#00FFFF" />
 
-                    <Button
-                        android:id="@+id/bouton_moins_arret"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_weight="1"
-                        android:text="-" />
-
-                    <TextView
-                        android:id="@+id/texte_arret"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="Température d'arrêt : 28 °C"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black" />
-
-                    <Button
-                        android:id="@+id/bouton_plus_arret"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_weight="1"
-                        android:text="+" />
-
-                    <Button
-                        android:id="@+id/bouton_moins_enclenchement"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_weight="1"
-                        android:text="-" />
-
-                    <TextView
-                        android:id="@+id/texte_enclenchement"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="Température d'enclenchement : 24 °C"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black" />
+                        android:orientation="horizontal" >
+                        <Button
+                            android:id="@+id/bouton_moins_arret"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="0"
+                            android:text="-"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/texteSousTitre" />
 
-                    <Button
-                        android:id="@+id/bouton_plus_enclenchement"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_weight="1"
-                        android:text="+" />
+                        <TextView
+                            android:id="@+id/texte_arret"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Température d'arrêt : 28 °C"
+                            android:textColor="@color/couleurTexteGeneral"
+                            android:textSize="@dimen/texteGeneral"
+                            android:textStyle="bold" />
+
+                        <Button
+                            android:id="@+id/bouton_plus_arret"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="0"
+                            android:text="+"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/texteSousTitre" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" >
+                        <Button
+                            android:id="@+id/bouton_moins_enclenchement"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="0"
+                            android:text="-"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/texteSousTitre" />
+
+                        <TextView
+                            android:id="@+id/texte_enclenchement"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Température d'enclenchement : 24 °C"
+                            android:textColor="@color/couleurTexteGeneral"
+                            android:textSize="@dimen/texteGeneral"
+                            android:textStyle="bold" />
+
+                        <Button
+                            android:id="@+id/bouton_plus_enclenchement"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="0"
+                            android:text="+"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/texteSousTitre" />
+                    </LinearLayout>
 
                     <ImageView
                         android:id="@+id/ligne"
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
-                        android:layout_columnSpan="3"
                         android:layerType="software"
                         android:src="@drawable/dotted_line" />
 
@@ -184,35 +285,336 @@
                         android:id="@+id/radio_button_consigne"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_columnSpan="3"
-                        android:text="Consigne (commande la filtration)" />
+                        android:text="Consigne (commande la filtration)"
+                        android:textColor="@color/couleurTexteGeneral"
+                        android:textSize="@dimen/texteGeneral"
+                        android:textStyle="bold"
+                        android:buttonTint="#00FFFF" />
 
-                    <Button
-                        android:id="@+id/bouton_moins_consigne"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" >
+                        <Button
+                            android:id="@+id/bouton_moins_consigne"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="0"
+                            android:text="-"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/texteSousTitre" />
+
+                        <TextView
+                            android:id="@+id/texte_consigne"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Température de consigne : 26 °C"
+                            android:textColor="@color/couleurTexteGeneral"
+                            android:textSize="@dimen/texteGeneral"
+                            android:textStyle="bold" />
+
+                        <Button
+                            android:id="@+id/bouton_plus_consigne"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="0"
+                            android:text="+"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/texteSousTitre" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_plages_fct"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/layout_widget_space"
+                android:paddingBottom="@dimen/layout_widget_space"
+                android:background="@color/transparentBackground"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <View
                         android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_height="2dp"
                         android:layout_weight="1"
-                        android:text="-" />
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
 
                     <TextView
-                        android:id="@+id/texte_consigne"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="0"
+                        android:maxLines="1"
+                        android:text="Plages de fonctionnement"
+                        android:textStyle="bold"
                         android:gravity="center"
-                        android:text="Température de consigne : 26 °C"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black" />
+                        android:textColor="@color/couleurSousTitre"
+                        android:textSize="@dimen/texteSousTitre" />
 
-                    <Button
-                        android:id="@+id/bouton_plus_consigne"
+                    <View
                         android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_height="2dp"
                         android:layout_weight="1"
-                        android:text="+" />
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+                </LinearLayout>
+
+                <GridLayout
+                    android:id="@+id/widget_plage_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="61dp"
+                    android:layout_marginLeft="@dimen/layout_widget_space"
+                    android:layout_marginRight="@dimen/layout_widget_space">
+                    <ImageButton
+                        android:id="@+id/bouton_supprimer_plage_1"
+                        android:layout_width="61dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/layout_space"
+                        android:layout_marginEnd="@dimen/layout_space"
+                        android:layout_row="0"
+                        android:layout_column="0"
+                        android:layout_rowSpan="2"
+                        android:background="@drawable/back_button_delete_range"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/poubelle" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="0"
+                        android:layout_column="1"
+                        android:layout_gravity="center"
+                        android:text="Plage 1"
+                        android:textColor="@color/couleurSousTitre"
+                        android:textSize="@dimen/texteSousTitre"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/texte_plage_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="1"
+                        android:layout_column="1"
+                        android:layout_gravity="center"
+                        android:text="05h10 - 11h05"
+                        android:textColor="@color/couleurTexteGeneral"
+                        android:textSize="@dimen/texteGeneral"
+                        android:textStyle="bold" />
+
+                    <ImageButton
+                        android:id="@+id/bouton_modifier_plage_1"
+                        android:layout_width="61dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:layout_marginRight="@dimen/layout_space"
+                        android:layout_marginStart="@dimen/layout_space"
+                        android:layout_marginEnd="@dimen/layout_space"
+                        android:layout_row="0"
+                        android:layout_column="2"
+                        android:layout_rowSpan="2"
+                        android:background="@drawable/back_button_change_range"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/engrenages" />
                 </GridLayout>
 
-            </FrameLayout>
+                <GridLayout
+                    android:id="@+id/widget_plage_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="61dp"
+                    android:layout_marginTop="@dimen/layout_space"
+                    android:layout_marginLeft="@dimen/layout_widget_space"
+                    android:layout_marginRight="@dimen/layout_widget_space">
+                    <ImageButton
+                        android:id="@+id/bouton_supprimer_plage_2"
+                        android:layout_width="61dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/layout_space"
+                        android:layout_marginEnd="@dimen/layout_space"
+                        android:layout_row="0"
+                        android:layout_column="0"
+                        android:layout_rowSpan="2"
+                        android:background="@drawable/back_button_delete_range"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/poubelle" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="0"
+                        android:layout_column="1"
+                        android:layout_gravity="center"
+                        android:text="Plage 2"
+                        android:textColor="@color/couleurSousTitre"
+                        android:textSize="@dimen/texteSousTitre"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/texte_plage_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="1"
+                        android:layout_column="1"
+                        android:layout_gravity="center"
+                        android:text="05h10 - 11h05"
+                        android:textColor="@color/couleurTexteGeneral"
+                        android:textSize="@dimen/texteGeneral"
+                        android:textStyle="bold" />
+
+                    <ImageButton
+                        android:id="@+id/bouton_modifier_plage_2"
+                        android:layout_width="61dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:layout_marginRight="@dimen/layout_space"
+                        android:layout_marginStart="@dimen/layout_space"
+                        android:layout_marginEnd="@dimen/layout_space"
+                        android:layout_row="0"
+                        android:layout_column="2"
+                        android:layout_rowSpan="2"
+                        android:background="@drawable/back_button_change_range"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/engrenages" />
+                </GridLayout>
+
+                <GridLayout
+                    android:id="@+id/widget_plage_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="61dp"
+                    android:layout_marginTop="@dimen/layout_space"
+                    android:layout_marginLeft="@dimen/layout_widget_space"
+                    android:layout_marginRight="@dimen/layout_widget_space">
+                    <ImageButton
+                        android:id="@+id/bouton_supprimer_plage_3"
+                        android:layout_width="61dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/layout_space"
+                        android:layout_marginEnd="@dimen/layout_space"
+                        android:layout_row="0"
+                        android:layout_column="0"
+                        android:layout_rowSpan="2"
+                        android:background="@drawable/back_button_delete_range"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/poubelle" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="0"
+                        android:layout_column="1"
+                        android:layout_gravity="center"
+                        android:text="Plage 3"
+                        android:textColor="@color/couleurSousTitre"
+                        android:textSize="@dimen/texteSousTitre"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/texte_plage_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="1"
+                        android:layout_column="1"
+                        android:layout_gravity="center"
+                        android:text="05h10 - 11h05"
+                        android:textColor="@color/couleurTexteGeneral"
+                        android:textSize="@dimen/texteGeneral"
+                        android:textStyle="bold" />
+
+                    <ImageButton
+                        android:id="@+id/bouton_modifier_plage_3"
+                        android:layout_width="61dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:layout_marginRight="@dimen/layout_space"
+                        android:layout_marginStart="@dimen/layout_space"
+                        android:layout_marginEnd="@dimen/layout_space"
+                        android:layout_row="0"
+                        android:layout_column="2"
+                        android:layout_rowSpan="2"
+                        android:background="@drawable/back_button_change_range"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/engrenages" />
+                </GridLayout>
+
+                <GridLayout
+                    android:id="@+id/widget_plage_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="61dp"
+                    android:layout_marginTop="@dimen/layout_space"
+                    android:layout_marginLeft="@dimen/layout_widget_space"
+                    android:layout_marginRight="@dimen/layout_widget_space">
+                    <ImageButton
+                        android:id="@+id/bouton_supprimer_plage_4"
+                        android:layout_width="61dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/layout_space"
+                        android:layout_marginEnd="@dimen/layout_space"
+                        android:layout_row="0"
+                        android:layout_column="0"
+                        android:layout_rowSpan="2"
+                        android:background="@drawable/back_button_delete_range"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/poubelle" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="0"
+                        android:layout_column="1"
+                        android:layout_gravity="center"
+                        android:text="Plage 4"
+                        android:textColor="@color/couleurSousTitre"
+                        android:textSize="@dimen/texteSousTitre"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/texte_plage_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_row="1"
+                        android:layout_column="1"
+                        android:layout_gravity="center"
+                        android:text="05h10 - 11h05"
+                        android:textColor="@color/couleurTexteGeneral"
+                        android:textSize="@dimen/texteGeneral"
+                        android:textStyle="bold" />
+
+                    <ImageButton
+                        android:id="@+id/bouton_modifier_plage_4"
+                        android:layout_width="61dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:layout_marginRight="@dimen/layout_space"
+                        android:layout_marginStart="@dimen/layout_space"
+                        android:layout_marginEnd="@dimen/layout_space"
+                        android:layout_row="0"
+                        android:layout_column="2"
+                        android:layout_rowSpan="2"
+                        android:background="@drawable/back_button_change_range"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/engrenages" />
+                </GridLayout>
+
+                <Button
+                    android:id="@+id/bouton_ajouter_plage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/layout_space"
+                    android:layout_marginLeft="@dimen/layout_widget_space"
+                    android:layout_marginRight="@dimen/layout_widget_space"
+                    android:text="Ajouter plage"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/texteGeneral" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

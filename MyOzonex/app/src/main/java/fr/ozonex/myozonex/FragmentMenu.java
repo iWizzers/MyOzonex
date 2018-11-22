@@ -5,21 +5,19 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
-
-import static android.support.v4.view.MotionEventCompat.getPointerCount;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 public class FragmentMenu extends Fragment implements View.OnClickListener {
     View view = null;
 
     // Orientation paysage
-    private ScaleGestureDetector mScaleGestureDetector;
-    AbsoluteLayout layout;
+    HorizontalScrollView globalLayoutPaysage;
     ImageButton boutonRetour;
     ImageButton boutonPompeFiltration;
     ImageButton boutonFiltre;
@@ -35,9 +33,7 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
     ImageButton boutonAlgicide;
     ImageButton boutonBassin;
     ImageButton boutonCapteurs;
-    ImageButton boutonCommunication;
     ImageButton boutonJournalEvenements;
-    ImageButton boutonValeursMesurees;
     ImageButton boutonDeconnexion;
 
     @Nullable
@@ -47,33 +43,11 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
 
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            layout = (AbsoluteLayout) view.findViewById(R.id.layout);
-            mScaleGestureDetector = new ScaleGestureDetector(MainActivity.instance(), new ScaleListener(layout));
-            view.findViewById(R.id.horizontal_scroll).setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (getPointerCount(event) == 2) {
-                        mScaleGestureDetector.onTouchEvent(event);
-                    } else {
-                        return false;
-                    }
+            new ScaleListener((HorizontalScrollView) view.findViewById(R.id.horizontal_scroll),
+                    (ScrollView) view.findViewById(R.id.vertical_scroll),
+                    (AbsoluteLayout) view.findViewById(R.id.layout));
 
-                    return true;
-                }
-            });
-            view.findViewById(R.id.vertical_scroll).setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (getPointerCount(event) == 2) {
-                        mScaleGestureDetector.onTouchEvent(event);
-                    } else {
-                        return false;
-                    }
-
-                    return true;
-                }
-            });
-
+            globalLayoutPaysage = view.findViewById(R.id.horizontal_scroll);
             boutonRetour = (ImageButton) view.findViewById(R.id.bouton_retour);
             boutonPompeFiltration = (ImageButton) view.findViewById(R.id.bouton_pompe_filtration);
             boutonFiltre = (ImageButton) view.findViewById(R.id.bouton_filtre);
@@ -89,9 +63,7 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
             boutonAlgicide = (ImageButton) view.findViewById(R.id.bouton_algicide);
             boutonBassin = (ImageButton) view.findViewById(R.id.bouton_bassin);
             boutonCapteurs = (ImageButton) view.findViewById(R.id.bouton_capteurs);
-            boutonCommunication = (ImageButton) view.findViewById(R.id.bouton_communication);
             boutonJournalEvenements = (ImageButton) view.findViewById(R.id.bouton_journal_evenements);
-            boutonValeursMesurees = (ImageButton) view.findViewById(R.id.bouton_valeurs_mesurees);
             boutonDeconnexion = (ImageButton) view.findViewById(R.id.bouton_deconnexion);
 
             boutonRetour.setOnClickListener(this);
@@ -109,9 +81,7 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
             boutonAlgicide.setOnClickListener(this);
             boutonBassin.setOnClickListener(this);
             boutonCapteurs.setOnClickListener(this);
-            boutonCommunication.setOnClickListener(this);
             boutonJournalEvenements.setOnClickListener(this);
-            boutonValeursMesurees.setOnClickListener(this);
             boutonDeconnexion.setOnClickListener(this);
         }
 
@@ -125,25 +95,44 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
     public void update() {
         if ((view != null) && isAdded()) {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());
                 boutonPompeFiltration.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PompeFiltration));
                 boutonFiltre.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Filtre));
                 boutonSurpresseur.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Surpresseur));
                 boutonChauffage.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage));
                 boutonLampesUV.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.LampesUV));
                 boutonOzonateur.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Ozone));
-                boutonElectrolyseur.setEnabled(false);
+                boutonElectrolyseur.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Electrolyseur));
                 boutonRegulateurPhMoins.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins));
                 boutonRegulateurPhPlus.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus));
                 boutonRegulateurORP.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp));
                 boutonAlgicide.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Algicide));
                 boutonEclairage.setEnabled(false);
-                boutonBassin.setEnabled(false);
                 boutonCapteurs.setEnabled(false);
-                boutonCommunication.setEnabled(false);
-                boutonJournalEvenements.setEnabled(false);
-                boutonValeursMesurees.setEnabled(false);
+
+                definirCouleur(R.id.texte_pompe_filtration);
+                definirCouleur(R.id.texte_filtre);
+                definirCouleur(R.id.texte_surpresseur);
+                definirCouleur(R.id.texte_chauffage);
+                definirCouleur(R.id.texte_lampes_uv);
+                definirCouleur(R.id.texte_electrolyseur);
+                definirCouleur(R.id.texte_ozonateur);
+                definirCouleur(R.id.texte_eclairage);
+                definirCouleur(R.id.texte_reg_ph_plus);
+                definirCouleur(R.id.texte_reg_ph_moins);
+                definirCouleur(R.id.texte_reg_orp);
+                definirCouleur(R.id.texte_algicide);
+                definirCouleur(R.id.texte_bassin);
+                definirCouleur(R.id.texte_capteurs);
+                definirCouleur(R.id.texte_events);
+                definirCouleur(R.id.texte_deconnexion);
             }
         }
+    }
+
+    private void definirCouleur(int id) {
+        TextView textView = view.findViewById(id);
+        textView.setTextColor(Donnees.instance().obtenirCouleurTexte());
     }
 
     @Override
@@ -189,19 +178,13 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
                 MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_algicide_layout));
                 break;
             case R.id.bouton_bassin:
-                //MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_pompe_filtration_layout));
+                MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_bassin_layout));
                 break;
             case R.id.bouton_capteurs:
                 //MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_pompe_filtration_layout));
                 break;
-            case R.id.bouton_communication:
-                //MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_pompe_filtration_layout));
-                break;
             case R.id.bouton_journal_evenements:
-                //MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_pompe_filtration_layout));
-                break;
-            case R.id.bouton_valeurs_mesurees:
-                //MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_pompe_filtration_layout));
+                MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_events_layout));
                 break;
             case R.id.bouton_deconnexion:
                 MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_deconnexion_layout));

@@ -6,10 +6,12 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
-    <dimen name="texteTitre">30dp</dimen>
-    <dimen name="texteSousTitre">20dp</dimen>
-    <dimen name="texteGeneral">16dp</dimen>
-    <dimen name="texteValeurPageDonnee">64dp</dimen>
+    <dimen name="texteTitre">30sp</dimen>
+    <dimen name="texteSousTitre">20sp</dimen>
+    <dimen name="texteGeneral">16sp</dimen>
+    <dimen name="texteValeurPageDonnee">64sp</dimen>
 
-    <dimen name="layoutSpace">6dp</dimen>
+    <dimen name="layout_widget_space">25dp</dimen>
+    <dimen name="layout_container_space">15dp</dimen>
+    <dimen name="layout_space">6dp</dimen>
 </resources>

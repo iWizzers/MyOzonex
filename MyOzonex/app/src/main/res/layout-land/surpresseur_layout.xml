@@ -7,7 +7,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="horizontal"
-    android:background="@drawable/fond1">
+    android:background="@drawable/fond_paysage_1">
 
     <ScrollView
         android:id="@+id/vertical_scroll"
@@ -21,7 +21,7 @@
             tools:ignore="Deprecated">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="800dp"
                 android:orientation="vertical" >
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -58,7 +58,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0"
                         android:maxLines="1"
-                        android:text="Supresseur"
+                        android:text="@string/surpresseur"
                         android:textStyle="bold"
                         android:gravity="center"
                         android:textColor="@android:color/black"
@@ -72,16 +72,16 @@
 
                 <GridLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="match_parent" >
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="0"
                         android:layout_row="0"
-                        android:layout_columnWeight="0"
+                        android:layout_rowWeight="1"
                         android:background="@color/transparentBackground"
-                        android:paddingTop="24dp"
-                        android:paddingBottom="25dp"
+                        android:paddingTop="@dimen/layout_widget_space"
+                        android:paddingBottom="@dimen/layout_widget_space"
                         android:orientation="vertical">
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -93,11 +93,11 @@
                                 android:orientation="horizontal" >
                                 <View
                                     android:layout_width="50dp"
-                                    android:layout_height="10dp"
+                                    android:layout_height="2dp"
                                     android:layout_weight="1"
-                                    android:background="@drawable/ligne_horizontal_sous_titre"
-                                    android:layerType="software"
-                                    android:layout_gravity="center" />
+                                    android:layout_gravity="center"
+                                    android:background="@color/couleurSousTitre"
+                                    android:layerType="software" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -112,19 +112,19 @@
 
                                 <View
                                     android:layout_width="50dp"
-                                    android:layout_height="10dp"
+                                    android:layout_height="2dp"
                                     android:layout_weight="1"
-                                    android:background="@drawable/ligne_horizontal_sous_titre"
-                                    android:layerType="software"
-                                    android:layout_gravity="center" />
+                                    android:layout_gravity="center"
+                                    android:background="@color/couleurSousTitre"
+                                    android:layerType="software" />
                             </LinearLayout>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical"
-                                android:paddingLeft="25dp"
-                                android:paddingRight="25dp">
+                                android:paddingLeft="@dimen/layout_widget_space"
+                                android:paddingRight="@dimen/layout_widget_space">
                                 <TextView
                                     android:id="@+id/texte_donnees_conso"
                                     android:layout_width="match_parent"
@@ -142,9 +142,11 @@
                         android:layout_height="wrap_content"
                         android:layout_column="2"
                         android:layout_row="0"
-                        android:layout_columnWeight="0"
-                        android:paddingTop="24dp"
-                        android:paddingRight="25dp"
+                        android:layout_rowWeight="1"
+                        android:paddingTop="@dimen/layout_widget_space"
+                        android:paddingBottom="@dimen/layout_widget_space"
+                        android:paddingLeft="@dimen/layout_widget_space"
+                        android:paddingRight="@dimen/layout_widget_space"
                         android:orientation="vertical">
                         <FrameLayout
                             android:layout_width="171dp"
@@ -163,7 +165,7 @@
                                 android:layout_height="match_parent"
                                 android:orientation="vertical"
                                 android:gravity="center"
-                                android:padding="15dp" >
+                                android:padding="@dimen/layout_container_space" >
                                 <Button
                                     android:id="@+id/bouton_auto"
                                     android:layout_width="match_parent"
@@ -201,6 +203,573 @@
                                     android:textSize="@dimen/texteSousTitre" />
                             </LinearLayout>
                         </FrameLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_plages_fct"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_column="0"
+                        android:layout_row="1"
+                        android:layout_rowWeight="0"
+                        android:layout_columnSpan="3"
+                        android:background="@color/transparentBackground"
+                        android:orientation="vertical" >
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:background="@color/couleurSousTitre"
+                            android:layerType="software" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="61dp"
+                            android:paddingTop="@dimen/layout_space"
+                            android:paddingLeft="@dimen/layout_widget_space"
+                            android:paddingRight="@dimen/layout_widget_space"
+                            android:orientation="horizontal" >
+                            <Space
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1" />
+
+                            <GridLayout
+                                android:id="@+id/widget_plage_1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginRight="@dimen/layout_space"
+                                android:layout_marginEnd="@dimen/layout_space">
+                                <ImageButton
+                                    android:id="@+id/bouton_supprimer_plage_1"
+                                    android:layout_width="61dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginRight="@dimen/layout_space"
+                                    android:layout_marginEnd="@dimen/layout_space"
+                                    android:layout_row="0"
+                                    android:layout_column="0"
+                                    android:layout_rowSpan="2"
+                                    android:background="@drawable/back_button_delete_range"
+                                    android:scaleType="fitCenter"
+                                    app:srcCompat="@drawable/poubelle" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_row="0"
+                                    android:layout_column="1"
+                                    android:layout_gravity="center"
+                                    android:text="Plage 1"
+                                    android:textColor="@color/couleurSousTitre"
+                                    android:textSize="@dimen/texteSousTitre"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/texte_plage_1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_row="1"
+                                    android:layout_column="1"
+                                    android:layout_gravity="center"
+                                    android:text="05h10 - 11h05"
+                                    android:textColor="@color/couleurTexteGeneral"
+                                    android:textSize="@dimen/texteGeneral" />
+
+                                <ImageButton
+                                    android:id="@+id/bouton_modifier_plage_1"
+                                    android:layout_width="61dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="@dimen/layout_space"
+                                    android:layout_marginRight="@dimen/layout_space"
+                                    android:layout_marginStart="@dimen/layout_space"
+                                    android:layout_marginEnd="@dimen/layout_space"
+                                    android:layout_row="0"
+                                    android:layout_column="2"
+                                    android:layout_rowSpan="2"
+                                    android:background="@drawable/back_button_change_range"
+                                    android:scaleType="fitCenter"
+                                    app:srcCompat="@drawable/engrenages" />
+
+                                <View
+                                    android:id="@+id/ligne_sep_plage_1"
+                                    android:layout_width="2dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_rowSpan="2"
+                                    android:background="@color/couleurSousTitre"
+                                    android:layerType="software" />
+                            </GridLayout>
+
+                            <GridLayout
+                                android:id="@+id/widget_plage_2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginRight="@dimen/layout_space"
+                                android:layout_marginEnd="@dimen/layout_space">
+                                <ImageButton
+                                    android:id="@+id/bouton_supprimer_plage_2"
+                                    android:layout_width="61dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginRight="@dimen/layout_space"
+                                    android:layout_marginEnd="@dimen/layout_space"
+                                    android:layout_row="0"
+                                    android:layout_column="0"
+                                    android:layout_rowSpan="2"
+                                    android:background="@drawable/back_button_delete_range"
+                                    android:scaleType="fitCenter"
+                                    app:srcCompat="@drawable/poubelle" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_row="0"
+                                    android:layout_column="1"
+                                    android:layout_gravity="center"
+                                    android:text="Plage 2"
+                                    android:textColor="@color/couleurSousTitre"
+                                    android:textSize="@dimen/texteSousTitre"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/texte_plage_2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_row="1"
+                                    android:layout_column="1"
+                                    android:layout_gravity="center"
+                                    android:text="05h10 - 11h05"
+                                    android:textColor="@color/couleurTexteGeneral"
+                                    android:textSize="@dimen/texteGeneral" />
+
+                                <ImageButton
+                                    android:id="@+id/bouton_modifier_plage_2"
+                                    android:layout_width="61dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="@dimen/layout_space"
+                                    android:layout_marginRight="@dimen/layout_space"
+                                    android:layout_marginStart="@dimen/layout_space"
+                                    android:layout_marginEnd="@dimen/layout_space"
+                                    android:layout_row="0"
+                                    android:layout_column="2"
+                                    android:layout_rowSpan="2"
+                                    android:background="@drawable/back_button_change_range"
+                                    android:scaleType="fitCenter"
+                                    app:srcCompat="@drawable/engrenages" />
+
+                                <View
+                                    android:id="@+id/ligne_sep_plage_2"
+                                    android:layout_width="2dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_rowSpan="2"
+                                    android:background="@color/couleurSousTitre"
+                                    android:layerType="software" />
+                            </GridLayout>
+
+                            <GridLayout
+                                android:id="@+id/widget_plage_3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginRight="@dimen/layout_space"
+                                android:layout_marginEnd="@dimen/layout_space">
+                                <ImageButton
+                                    android:id="@+id/bouton_supprimer_plage_3"
+                                    android:layout_width="61dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginRight="@dimen/layout_space"
+                                    android:layout_marginEnd="@dimen/layout_space"
+                                    android:layout_row="0"
+                                    android:layout_column="0"
+                                    android:layout_rowSpan="2"
+                                    android:background="@drawable/back_button_delete_range"
+                                    android:scaleType="fitCenter"
+                                    app:srcCompat="@drawable/poubelle" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_row="0"
+                                    android:layout_column="1"
+                                    android:layout_gravity="center"
+                                    android:text="Plage 3"
+                                    android:textColor="@color/couleurSousTitre"
+                                    android:textSize="@dimen/texteSousTitre"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/texte_plage_3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_row="1"
+                                    android:layout_column="1"
+                                    android:layout_gravity="center"
+                                    android:text="05h10 - 11h05"
+                                    android:textColor="@color/couleurTexteGeneral"
+                                    android:textSize="@dimen/texteGeneral" />
+
+                                <ImageButton
+                                    android:id="@+id/bouton_modifier_plage_3"
+                                    android:layout_width="61dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="@dimen/layout_space"
+                                    android:layout_marginRight="@dimen/layout_space"
+                                    android:layout_marginStart="@dimen/layout_space"
+                                    android:layout_marginEnd="@dimen/layout_space"
+                                    android:layout_row="0"
+                                    android:layout_column="2"
+                                    android:layout_rowSpan="2"
+                                    android:background="@drawable/back_button_change_range"
+                                    android:scaleType="fitCenter"
+                                    app:srcCompat="@drawable/engrenages" />
+
+                                <View
+                                    android:id="@+id/ligne_sep_plage_3"
+                                    android:layout_width="2dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_rowSpan="2"
+                                    android:background="@color/couleurSousTitre"
+                                    android:layerType="software" />
+                            </GridLayout>
+
+                            <GridLayout
+                                android:id="@+id/widget_plage_4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent">
+                                <ImageButton
+                                    android:id="@+id/bouton_supprimer_plage_4"
+                                    android:layout_width="61dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginRight="@dimen/layout_space"
+                                    android:layout_marginEnd="@dimen/layout_space"
+                                    android:layout_row="0"
+                                    android:layout_column="0"
+                                    android:layout_rowSpan="2"
+                                    android:background="@drawable/back_button_delete_range"
+                                    android:scaleType="fitCenter"
+                                    app:srcCompat="@drawable/poubelle" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_row="0"
+                                    android:layout_column="1"
+                                    android:layout_gravity="center"
+                                    android:text="Plage 4"
+                                    android:textColor="@color/couleurSousTitre"
+                                    android:textSize="@dimen/texteSousTitre"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/texte_plage_4"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_row="1"
+                                    android:layout_column="1"
+                                    android:layout_gravity="center"
+                                    android:text="05h10 - 11h05"
+                                    android:textColor="@color/couleurTexteGeneral"
+                                    android:textSize="@dimen/texteGeneral" />
+
+                                <ImageButton
+                                    android:id="@+id/bouton_modifier_plage_4"
+                                    android:layout_width="61dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="@dimen/layout_space"
+                                    android:layout_marginRight="@dimen/layout_space"
+                                    android:layout_marginStart="@dimen/layout_space"
+                                    android:layout_marginEnd="@dimen/layout_space"
+                                    android:layout_row="0"
+                                    android:layout_column="2"
+                                    android:layout_rowSpan="2"
+                                    android:background="@drawable/back_button_change_range"
+                                    android:scaleType="fitCenter"
+                                    app:srcCompat="@drawable/engrenages" />
+                            </GridLayout>
+
+                            <Button
+                                android:id="@+id/bouton_ajouter_plage"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:text="Ajouter plage"
+                                android:textColor="@android:color/black"
+                                android:textSize="@dimen/texteGeneral" />
+
+                            <Space
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/layout_container_space"
+                            android:layout_marginLeft="@dimen/layout_widget_space"
+                            android:layout_marginRight="@dimen/layout_widget_space"
+                            android:layout_marginStart="@dimen/layout_widget_space"
+                            android:layout_marginEnd="@dimen/layout_widget_space"
+                            android:orientation="horizontal" >
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="1"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="2"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="3"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="4"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="5"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="6"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="7"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="8"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="9"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="10"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="11"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="12"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="13"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="14"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="15"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="16"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="17"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="18"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="19"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="20"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="21"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="22"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="23"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="24"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/view_plage"
+                            android:layout_width="match_parent"
+                            android:layout_height="41dp"
+                            android:layout_marginBottom="@dimen/layout_widget_space"
+                            android:layout_marginLeft="@dimen/layout_widget_space"
+                            android:layout_marginRight="@dimen/layout_widget_space"
+                            android:layout_marginStart="@dimen/layout_widget_space"
+                            android:layout_marginEnd="@dimen/layout_widget_space"
+                            android:background="@android:color/transparent"
+                            android:layerType="software"
+                            android:orientation="horizontal">
+                        </LinearLayout>
                     </LinearLayout>
                 </GridLayout>
             </LinearLayout>

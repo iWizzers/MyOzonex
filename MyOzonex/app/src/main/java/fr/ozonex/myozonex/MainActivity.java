@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity
         return inst;
     }
 
+    private boolean premierDemarrage = false;
     private boolean activityResume = false;
 
     private HttpGetRequest request;
@@ -45,11 +48,16 @@ public class MainActivity extends AppCompatActivity
 
     private int page = 0;
 
+    boolean msgEtatSysteme = false;
+    TextView ledEtatSysteme;
+    TextView texteEtatSysteme;
+
     private ActionBarDrawerToggle toggle;
     private FragmentConnexion fragmentConnexion = new FragmentConnexion();
     private FragmentDonnees fragmentDonnees = new FragmentDonnees();
     private FragmentSynoptique fragmentSynoptique = new FragmentSynoptique();
     private FragmentMenu fragmentMenu = new FragmentMenu();
+    private FragmentBassin fragmentBassin = new FragmentBassin();
     private FragmentPompeFiltration fragmentPompeFiltration = new FragmentPompeFiltration();
     private FragmentFiltre fragmentFiltre = new FragmentFiltre();
     private FragmentSurpresseur fragmentSurpresseur = new FragmentSurpresseur();
@@ -60,8 +68,11 @@ public class MainActivity extends AppCompatActivity
     private FragmentRegulateurPhMoins fragmentRegulateurPhMoins = new FragmentRegulateurPhMoins();
     private FragmentRegulateurORP fragmentRegulateurORP = new FragmentRegulateurORP();
     private FragmentAlgicide fragmentAlgicide = new FragmentAlgicide();
+    private FragmentEvents fragmentEvents = new FragmentEvents();
 
     Bundle savedInstanceState;
+
+    private Handler clignotementLED;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,25 +84,47 @@ public class MainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         menu = navigationView.getMenu();
 
+        View decorView = getWindow().getDecorView();
+
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.setFitsSystemWindows(true);
             toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
             drawer.addDrawerListener(toggle);
             toggle.syncState();
 
             navigationView.setNavigationItemSelectedListener(this);
-            menu.findItem(R.id.nav_synoptique_layout).setVisible(false);
             menu.findItem(R.id.nav_menu_layout).setVisible(false);
 
             View headerView = navigationView.getHeaderView(0);
             TextView idSysteme = (TextView) headerView.findViewById(R.id.id_systeme);
             idSysteme.setText("Système : " + Donnees.getPreferences(Donnees.ID_SYSTEME));
+            ledEtatSysteme = headerView.findViewById(R.id.led_etat_systeme);
+            texteEtatSysteme = headerView.findViewById(R.id.texte_etat_systeme);
+
+            decorView.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         } else {
-            // Fullscreen
+            drawer.setFitsSystemWindows(false);
             getSupportActionBar().hide();
+
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+            decorView.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                            // Set the content to appear under the system bars so that the
+                            // content doesn't resize when the system bars hide and show.
+                            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            // Hide the nav bar and status bar
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN);
         }
 
         httpService = new HttpService();
@@ -103,11 +136,25 @@ public class MainActivity extends AppCompatActivity
 
         Handler update = new Handler();
         update.postDelayed(refresh,0);
+
+        clignotementLED = new Handler();
     }
+
+
 
     private final Runnable refresh = new Runnable() {
         public void run() {
             restoreMe(savedInstanceState);
+        }
+    };
+
+    private Runnable clignotement = new Runnable() {
+        @Override
+        public void run() {
+            fragmentDonnees.clignotement();
+            fragmentSynoptique.clignotement();
+
+            clignotementLED.postDelayed(this, Global.TEMPO_CLIGNOTEMENT_LED);
         }
     };
 
@@ -164,8 +211,10 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_deconnexion_layout) {
             showNavigationViewButton(false);
             stopService(serviceIntent);
-            Donnees.setPreferences(Donnees.ID_SYSTEME, "");
-            Donnees.setPreferences(Donnees.MOTDEPASSE, "");
+            if (!premierDemarrage) {
+                Donnees.setPreferences(Donnees.ID_SYSTEME, "");
+                Donnees.setPreferences(Donnees.MOTDEPASSE, "");
+            }
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame
                             , fragmentConnexion)
@@ -191,6 +240,12 @@ public class MainActivity extends AppCompatActivity
                             , fragmentMenu)
                     .commit();
             toolbar.setTitle(getString(R.string.menu));
+        } else if (id == R.id.nav_bassin_layout) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame
+                            , fragmentBassin)
+                    .commit();
+            toolbar.setTitle(getString(R.string.bassin));
         } else if (id == R.id.nav_pompe_filtration_layout) {
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame
@@ -251,6 +306,12 @@ public class MainActivity extends AppCompatActivity
                             , fragmentAlgicide)
                     .commit();
             toolbar.setTitle(getString(R.string.algicide));
+        } else if (id == R.id.nav_events_layout) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame
+                            , fragmentEvents)
+                    .commit();
+            toolbar.setTitle(getString(R.string.events));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -265,6 +326,10 @@ public class MainActivity extends AppCompatActivity
     public void onPause() {
         super.onPause();
         activityResume = false;
+
+        if (clignotementLED != null) {
+            clignotementLED.removeCallbacks(clignotement);
+        }
     }
 
     @Override
@@ -272,8 +337,12 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         activityResume = true;
 
-        if (!isMyServiceRunning(httpService.getClass())) {
+        if ((fragmentConnexion.getView() == null) && !fragmentConnexion.isAdded() && !isMyServiceRunning(httpService.getClass())) {
             startService(serviceIntent);
+        }
+
+        if (clignotementLED != null) {
+            clignotementLED.postDelayed(clignotement,0);
         }
 
         Notification.instance().supprimer();
@@ -297,6 +366,7 @@ public class MainActivity extends AppCompatActivity
     private void restoreMe(Bundle state) {
         if (state == null) {
             if (!Donnees.getPreferences(Donnees.ID_SYSTEME).isEmpty() && !Donnees.getPreferences(Donnees.MOTDEPASSE).isEmpty()) {
+                premierDemarrage = true;
                 connexion();
             } else {
                 onNavigationItemSelected(menu.findItem(R.id.nav_deconnexion_layout));
@@ -304,8 +374,7 @@ public class MainActivity extends AppCompatActivity
         } else {
             page = state.getInt("page");
 
-            if ((page == R.id.nav_synoptique_layout)
-                    || (page == R.id.nav_menu_layout)) {
+            if (page == R.id.nav_menu_layout) {
                 page = R.id.nav_donnees_layout;
             }
 
@@ -320,7 +389,7 @@ public class MainActivity extends AppCompatActivity
                 "Base de données",
                 "Connexion à la base de données...",
                 HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Get),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.Login),
+                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageLogin),
                 data);
 
         InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -362,10 +431,16 @@ public class MainActivity extends AppCompatActivity
 
         if (result == null) {
             Toast.makeText(this, "Un problème est survenu lors de la communication avec le serveur", Toast.LENGTH_SHORT).show();
+
+            if (premierDemarrage) {
+                onNavigationItemSelected(menu.findItem(R.id.nav_deconnexion_layout));
+                premierDemarrage = false;
+            }
         } else {
             if (!result.isEmpty()) {
                 if (result.contains("LOG")) {
                     if (result.contains("OK")) {
+                        premierDemarrage = false;
                         showNavigationViewButton(true);
                         onNavigationItemSelected(menu.findItem(R.id.nav_donnees_layout));
 
@@ -382,141 +457,308 @@ public class MainActivity extends AppCompatActivity
                         jsonObject = new JSONObject(result);
                         JSONObject object;
 
-                        object = new JSONObject(jsonObject.getString("Bassin"));
-                        Donnees.instance().definirVolumeBassin(object.getInt("volume"));
-                        Donnees.instance().definirTypeAsservissement(object.getString("regulation_type"));
+                        try {
+                            object = new JSONObject(jsonObject.getString("Bassin"));
+                            Donnees.instance().definirVolumeBassin(object.getInt("volume"));
+                            Donnees.instance().definirTypeRefoulement(object.getString("type_refoulement"));
+                            Donnees.instance().definirTypeAsservissement(object.getString("type_regulation"));
+                            Donnees.instance().definirTempsSecuriteInjection(object.getInt("temps_securite_injection"));
+                            Donnees.instance().definirHysteresisInjectionPh(object.getDouble("hyst_injection_ph"));
+                            Donnees.instance().definirHysteresisInjectionORP(object.getInt("hyst_injection_orp"));
+                            Donnees.instance().definirHysteresisInjectionAmpero(object.getDouble("hyst_injection_ampero"));
+                        } catch (JSONException e) {
+                            Log.d("ERROR", "Bassin");
+                        }
 
-                        object = new JSONObject(jsonObject.getString("Capteurs"));
-                        Donnees.instance().definirPresence(Donnees.Capteur.TemperatureBassin, object.getJSONObject("Température bassin").getInt("is_installed"));
-                        Donnees.instance().definirEtat(Donnees.Capteur.TemperatureBassin, object.getJSONObject("Température bassin").getString("state"));
-                        Donnees.instance().definirValeur(Donnees.Capteur.TemperatureBassin, object.getJSONObject("Température bassin").getDouble("value"));
+                        try {
+                            object = new JSONObject(jsonObject.getString("Capteurs"));
+                            Donnees.instance().definirPresence(Donnees.Capteur.TemperatureBassin, object.getJSONObject("Température bassin").getInt("installe"));
+                            Donnees.instance().definirEtat(Donnees.Capteur.TemperatureBassin, object.getJSONObject("Température bassin").getString("etat"));
+                            Donnees.instance().definirValeur(Donnees.Capteur.TemperatureBassin, object.getJSONObject("Température bassin").getDouble("valeur"));
 
-                        Donnees.instance().definirPresence(Donnees.Capteur.TemperatureLocal, object.getJSONObject("Température externe").getInt("is_installed"));
-                        Donnees.instance().definirEtat(Donnees.Capteur.TemperatureLocal, object.getJSONObject("Température externe").getString("state"));
-                        Donnees.instance().definirValeur(Donnees.Capteur.TemperatureLocal, object.getJSONObject("Température externe").getDouble("value"));
+                            Donnees.instance().definirPresence(Donnees.Capteur.CapteurInterne, object.getJSONObject("Température interne").getInt("installe"));
+                            Donnees.instance().definirEtat(Donnees.Capteur.TemperatureInterne, object.getJSONObject("Température interne").getString("etat"));
+                            Donnees.instance().definirValeur(Donnees.Capteur.TemperatureInterne, object.getJSONObject("Température interne").getDouble("valeur"));
+                            Donnees.instance().definirEtat(Donnees.Capteur.HumiditeInterne, object.getJSONObject("Humidité interne").getString("etat"));
+                            Donnees.instance().definirValeur(Donnees.Capteur.HumiditeInterne, object.getJSONObject("Humidité interne").getDouble("valeur"));
+                            Donnees.instance().definirEtat(Donnees.Capteur.PressionAtmospheriqueInterne, object.getJSONObject("Pression atmosphérique interne").getString("etat"));
+                            Donnees.instance().definirValeur(Donnees.Capteur.PressionAtmospheriqueInterne, object.getJSONObject("Pression atmosphérique interne").getDouble("valeur"));
 
-                        Donnees.instance().definirPresence(Donnees.Capteur.Ph, object.getJSONObject("pH").getInt("is_installed"));
-                        Donnees.instance().definirEtat(Donnees.Capteur.Ph, object.getJSONObject("pH").getString("state"));
-                        Donnees.instance().definirValeur(Donnees.Capteur.Ph, object.getJSONObject("pH").getDouble("value"));
+                            Donnees.instance().definirPresence(Donnees.Capteur.CapteurExterne, object.getJSONObject("Température externe").getInt("installe"));
+                            Donnees.instance().definirEtat(Donnees.Capteur.TemperatureExterne, object.getJSONObject("Température externe").getString("etat"));
+                            Donnees.instance().definirValeur(Donnees.Capteur.TemperatureExterne, object.getJSONObject("Température externe").getDouble("valeur"));
+                            Donnees.instance().definirEtat(Donnees.Capteur.HumiditeExterne, object.getJSONObject("Humidité externe").getString("etat"));
+                            Donnees.instance().definirValeur(Donnees.Capteur.HumiditeExterne, object.getJSONObject("Humidité externe").getDouble("valeur"));
+                            Donnees.instance().definirEtat(Donnees.Capteur.PressionAtmospheriqueExterne, object.getJSONObject("Pression atmosphérique externe").getString("etat"));
+                            Donnees.instance().definirValeur(Donnees.Capteur.PressionAtmospheriqueExterne, object.getJSONObject("Pression atmosphérique externe").getDouble("valeur"));
 
-                        Donnees.instance().definirPresence(Donnees.Capteur.Redox, object.getJSONObject("ORP").getInt("is_installed"));
-                        Donnees.instance().definirEtat(Donnees.Capteur.Redox, object.getJSONObject("ORP").getString("state"));
-                        Donnees.instance().definirValeur(Donnees.Capteur.Redox, object.getJSONObject("ORP").getDouble("value"));
+                            Donnees.instance().definirPresence(Donnees.Capteur.Ph, object.getJSONObject("pH").getInt("installe"));
+                            Donnees.instance().definirEtat(Donnees.Capteur.Ph, object.getJSONObject("pH").getString("etat"));
+                            Donnees.instance().definirValeur(Donnees.Capteur.Ph, object.getJSONObject("pH").getDouble("valeur"));
 
-                        Donnees.instance().definirPresence(Donnees.Capteur.Pression, object.getJSONObject("Pression").getInt("is_installed"));
-                        Donnees.instance().definirEtat(Donnees.Capteur.Pression, object.getJSONObject("Pression").getString("state"));
-                        Donnees.instance().definirValeur(Donnees.Capteur.Pression, object.getJSONObject("Pression").getDouble("value"));
+                            Donnees.instance().definirPresence(Donnees.Capteur.Redox, object.getJSONObject("ORP").getInt("installe"));
+                            Donnees.instance().definirEtat(Donnees.Capteur.Redox, object.getJSONObject("ORP").getString("etat"));
+                            Donnees.instance().definirValeur(Donnees.Capteur.Redox, object.getJSONObject("ORP").getDouble("valeur"));
 
-                        Donnees.instance().definirPresence(Donnees.Capteur.Ampero, object.getJSONObject("Ampéro").getInt("is_installed"));
-                        Donnees.instance().definirEtat(Donnees.Capteur.Ampero, object.getJSONObject("Ampéro").getString("state"));
-                        Donnees.instance().definirValeur(Donnees.Capteur.Ampero, object.getJSONObject("Ampéro").getDouble("value"));
+                            Donnees.instance().definirPresence(Donnees.Capteur.Pression, object.getJSONObject("Pression").getInt("installe"));
+                            Donnees.instance().definirEtat(Donnees.Capteur.Pression, object.getJSONObject("Pression").getString("etat"));
+                            Donnees.instance().definirValeur(Donnees.Capteur.Pression, object.getJSONObject("Pression").getDouble("valeur"));
 
-                        object = new JSONObject(jsonObject.getString("Pompe filtration"));
-                        Donnees.instance().definirEquipementInstalle(Donnees.Equipement.PompeFiltration, object.getInt("is_installed") > 0);
-                        Donnees.instance().definirModeFonctionnement(Donnees.Equipement.PompeFiltration, object.getInt("state"));
-                        Donnees.instance().definirDateDebutConso(Donnees.Equipement.PompeFiltration, object.getString("date_consumption"));
-                        Donnees.instance().definirConsoHP(Donnees.Equipement.PompeFiltration, object.getDouble("peak_consumption"));
-                        Donnees.instance().definirConsoHC(Donnees.Equipement.PompeFiltration, object.getDouble("off_peak_consumption"));
+                            Donnees.instance().definirPresence(Donnees.Capteur.Ampero, object.getJSONObject("Ampéro").getInt("installe"));
+                            Donnees.instance().definirEtat(Donnees.Capteur.Ampero, object.getJSONObject("Ampéro").getString("etat"));
+                            Donnees.instance().definirValeur(Donnees.Capteur.Ampero, object.getJSONObject("Ampéro").getDouble("valeur"));
+                        } catch (JSONException e) {
+                            Log.d("ERROR", "Capteurs");
+                        }
 
-                        object = new JSONObject(jsonObject.getString("Filtre"));
-                        Donnees.instance().definirEquipementInstalle(Donnees.Equipement.Filtre, object.getInt("is_installed") > 0);
-                        Donnees.instance().definirDateDernierLavage(object.getString("date_last_wash"));
-                        Donnees.instance().definirPressionApresLavage(object.getDouble("pressure_after_wash"));
-                        Donnees.instance().definirPressionProchainLavage(object.getDouble("next_pressure"));
-                        Donnees.instance().definirSeuilBasPression(object.getDouble("low_pressure_thresh"));
-                        Donnees.instance().definirSeuilHautPression(object.getDouble("high_pressure_thresh"));
-                        Donnees.instance().definirSeuilSecuriteSurpression(object.getDouble("security_pressure_thresh"));
+                        try {
+                            object = new JSONObject(jsonObject.getString("Pompe filtration"));
+                            Donnees.instance().definirEquipementInstalle(Donnees.Equipement.PompeFiltration, object.getInt("installe") > 0);
+                            Donnees.instance().definirModeFonctionnement(Donnees.Equipement.PompeFiltration, object.getInt("etat"));
+                            Donnees.instance().definirEtatLectureCapteurs(object.getInt("lecture_capteurs") > 0);
+                            Donnees.instance().definirDateDebutConso(Donnees.Equipement.PompeFiltration, object.getString("date_consommation"));
+                            Donnees.instance().definirConsoHP(Donnees.Equipement.PompeFiltration, object.getDouble("consommation_hp"));
+                            Donnees.instance().definirConsoHC(Donnees.Equipement.PompeFiltration, object.getDouble("consommation_hc"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.PompeFiltration, 0, object.getString("plage_1"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.PompeFiltration, 1, object.getString("plage_2"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.PompeFiltration, 2, object.getString("plage_3"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.PompeFiltration, 3, object.getString("plage_4"));
+                        } catch (JSONException e) {
+                            Log.d("ERROR", "Pompe filtration");
+                        }
 
-                        object = new JSONObject(jsonObject.getString("Surpresseur"));
-                        Donnees.instance().definirEquipementInstalle(Donnees.Equipement.Surpresseur, object.getInt("is_installed") > 0);
-                        Donnees.instance().definirModeFonctionnement(Donnees.Equipement.Surpresseur, object.getInt("state"));
-                        Donnees.instance().definirDateDebutConso(Donnees.Equipement.Surpresseur, object.getString("date_consumption"));
-                        Donnees.instance().definirConsoHP(Donnees.Equipement.Surpresseur, object.getDouble("peak_consumption"));
-                        Donnees.instance().definirConsoHC(Donnees.Equipement.Surpresseur, object.getDouble("off_peak_consumption"));
+                        try {
+                            object = new JSONObject(jsonObject.getString("Filtre"));
+                            Donnees.instance().definirEquipementInstalle(Donnees.Equipement.Filtre, object.getInt("installe") > 0);
+                            Donnees.instance().definirDateDernierLavage(object.getString("date_dernier_lavage"));
+                            Donnees.instance().definirPressionApresLavage(object.getDouble("pression_apres_lavage"));
+                            Donnees.instance().definirPressionProchainLavage(object.getDouble("pression_prochain_lavage"));
+                            Donnees.instance().definirSeuilSecuriteSurpression(object.getDouble("seuil_securite_surpression"));
+                            Donnees.instance().definirSeuilHautPression(object.getDouble("seuil_haut_pression"));
+                            Donnees.instance().definirSeuilBasPression(object.getDouble("seuil_bas_pression"));
+                        } catch (JSONException e) {
+                            Log.d("ERROR", "Filtre");
+                        }
 
-                        object = new JSONObject(jsonObject.getString("Chauffage"));
-                        Donnees.instance().definirEquipementInstalle(Donnees.Equipement.Chauffage, object.getInt("is_installed") > 0);
-                        Donnees.instance().definirModeFonctionnement(Donnees.Equipement.Chauffage, object.getInt("state"));
-                        Donnees.instance().definirDateDebutConso(Donnees.Equipement.Chauffage, object.getString("date_consumption"));
-                        Donnees.instance().definirConsoHP(Donnees.Equipement.Chauffage, object.getDouble("peak_consumption"));
-                        Donnees.instance().definirConsoHC(Donnees.Equipement.Chauffage, object.getDouble("off_peak_consumption"));
-                        Donnees.instance().definirControlePompeFiltration(object.getInt("temperature_control"));
-                        Donnees.instance().definirTemperatureArret(object.getInt("stop_temperature"));
-                        Donnees.instance().definirTemperatureEnclenchement(object.getInt("start_temperature"));
-                        Donnees.instance().definirTemperatureConsigne(object.getInt("setpoint_temperature"));
+                        try {
+                            object = new JSONObject(jsonObject.getString("Surpresseur"));
+                            Donnees.instance().definirEquipementInstalle(Donnees.Equipement.Surpresseur, object.getInt("installe") > 0);
+                            Donnees.instance().definirModeFonctionnement(Donnees.Equipement.Surpresseur, object.getInt("etat"));
+                            Donnees.instance().definirDateDebutConso(Donnees.Equipement.Surpresseur, object.getString("date_consommation"));
+                            Donnees.instance().definirConsoHP(Donnees.Equipement.Surpresseur, object.getDouble("consommation_hp"));
+                            Donnees.instance().definirConsoHC(Donnees.Equipement.Surpresseur, object.getDouble("consommation_hc"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.Surpresseur, 0, object.getString("plage_1"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.Surpresseur, 1, object.getString("plage_2"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.Surpresseur, 2, object.getString("plage_3"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.Surpresseur, 3, object.getString("plage_4"));
+                        } catch (JSONException e) {
+                            Log.d("ERROR", "Surpresseur");
+                        }
 
-                        object = new JSONObject(jsonObject.getString("Lampes UV"));
-                        Donnees.instance().definirEquipementInstalle(Donnees.Equipement.LampesUV, object.getInt("is_installed") > 0);
-                        Donnees.instance().definirModeFonctionnement(Donnees.Equipement.LampesUV, object.getInt("state"));
-                        Donnees.instance().definirDateDebutConso(Donnees.Equipement.LampesUV, object.getString("date_consumption"));
-                        Donnees.instance().definirConsoHP(Donnees.Equipement.LampesUV, object.getDouble("peak_consumption"));
-                        Donnees.instance().definirConsoHC(Donnees.Equipement.LampesUV, object.getDouble("off_peak_consumption"));
+                        try {
+                            object = new JSONObject(jsonObject.getString("Chauffage"));
+                            Donnees.instance().definirEquipementInstalle(Donnees.Equipement.Chauffage, object.getInt("installe") > 0);
+                            Donnees.instance().definirModeFonctionnement(Donnees.Equipement.Chauffage, object.getInt("etat"));
+                            Donnees.instance().definirDateDebutConso(Donnees.Equipement.Chauffage, object.getString("date_consommation"));
+                            Donnees.instance().definirConsoHP(Donnees.Equipement.Chauffage, object.getDouble("consommation_hp"));
+                            Donnees.instance().definirConsoHC(Donnees.Equipement.Chauffage, object.getDouble("consommation_hc"));
+                            Donnees.instance().definirControlePompeFiltration(object.getInt("gestion_temperature"));
+                            Donnees.instance().definirTemperatureArret(object.getInt("temperature_arret"));
+                            Donnees.instance().definirTemperatureEnclenchement(object.getInt("temperature_encl"));
+                            Donnees.instance().definirTemperatureConsigne(object.getInt("temperature_consigne"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.Chauffage, 0, object.getString("plage_1"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.Chauffage, 1, object.getString("plage_2"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.Chauffage, 2, object.getString("plage_3"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.Chauffage, 3, object.getString("plage_4"));
+                        } catch (JSONException e) {
+                            Log.d("ERROR", "Chauffage");
+                        }
 
-                        object = new JSONObject(jsonObject.getString("Ozone"));
-                        Donnees.instance().definirEquipementInstalle(Donnees.Equipement.Ozone, object.getInt("is_installed") > 0);
-                        Donnees.instance().definirModeFonctionnement(Donnees.Equipement.Ozone, object.getInt("state"));
-                        Donnees.instance().definirDateDebutConso(Donnees.Equipement.Ozone, object.getString("date_consumption"));
-                        Donnees.instance().definirConsoHP(Donnees.Equipement.Ozone, object.getDouble("peak_consumption"));
-                        Donnees.instance().definirConsoHC(Donnees.Equipement.Ozone, object.getDouble("off_peak_consumption"));
+                        try {
+                            object = new JSONObject(jsonObject.getString("Lampes UV"));
+                            Donnees.instance().definirEquipementInstalle(Donnees.Equipement.LampesUV, object.getInt("installe") > 0);
+                            Donnees.instance().definirModeFonctionnement(Donnees.Equipement.LampesUV, object.getInt("etat"));
+                            Donnees.instance().definirDateDebutConso(Donnees.Equipement.LampesUV, object.getString("date_consommation"));
+                            Donnees.instance().definirConsoHP(Donnees.Equipement.LampesUV, object.getDouble("consommation_hp"));
+                            Donnees.instance().definirConsoHC(Donnees.Equipement.LampesUV, object.getDouble("consommation_hc"));
+                        } catch (JSONException e) {
+                            Log.d("ERROR", "Lampes UV");
+                        }
 
-                        //ELECTROLYSEUR
+                        try {
+                            object = new JSONObject(jsonObject.getString("Ozonateur"));
+                            Donnees.instance().definirEquipementInstalle(Donnees.Equipement.Ozone, object.getInt("installe") > 0);
+                            Donnees.instance().definirModeFonctionnement(Donnees.Equipement.Ozone, object.getInt("etat"));
+                            Donnees.instance().definirDateDebutConso(Donnees.Equipement.Ozone, object.getString("date_consommation"));
+                            Donnees.instance().definirConsoHP(Donnees.Equipement.Ozone, object.getDouble("consommation_hp"));
+                            Donnees.instance().definirConsoHC(Donnees.Equipement.Ozone, object.getDouble("consommation_hc"));
+                        } catch (JSONException e) {
+                            Log.d("ERROR", "Ozonateur");
+                        }
 
-                        object = new JSONObject(jsonObject.getString("Régulateur pH-"));
-                        Donnees.instance().definirEquipementInstalle(Donnees.Equipement.PhMoins, object.getInt("is_installed") > 0);
-                        Donnees.instance().definirModeFonctionnement(Donnees.Equipement.PhMoins, object.getInt("state"));
-                        Donnees.instance().definirDateDebutConso(Donnees.Equipement.PhMoins, object.getString("date_consumption"));
-                        Donnees.instance().definirConsoVolume(Donnees.Equipement.PhMoins, object.getDouble("volume"));
-                        Donnees.instance().definirConsoVolumeRestant(Donnees.Equipement.PhMoins, object.getDouble("remaining_volume"));
-                        Donnees.instance().definirTraitementEnCours(Donnees.Equipement.PhMoins, object.getInt("ongoing_treatment"));
-                        Donnees.instance().definirReglageAuto(Donnees.Equipement.PhMoins, object.getInt("auto_adjust"));
-                        Donnees.instance().definirDureeCycle(Donnees.Equipement.PhMoins, object.getInt("cycle_time"));
-                        Donnees.instance().definirMultiplicateurDifference(Donnees.Equipement.PhMoins, object.getInt("multiplier"));
-                        Donnees.instance().definirDureeInjection(Donnees.Equipement.PhMoins, object.getString("injection_time"));
-                        Donnees.instance().definirTempsReponse(Donnees.Equipement.PhMoins, object.getString("response_time"));
-                        Donnees.instance().definirTempsInjectionJournalierMax(Donnees.Equipement.PhMoins, object.getInt("max_daily_injection_time"));
-                        Donnees.instance().definirTempsInjectionJournalierMaxRestant(Donnees.Equipement.PhMoins, object.getInt("max_daily_injection_time_remaining"));
+                        try {
+                            object = new JSONObject(jsonObject.getString("Electrolyseur"));
+                            Donnees.instance().definirEquipementInstalle(Donnees.Equipement.Electrolyseur, object.getInt("installe") > 0);
+                            Donnees.instance().definirModeFonctionnement(Donnees.Equipement.Electrolyseur, object.getInt("etat"));
+                            Donnees.instance().definirDateDebutConso(Donnees.Equipement.Electrolyseur, object.getString("date_consommation"));
+                            Donnees.instance().definirConsoHP(Donnees.Equipement.Electrolyseur, object.getDouble("consommation_hp"));
+                            Donnees.instance().definirConsoHC(Donnees.Equipement.Electrolyseur, object.getDouble("consommation_hc"));
+                        } catch (JSONException e) {
+                            Log.d("ERROR", "Electrolyseur");
+                        }
 
-                        object = new JSONObject(jsonObject.getString("Régulateur pH+"));
-                        Donnees.instance().definirEquipementInstalle(Donnees.Equipement.PhPlus, object.getInt("is_installed") > 0);
-                        Donnees.instance().definirModeFonctionnement(Donnees.Equipement.PhPlus, object.getInt("state"));
-                        Donnees.instance().definirDateDebutConso(Donnees.Equipement.PhPlus, object.getString("date_consumption"));
-                        Donnees.instance().definirConsoVolume(Donnees.Equipement.PhPlus, object.getDouble("volume"));
-                        Donnees.instance().definirConsoVolumeRestant(Donnees.Equipement.PhPlus, object.getDouble("remaining_volume"));
-                        Donnees.instance().definirTraitementEnCours(Donnees.Equipement.PhPlus, object.getInt("ongoing_treatment"));
-                        Donnees.instance().definirReglageAuto(Donnees.Equipement.PhPlus, object.getInt("auto_adjust"));
-                        Donnees.instance().definirDureeCycle(Donnees.Equipement.PhPlus, object.getInt("cycle_time"));
-                        Donnees.instance().definirMultiplicateurDifference(Donnees.Equipement.PhPlus, object.getInt("multiplier"));
-                        Donnees.instance().definirDureeInjection(Donnees.Equipement.PhPlus, object.getString("injection_time"));
-                        Donnees.instance().definirTempsReponse(Donnees.Equipement.PhPlus, object.getString("response_time"));
-                        Donnees.instance().definirTempsInjectionJournalierMax(Donnees.Equipement.PhPlus, object.getInt("max_daily_injection_time"));
-                        Donnees.instance().definirTempsInjectionJournalierMaxRestant(Donnees.Equipement.PhPlus, object.getInt("max_daily_injection_time_remaining"));
+                        try {
+                            object = new JSONObject(jsonObject.getString("Régulateur pH"));
+                            Donnees.instance().definirConsignePh(object.getDouble("point_consigne"));
+                            Donnees.instance().definirHysteresisPhPlus(object.getDouble("hysteresis_plus"));
+                            Donnees.instance().definirHysteresisPhMoins(object.getDouble("hysteresis_moins"));
+                        } catch (JSONException e) {
+                            Log.d("ERROR", "Régulateur pH");
+                        }
 
-                        object = new JSONObject(jsonObject.getString("Régulateur ORP"));
-                        Donnees.instance().definirEquipementInstalle(Donnees.Equipement.Orp, object.getInt("is_installed") > 0);
-                        Donnees.instance().definirModeFonctionnement(Donnees.Equipement.Orp, object.getInt("state"));
-                        Donnees.instance().definirDateDebutConso(Donnees.Equipement.Orp, object.getString("date_consumption"));
-                        Donnees.instance().definirConsoVolume(Donnees.Equipement.Orp, object.getDouble("volume"));
-                        Donnees.instance().definirConsoVolumeRestant(Donnees.Equipement.Orp, object.getDouble("remaining_volume"));
-                        Donnees.instance().definirTraitementEnCours(Donnees.Equipement.Orp, object.getInt("ongoing_treatment"));
-                        Donnees.instance().definirReglageAuto(Donnees.Equipement.Orp, object.getInt("auto_adjust"));
-                        Donnees.instance().definirDureeCycle(Donnees.Equipement.Orp, object.getInt("cycle_time"));
-                        Donnees.instance().definirMultiplicateurDifference(Donnees.Equipement.Orp, object.getInt("multiplier"));
-                        Donnees.instance().definirDureeInjection(Donnees.Equipement.Orp, object.getString("injection_time"));
-                        Donnees.instance().definirTempsReponse(Donnees.Equipement.Orp, object.getString("response_time"));
-                        Donnees.instance().definirTempsInjectionJournalierMax(Donnees.Equipement.Orp, object.getInt("max_daily_injection_time"));
-                        Donnees.instance().definirTempsInjectionJournalierMaxRestant(Donnees.Equipement.Orp, object.getInt("max_daily_injection_time_remaining"));
-                        Donnees.instance().definirEtat(Donnees.Equipement.Orp, object.getInt("superchlorination"));
-                        Donnees.instance().definirDonneesSurchloration("Fréquence : <b>" + object.getString("frequency") + "</b><br /><b>" + object.getInt("mv_added") + " mV </b>ajouté<br /><font color=\"#00FF00\"><i>Prochaine dans <b>" + object.getInt("next_superchlorination") + " jour(s)</b></i></font>");
+                        try {
+                            object = new JSONObject(jsonObject.getString("Régulateur pH-"));
+                            Donnees.instance().definirEquipementInstalle(Donnees.Equipement.PhMoins, object.getInt("installe") > 0);
+                            Donnees.instance().definirModeFonctionnement(Donnees.Equipement.PhMoins, object.getInt("etat"));
+                            Donnees.instance().definirDateDebutConso(Donnees.Equipement.PhMoins, object.getString("date_consommation"));
+                            Donnees.instance().definirConsoVolume(Donnees.Equipement.PhMoins, object.getDouble("volume"));
+                            Donnees.instance().definirConsoVolumeRestant(Donnees.Equipement.PhMoins, object.getDouble("volume_restant"));
+                            Donnees.instance().definirConsoJour(Donnees.Equipement.PhMoins, object.getDouble("consommation_jour"));
+                            Donnees.instance().definirConsoSemaine(Donnees.Equipement.PhMoins, object.getDouble("consommation_semaine"));
+                            Donnees.instance().definirConsoMois(Donnees.Equipement.PhMoins, object.getDouble("consommation_mois"));
+                            Donnees.instance().definirTraitementEnCours(Donnees.Equipement.PhMoins, object.getInt("injection"));
+                            Donnees.instance().definirDureeCycle(Donnees.Equipement.PhMoins, object.getInt("duree_cycle"));
+                            Donnees.instance().definirMultiplicateurDifference(Donnees.Equipement.PhMoins, object.getInt("multiplicateur_diff"));
+                            Donnees.instance().definirDureeInjection(Donnees.Equipement.PhMoins, object.getString("duree_injection"));
+                            Donnees.instance().definirTempsReponse(Donnees.Equipement.PhMoins, object.getString("temps_reponse"));
+                            Donnees.instance().definirTempsInjectionJournalierMax(Donnees.Equipement.PhMoins, object.getInt("temps_injection_jour_max"));
+                            Donnees.instance().definirTempsInjectionJournalierMaxRestant(Donnees.Equipement.PhMoins, object.getInt("temps_injection_jour_max_restant"));
+                        } catch (JSONException e) {
+                            Log.d("ERROR", "Régulateur pH-");
+                        }
 
-                        object = new JSONObject(jsonObject.getString("Algicide"));
-                        Donnees.instance().definirEquipementInstalle(Donnees.Equipement.Algicide, object.getInt("is_installed") > 0);
-                        Donnees.instance().definirModeFonctionnement(Donnees.Equipement.Algicide, object.getInt("state"));
-                        Donnees.instance().definirDateDebutConso(Donnees.Equipement.Algicide, object.getString("date_consumption"));
-                        Donnees.instance().definirConsoVolume(Donnees.Equipement.Algicide, object.getDouble("volume"));
-                        Donnees.instance().definirConsoVolumeRestant(Donnees.Equipement.Algicide, object.getDouble("remaining_volume"));
-                        Donnees.instance().definirTraitementEnCours(Donnees.Equipement.Algicide, object.getInt("ongoing_treatment"));
-                        Donnees.instance().definirEtat(Donnees.Equipement.Algicide, object.getInt("enable"));
-                        Donnees.instance().definirDonneesAlgicide("Fréquence : " + object.getString("frequency") + "\nPendant " + object.getInt("during") + " minute(s)\nProchaine dans " + object.getInt("next") + " jour(s)" + ((object.getInt("next") == 0) ? "\nTemps restant : " + object.getInt("remaining_time") + " minute(s)" : ""));
+                        try {
+                            object = new JSONObject(jsonObject.getString("Régulateur pH+"));
+                            Donnees.instance().definirEquipementInstalle(Donnees.Equipement.PhPlus, object.getInt("installe") > 0);
+                            Donnees.instance().definirModeFonctionnement(Donnees.Equipement.PhPlus, object.getInt("etat"));
+                            Donnees.instance().definirDateDebutConso(Donnees.Equipement.PhPlus, object.getString("date_consommation"));
+                            Donnees.instance().definirConsoVolume(Donnees.Equipement.PhPlus, object.getDouble("volume"));
+                            Donnees.instance().definirConsoVolumeRestant(Donnees.Equipement.PhPlus, object.getDouble("volume_restant"));
+                            Donnees.instance().definirConsoJour(Donnees.Equipement.PhPlus, object.getDouble("consommation_jour"));
+                            Donnees.instance().definirConsoSemaine(Donnees.Equipement.PhPlus, object.getDouble("consommation_semaine"));
+                            Donnees.instance().definirConsoMois(Donnees.Equipement.PhPlus, object.getDouble("consommation_mois"));
+                            Donnees.instance().definirTraitementEnCours(Donnees.Equipement.PhPlus, object.getInt("injection"));
+                            Donnees.instance().definirDureeCycle(Donnees.Equipement.PhPlus, object.getInt("duree_cycle"));
+                            Donnees.instance().definirMultiplicateurDifference(Donnees.Equipement.PhPlus, object.getInt("multiplicateur_diff"));
+                            Donnees.instance().definirDureeInjection(Donnees.Equipement.PhPlus, object.getString("duree_injection"));
+                            Donnees.instance().definirTempsReponse(Donnees.Equipement.PhPlus, object.getString("temps_reponse"));
+                            Donnees.instance().definirTempsInjectionJournalierMax(Donnees.Equipement.PhPlus, object.getInt("temps_injection_jour_max"));
+                            Donnees.instance().definirTempsInjectionJournalierMaxRestant(Donnees.Equipement.PhPlus, object.getInt("temps_injection_jour_max_restant"));
+                        } catch (JSONException e) {
+                            Log.d("ERROR", "Régulateur pH+");
+                        }
+
+                        try {
+                            object = new JSONObject(jsonObject.getString("Régulateur ORP"));
+                            Donnees.instance().definirEquipementInstalle(Donnees.Equipement.Orp, object.getInt("installe") > 0);
+                            Donnees.instance().definirConsigneOrp(object.getInt("point_consigne_orp"));
+                            Donnees.instance().definirHysteresisOrp(object.getInt("hysteresis_orp"));
+                            Donnees.instance().definirConsigneAmpero(object.getDouble("point_consigne_ampero"));
+                            Donnees.instance().definirHysteresisAmpero(object.getDouble("hysteresis_ampero"));
+                            Donnees.instance().definirChloreLibreActif(object.getDouble("chlore_libre_actif"));
+                            Donnees.instance().definirModeFonctionnement(Donnees.Equipement.Orp, object.getInt("etat"));
+                            Donnees.instance().definirDateDebutConso(Donnees.Equipement.Orp, object.getString("date_consommation"));
+                            Donnees.instance().definirConsoVolume(Donnees.Equipement.Orp, object.getDouble("volume"));
+                            Donnees.instance().definirConsoVolumeRestant(Donnees.Equipement.Orp, object.getDouble("volume_restant"));
+                            Donnees.instance().definirConsoJour(Donnees.Equipement.Orp, object.getDouble("consommation_jour"));
+                            Donnees.instance().definirConsoSemaine(Donnees.Equipement.Orp, object.getDouble("consommation_semaine"));
+                            Donnees.instance().definirConsoMois(Donnees.Equipement.Orp, object.getDouble("consommation_mois"));
+                            Donnees.instance().definirTraitementEnCours(Donnees.Equipement.Orp, object.getInt("injection"));
+                            Donnees.instance().definirDureeCycle(Donnees.Equipement.Orp, object.getInt("duree_cycle"));
+                            Donnees.instance().definirMultiplicateurDifference(Donnees.Equipement.Orp, object.getInt("multiplicateur_diff"));
+                            Donnees.instance().definirDureeInjection(Donnees.Equipement.Orp, object.getString("duree_injection"));
+                            Donnees.instance().definirTempsReponse(Donnees.Equipement.Orp, object.getString("temps_reponse"));
+                            Donnees.instance().definirTempsInjectionJournalierMax(Donnees.Equipement.Orp, object.getInt("temps_injection_jour_max"));
+                            Donnees.instance().definirTempsInjectionJournalierMaxRestant(Donnees.Equipement.Orp, object.getInt("temps_injection_jour_max_restant"));
+                            Donnees.instance().definirEtat(Donnees.Equipement.Orp, object.getInt("surchloration"));
+                            Donnees.instance().definirDonneesSurchloration("Fréquence : <b>" + object.getString("frequence") + "</b><br /><b>" + object.getInt("mv_ajoute") + " mV </b>ajouté<br /><font color=\"#00FF00\"><i>Prochaine dans <b>" + object.getInt("prochaine_surchloration") + " jour(s)</b></i></font>");
+                        } catch (JSONException e) {
+                            Log.d("ERROR", "Régulateur ORP");
+                        }
+
+                        try {
+                            object = new JSONObject(jsonObject.getString("Algicide"));
+                            Donnees.instance().definirEquipementInstalle(Donnees.Equipement.Algicide, object.getInt("installe") > 0);
+                            Donnees.instance().definirModeFonctionnement(Donnees.Equipement.Algicide, object.getInt("etat"));
+                            Donnees.instance().definirDateDebutConso(Donnees.Equipement.Algicide, object.getString("date_consommation"));
+                            Donnees.instance().definirConsoVolume(Donnees.Equipement.Algicide, object.getDouble("volume"));
+                            Donnees.instance().definirConsoVolumeRestant(Donnees.Equipement.Algicide, object.getDouble("volume_restant"));
+                            Donnees.instance().definirTraitementEnCours(Donnees.Equipement.Algicide, object.getInt("injection"));
+                            Donnees.instance().definirEtat(Donnees.Equipement.Algicide, object.getInt("active"));
+                            Donnees.instance().definirDonneesAlgicide("Fréquence : <b>" + object.getString("frequence") + "</b><br />Pendant <b>" + object.getInt("pendant") + " minute(s)</b><br /><font color=\"#00FF00\"><i>Prochaine dans " + object.getInt("prochain") + " jour(s)</b></i></font>" + ((object.getInt("prochain") == 0) ? "<br /><font color=\"" + (object.getInt("temps_restant") > 0 ? "#00FF00" : "orange") + "\"><i>Temps restant : <b>" + object.getInt("temps_restant") + " minute(s)</b></i></font>" : ""));
+                        } catch (JSONException e) {
+                            Log.d("ERROR", "Algicide");
+                        }
+
+                        try {
+                            object = new JSONObject(jsonObject.getString("Horlogerie"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.HeuresCreuses, 0, object.getString("plage_1"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.HeuresCreuses, 1, object.getString("plage_2"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.HeuresCreuses, 2, object.getString("plage_3"));
+                        } catch (JSONException e) {
+                            Log.d("ERROR", "Horlogerie");
+                        }
+
+                        try {
+                            object = new JSONObject(jsonObject.getString("Système"));
+                            Donnees.instance().definirActiviteIHM(object.getString("alive"));
+                            Donnees.instance().definirBackground(object.getInt("background"));
+                        } catch (JSONException e) {
+                            Log.d("ERROR", "Système");
+                        }
+
+                        try {
+                            object = new JSONObject(jsonObject.getString( "Events"));
+                            Donnees.instance().supprimerEvents();
+                            for (int i = 1; i < (object.length() + 1); i++) {
+                                if (!object.getString("event" + i).isEmpty()) {
+                                    Donnees.instance().ajouterEvent(object.getJSONObject("event" + i).getString("texte"), object.getJSONObject("event" + i).getInt("couleur"), object.getJSONObject("event" + i).getString("dateheure"));
+
+                                    if (object.getJSONObject("event" + i).getInt("lu") == 0) {
+                                        Notification.instance().ajouter("Nouvel evenement", object.getJSONObject("event" + i).getString("texte") + " à " + object.getJSONObject("event" + i).getString("dateheure"));
+                                        MainActivity.instance().sendData(false,
+                                                "",
+                                                "",
+                                                HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
+                                                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageEvents),
+                                                "texte=" + object.getJSONObject("event" + i).getString("texte") + "&dateheure=" + object.getJSONObject("event" + i).getString("dateheure") + "&lu=1");
+                                    }
+                                } else {
+                                    break;
+                                }
+                            }
+                        } catch (JSONException e) {
+                            Log.d("ERROR", "Events");
+                        }
+
+                        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                            ledEtatSysteme.setActivated(Donnees.instance().obtenirActiviteIHM());
+                            texteEtatSysteme.setText(Donnees.instance().obtenirActiviteIHM() ? "Etat : connecté" : "Etat : déconnecté");
+                        }
+
+                        if (!Donnees.instance().obtenirActiviteIHM()) {
+                            if (!msgEtatSysteme) {
+                                msgEtatSysteme = true;
+                                Toast.makeText(this, "Le système s'est déconnecté du serveur", Toast.LENGTH_SHORT).show();
+                                Notification.instance().ajouter("Déconnexion", "Le système s'est déconnecté du serveur");
+                            }
+                        } else {
+                            if (msgEtatSysteme) {
+                                msgEtatSysteme = false;
+                                Toast.makeText(this, "Le système s'est connecté au serveur", Toast.LENGTH_SHORT).show();
+                                Notification.instance().ajouter("Connexion", "Le système s'est connecté au serveur");
+                            }
+                        }
 
                         menu.findItem(R.id.nav_pompe_filtration_layout).setVisible(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PompeFiltration));
                         menu.findItem(R.id.nav_filtre_layout).setVisible(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Filtre));
@@ -524,7 +766,7 @@ public class MainActivity extends AppCompatActivity
                         menu.findItem(R.id.nav_chauffage_layout).setVisible(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage));
                         menu.findItem(R.id.nav_lampes_uv_layout).setVisible(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.LampesUV));
                         menu.findItem(R.id.nav_ozone_layout).setVisible(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Ozone));
-                        menu.findItem(R.id.nav_electrolyseur_layout).setVisible(false);
+                        menu.findItem(R.id.nav_electrolyseur_layout).setVisible(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Electrolyseur));
                         menu.findItem(R.id.nav_regulateur_ph_moins_layout).setVisible(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins));
                         menu.findItem(R.id.nav_regulateur_ph_plus_layout).setVisible(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus));
                         menu.findItem(R.id.nav_regulateur_orp_layout).setVisible(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp));
@@ -532,7 +774,8 @@ public class MainActivity extends AppCompatActivity
 
                         updatePages();
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        //e.printStackTrace();
+                        Toast.makeText(this, "Un problème est survenu lors de la communication avec le serveur", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -543,6 +786,7 @@ public class MainActivity extends AppCompatActivity
         fragmentDonnees.update();
         fragmentSynoptique.update();
         fragmentMenu.update();
+        fragmentBassin.update();
         fragmentPompeFiltration.update();
         fragmentFiltre.update();
         fragmentSurpresseur.update();
@@ -553,5 +797,6 @@ public class MainActivity extends AppCompatActivity
         fragmentRegulateurPhMoins.update();
         fragmentRegulateurORP.update();
         fragmentAlgicide.update();
+        fragmentEvents.update();
     }
 }
