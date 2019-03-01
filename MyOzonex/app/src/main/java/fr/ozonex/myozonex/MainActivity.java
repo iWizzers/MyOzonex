@@ -211,10 +211,6 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_deconnexion_layout) {
             showNavigationViewButton(false);
             stopService(serviceIntent);
-            if (!premierDemarrage) {
-                Donnees.setPreferences(Donnees.ID_SYSTEME, "");
-                Donnees.setPreferences(Donnees.MOTDEPASSE, "");
-            }
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame
                             , fragmentConnexion)
