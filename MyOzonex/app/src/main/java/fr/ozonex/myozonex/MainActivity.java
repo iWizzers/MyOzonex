@@ -462,6 +462,7 @@ public class MainActivity extends AppCompatActivity
                             Donnees.instance().definirHysteresisInjectionPh(object.getDouble("hyst_injection_ph"));
                             Donnees.instance().definirHysteresisInjectionORP(object.getInt("hyst_injection_orp"));
                             Donnees.instance().definirHysteresisInjectionAmpero(object.getDouble("hyst_injection_ampero"));
+                            Donnees.instance().definirEtatRegulations(object.getInt("etat_regulations") > 0);
                         } catch (JSONException e) {
                             Log.d("ERROR", "Bassin");
                         }

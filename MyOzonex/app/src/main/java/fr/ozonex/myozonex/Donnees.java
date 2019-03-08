@@ -172,6 +172,7 @@ public class Donnees {
     private double hysteresisAmpero;
     private double chloreLibreActif;
 
+    private boolean etatRegulations = false;
     private int traitementEnCoursPhMoins = 0;
     private int traitementEnCoursPhPlus = 0;
     private int traitementEnCoursOrp = 0;
@@ -245,6 +246,7 @@ public class Donnees {
     public static final String ID_SYSTEME = "id system";
     public static final String MOTDEPASSE = "password";
 
+    private String derniereConnexion = "";
     private boolean activiteIHM = false;
     private int background;
     private int pageSource;
@@ -268,7 +270,13 @@ public class Donnees {
         return activiteIHM;
     }
 
+    public String obtenirDerniereConnexion() {
+        return derniereConnexion;
+    }
+
     public void definirActiviteIHM(String strDateHeure) {
+        derniereConnexion = strDateHeure;
+
         String date = strDateHeure.split("-")[0];
         String heure = strDateHeure.split("-")[1];
 
@@ -1650,6 +1658,16 @@ public class Donnees {
         } else if (capteur == Capteur._4_20_Libre) {
             valeur_4_20_Libre = valeur;
         }
+    }
+
+    public boolean obtenirEtatRegulations() {
+        return etatRegulations;
+    }
+
+
+
+    public void definirEtatRegulations(boolean etat) {
+        etatRegulations = etat;
     }
 
     private String formatValeur(double valeur) {
