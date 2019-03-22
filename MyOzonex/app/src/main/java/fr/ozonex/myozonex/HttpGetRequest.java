@@ -48,7 +48,7 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
 
     private static String pageString[] = {
         "login",
-        "data",
+        "app_data",
         "events",
         "horlogerie",
         "bassin",

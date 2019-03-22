@@ -567,6 +567,7 @@ public class MainActivity extends AppCompatActivity
                             Donnees.instance().definirPlage(Donnees.Equipement.Chauffage, 1, object.getString("plage_2"));
                             Donnees.instance().definirPlage(Donnees.Equipement.Chauffage, 2, object.getString("plage_3"));
                             Donnees.instance().definirPlage(Donnees.Equipement.Chauffage, 3, object.getString("plage_4"));
+                            Donnees.instance().definirTypeChauffage(object.getInt("type_chauffage"));
                         } catch (JSONException e) {
                             Log.d("ERROR", "Chauffage");
                         }

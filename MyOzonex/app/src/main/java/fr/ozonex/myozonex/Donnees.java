@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -69,6 +70,14 @@ public class Donnees {
 
     public static final String ASSERVISSEMENT_TOR = "TOR";
     public static final String ASSERVISSEMENT_LIN = "LINEAIRE";
+
+    public static final int PAC	= 0;
+    public static final int RECHAUFFEUR_CHAUDIERE = 1;
+    public static final int RECHAUFFEUR_ELECTRIQUE = 2;
+    public static final int PANNEAU_SOLAIRE = 3;
+    public static final int PANNEAU_ET_POMPE = 4;
+    public static final int PANNEAU_ET_CHAUDIERE = 5;
+    public static final int PANNEAU_ET_ELECTRIQUE = 6;
 
     boolean pompe_filtration_installe = false;
     boolean filtre_installe = false;
@@ -150,6 +159,7 @@ public class Donnees {
     private double seuilHautPression = 0;
     private double seuilBasPression = 0;
 
+    private int typeChauffage = 0;
     private int controleTemperature = 0;
     private int temperatureArret = 0;
     private int temperatureEnclenchement = 0;
@@ -940,7 +950,13 @@ public class Donnees {
 
     public void definirPlage(Equipement equipement, int index, String plage) {
         String[] split = plage.split(" - ");
-        boolean etat = !split[0].equals(split[1]);
+        boolean etat = false;
+
+        if (split.length == 2) {
+            etat = !split[0].equals(split[1]);
+        } else {
+            plage = "00h00 - 00h00";
+        }
 
         index *= 2;
 
@@ -1032,6 +1048,14 @@ public class Donnees {
 
     public void definirSeuilBasPression(double valeur) {
         seuilBasPression = valeur;
+    }
+
+    public int obtenirTypeChauffage() {
+        return typeChauffage;
+    }
+
+    public void definirTypeChauffage(int type) {
+        typeChauffage = type;
     }
 
     public int obtenirControlePompeFiltration() {

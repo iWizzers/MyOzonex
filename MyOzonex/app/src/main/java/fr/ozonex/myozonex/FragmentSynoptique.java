@@ -109,6 +109,13 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
     ImageView tuyauEntreeChauffage1;
     ImageView tuyauEntreeChauffage2;
     ImageView tuyauEntreeChauffage3;
+    ImageView tuyauEntreePanneauSolaire1;
+    ImageView tuyauEntreePanneauSolaire2;
+    ImageView tuyauEntreePanneauSolaire3;
+    ImageView tuyauEntreePanneauSolaire4;
+    ImageView tuyauSortiePanneauSolaire1;
+    ImageView tuyauSortiePanneauSolaire2;
+    ImageView tuyauSortiePanneauSolaire3;
     ImageView tuyauSortieChauffage1;
     ImageView tuyauSortieChauffage2;
     ImageView tuyauSortieChauffage3;
@@ -153,9 +160,10 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
     ImageButton boutonFiltre;
     TextView texteCapteurPression;
     ImageView helicePac;
+    View backgroundHelicePac;
     Rotate rotateHelicePac;
-    ImageButton boutonPac;
-    TextView texteModePac;
+    ImageButton boutonChauffage;
+    TextView texteModeChauffage;
     ImageButton boutonLampesUv;
     TextView texteModeLampesUV;
     ImageButton boutonAlgicide;
@@ -261,6 +269,13 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
         tuyauEntreeChauffage1 = (ImageView) view.findViewById(R.id.tuyau_entree_chauffage_1);
         tuyauEntreeChauffage2 = (ImageView) view.findViewById(R.id.tuyau_entree_chauffage_2);
         tuyauEntreeChauffage3 = (ImageView) view.findViewById(R.id.tuyau_entree_chauffage_3);
+        tuyauEntreePanneauSolaire1 = (ImageView) view.findViewById(R.id.tuyau_entree_panneau_solaire);
+        tuyauEntreePanneauSolaire2 = (ImageView) view.findViewById(R.id.tuyau_entree_panneau_solaire_2);
+        tuyauEntreePanneauSolaire3 = (ImageView) view.findViewById(R.id.tuyau_entree_panneau_solaire_3);
+        tuyauEntreePanneauSolaire4 = (ImageView) view.findViewById(R.id.tuyau_entree_panneau_solaire_4);
+        tuyauSortiePanneauSolaire1 = (ImageView) view.findViewById(R.id.tuyau_sortie_panneau_solaire);
+        tuyauSortiePanneauSolaire2 = (ImageView) view.findViewById(R.id.tuyau_sortie_panneau_solaire_2);
+        tuyauSortiePanneauSolaire3 = (ImageView) view.findViewById(R.id.tuyau_sortie_panneau_solaire_3);
         tuyauSortieChauffage1 = (ImageView) view.findViewById(R.id.tuyau_sortie_chauffage_1);
         tuyauSortieChauffage2 = (ImageView) view.findViewById(R.id.tuyau_sortie_chauffage_2);
         tuyauSortieChauffage3 = (ImageView) view.findViewById(R.id.tuyau_sortie_chauffage_3);
@@ -305,9 +320,10 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
         boutonFiltre = (ImageButton) view.findViewById(R.id.filtre);
         texteCapteurPression = (TextView) view.findViewById(R.id.texte_capteur_pression);
         helicePac = (ImageView) view.findViewById(R.id.helice_pac);
+        backgroundHelicePac = view.findViewById(R.id.background_helice_pac);
         rotateHelicePac = new Rotate(helicePac, 120);
-        boutonPac = (ImageButton) view.findViewById(R.id.pac);
-        texteModePac = (TextView) view.findViewById(R.id.texte_mode_pac);
+        boutonChauffage = (ImageButton) view.findViewById(R.id.pac);
+        texteModeChauffage = (TextView) view.findViewById(R.id.texte_mode_pac);
         boutonLampesUv = (ImageButton) view.findViewById(R.id.lampes_uv);
         texteModeLampesUV = (TextView) view.findViewById(R.id.texte_mode_lampes_uv);
         boutonAlgicide = (ImageButton) view.findViewById(R.id.algicide);
@@ -340,7 +356,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
         boutonFiltre.setOnClickListener(this);
         boutonOzonateur.setOnClickListener(this);
         boutonSurpresseur.setOnClickListener(this);
-        boutonPac.setOnClickListener(this);
+        boutonChauffage.setOnClickListener(this);
         boutonLampesUv.setOnClickListener(this);
         boutonAlgicide.setOnClickListener(this);
         boutonRegulateurOrp.setOnClickListener(this);
@@ -411,9 +427,8 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             definirTexteMode(texteModeSurpresseur, Donnees.Equipement.Surpresseur);
 
             afficherElementsEquipement(Donnees.Equipement.Chauffage,
-                    texteModePac,
-                    helicePac,
-                    boutonPac,
+                    texteModeChauffage,
+                    boutonChauffage,
                     tuyauSortieTFiltre,
                     tuyauSortieFiltre2,
                     vanneEntreeChauffage,
@@ -426,9 +441,18 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
                     vanneSortieChauffage,
                     tuyauSortieFiltreChauffage4,
                     tuyauSortieTFiltreChauffage);
+            helicePac.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() == Donnees.PAC) ? View.VISIBLE : View.GONE);
+            backgroundHelicePac.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() == Donnees.PAC) ? View.VISIBLE : View.GONE);
+            tuyauEntreePanneauSolaire1.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() >= Donnees.PANNEAU_SOLAIRE) ? View.VISIBLE : View.GONE);
+            tuyauEntreePanneauSolaire2.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() >= Donnees.PANNEAU_SOLAIRE) ? View.VISIBLE : View.GONE);
+            tuyauEntreePanneauSolaire3.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() >= Donnees.PANNEAU_SOLAIRE) ? View.VISIBLE : View.GONE);
+            tuyauEntreePanneauSolaire4.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() >= Donnees.PANNEAU_SOLAIRE) ? View.VISIBLE : View.GONE);
+            tuyauSortiePanneauSolaire1.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() == Donnees.PANNEAU_SOLAIRE) ? View.VISIBLE : View.GONE);
+            tuyauSortiePanneauSolaire2.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() == Donnees.PANNEAU_SOLAIRE) ? View.VISIBLE : View.GONE);
+            tuyauSortiePanneauSolaire3.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() == Donnees.PANNEAU_SOLAIRE) ? View.VISIBLE : View.GONE);
             tuyauSortieFiltreChauffage2.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) ? View.GONE : View.VISIBLE);
-            definirImageBouton(boutonPac, Donnees.Equipement.Chauffage);
-            definirTexteMode(texteModePac, Donnees.Equipement.Chauffage);
+            definirImageBouton(boutonChauffage, Donnees.Equipement.Chauffage);
+            definirTexteMode(texteModeChauffage, Donnees.Equipement.Chauffage);
 
             afficherElementsEquipement(Donnees.Equipement.Ozone,
                     texteModeOzonateur,
@@ -750,9 +774,16 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             tuyauEntreeChauffage1.setImageResource(pompeFiltrationActive ? R.drawable.tuyau_vertical_actif : R.drawable.tuyau_vertical_inactif);
             tuyauEntreeChauffage2.setImageResource(pompeFiltrationActive ? R.drawable.tuyau_3_12_actif : R.drawable.tuyau_3_12_inactif);
             tuyauEntreeChauffage3.setImageResource(pompeFiltrationActive ? R.drawable.tuyau_horizontal_actif : R.drawable.tuyau_horizontal_inactif);
+            tuyauEntreePanneauSolaire1.setImageResource(pompeFiltrationActive ? R.drawable.tuyau_9_12_actif : R.drawable.tuyau_9_12_inactif);
+            tuyauEntreePanneauSolaire2.setImageResource(pompeFiltrationActive ? R.drawable.tuyau_vertical_actif : R.drawable.tuyau_vertical_inactif);
+            tuyauEntreePanneauSolaire3.setImageResource(pompeFiltrationActive ? R.drawable.tuyau_3_6_actif : R.drawable.tuyau_3_6_inactif);
+            tuyauEntreePanneauSolaire4.setImageResource(pompeFiltrationActive ? R.drawable.tuyau_horizontal_actif : R.drawable.tuyau_horizontal_inactif);
             tuyauSortieChauffage1.setImageResource(pompeFiltrationActive ? (chauffageActive ? R.drawable.tuyau_horizontal_actif_chaud : R.drawable.tuyau_horizontal_actif) : R.drawable.tuyau_horizontal_inactif);
             tuyauSortieChauffage2.setImageResource(pompeFiltrationActive ? (chauffageActive ? R.drawable.tuyau_9_12_actif_chaud : R.drawable.tuyau_9_12_actif) : R.drawable.tuyau_9_12_inactif);
             tuyauSortieChauffage3.setImageResource(pompeFiltrationActive ? (chauffageActive ? R.drawable.tuyau_vertical_actif_chaud : R.drawable.tuyau_vertical_actif) : R.drawable.tuyau_vertical_inactif);
+            tuyauSortiePanneauSolaire1.setImageResource(pompeFiltrationActive ? (chauffageActive ? R.drawable.tuyau_9_12_actif_chaud : R.drawable.tuyau_9_12_actif) : R.drawable.tuyau_9_12_inactif);
+            tuyauSortiePanneauSolaire2.setImageResource(pompeFiltrationActive ? (chauffageActive ? R.drawable.tuyau_3_6_actif_chaud : R.drawable.tuyau_3_6_actif) : R.drawable.tuyau_3_6_inactif);
+            tuyauSortiePanneauSolaire3.setImageResource(pompeFiltrationActive ? (chauffageActive ? R.drawable.tuyau_horizontal_actif_chaud : R.drawable.tuyau_horizontal_actif) : R.drawable.tuyau_horizontal_inactif);
             tuyauSortieFiltreChauffage1.setImageResource(pompeFiltrationActive ? (chauffageActive ? R.drawable.tuyau_horizontal_actif_chaud : R.drawable.tuyau_horizontal_actif) : R.drawable.tuyau_horizontal_inactif);
             tuyauSortieFiltreChauffage2.setImageResource(pompeFiltrationActive ? (chauffageActive ? R.drawable.tuyau_9_12_actif_chaud : R.drawable.tuyau_9_12_actif) : R.drawable.tuyau_9_12_inactif);
             tuyauSortieFiltreChauffage3.setImageResource(pompeFiltrationActive ? (chauffageActive ? R.drawable.tuyau_vertical_actif_chaud : R.drawable.tuyau_vertical_actif) : R.drawable.tuyau_vertical_inactif);
@@ -845,8 +876,28 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
                 imageInactif = R.drawable.surpresseur_inactif;
                 break;
             case Chauffage:
-                imageActif = R.drawable.pac_actif;
-                imageInactif = R.drawable.pac_inactif;
+                if (Donnees.instance().obtenirTypeChauffage() == Donnees.RECHAUFFEUR_CHAUDIERE) {
+                    imageActif = R.drawable.rechauffeur_chaudiere_actif;
+                    imageInactif = R.drawable.rechauffeur_chaudiere_inactif;
+                } else if (Donnees.instance().obtenirTypeChauffage() == Donnees.RECHAUFFEUR_ELECTRIQUE) {
+                    imageActif = R.drawable.rechauffeur_electrique_actif;
+                    imageInactif = R.drawable.rechauffeur_electrique_inactif;
+                } else if (Donnees.instance().obtenirTypeChauffage() == Donnees.PANNEAU_SOLAIRE) {
+                    imageActif = R.drawable.panneau_solaire_actif;
+                    imageInactif = R.drawable.panneau_solaire_inactif;
+                } else if (Donnees.instance().obtenirTypeChauffage() == Donnees.PANNEAU_ET_POMPE) {
+                    imageActif = R.drawable.panneau_pac_actif;
+                    imageInactif = R.drawable.panneau_pac_inactif;
+                } else if (Donnees.instance().obtenirTypeChauffage() == Donnees.PANNEAU_ET_CHAUDIERE) {
+                    imageActif = R.drawable.panneau_chaudiere_actif;
+                    imageInactif = R.drawable.panneau_chaudiere_inactif;
+                } else if (Donnees.instance().obtenirTypeChauffage() == Donnees.PANNEAU_ET_ELECTRIQUE) {
+                    imageActif = R.drawable.panneau_electrique_actif;
+                    imageInactif = R.drawable.panneau_electrique_inactif;
+                } else {
+                    imageActif = R.drawable.pac_actif;
+                    imageInactif = R.drawable.pac_inactif;
+                }
                 break;
             case LampesUV:
                 imageActif = R.drawable.lampes_uv_actif;
@@ -871,7 +922,11 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
                 imageButton.setImageResource(imageActif);
 
                 if (equipement == Donnees.Equipement.Chauffage) {
-                    rotateHelicePac.startAnimation();
+                    if (Donnees.instance().obtenirTypeChauffage() == Donnees.PAC) {
+                        rotateHelicePac.startAnimation();
+                    } else {
+                        rotateHelicePac.stopAnimation();
+                    }
                 }
             } else {
                 imageButton.setImageResource(imageInactif);
