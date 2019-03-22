@@ -310,6 +310,17 @@ public class Donnees {
             activiteIHM = true;
         } else {
             activiteIHM = false;
+            Donnees.instance().definirEtatLectureCapteurs(false);
+            Donnees.instance().definirModeFonctionnement(Equipement.PompeFiltration, ARRET);
+            Donnees.instance().definirModeFonctionnement(Equipement.Surpresseur, ARRET);
+            Donnees.instance().definirModeFonctionnement(Equipement.Chauffage, ARRET);
+            Donnees.instance().definirModeFonctionnement(Equipement.LampesUV, ARRET);
+            Donnees.instance().definirModeFonctionnement(Equipement.Ozone, ARRET);
+            Donnees.instance().definirModeFonctionnement(Equipement.Electrolyseur, ARRET);
+            Donnees.instance().definirModeFonctionnement(Equipement.PhMoins, ARRET);
+            Donnees.instance().definirModeFonctionnement(Equipement.PhPlus, ARRET);
+            Donnees.instance().definirModeFonctionnement(Equipement.Orp, ARRET);
+            Donnees.instance().definirModeFonctionnement(Equipement.Algicide, ARRET);
         }
     }
 
@@ -577,7 +588,7 @@ public class Donnees {
             }
         }
 
-        if (sendNotification) {
+        if (sendNotification && activiteIHM) {
             Notification.instance().ajouter(titre, contenu);
         }
     }
@@ -1163,7 +1174,7 @@ public class Donnees {
     }
 
     public void definirHysteresisPhPlus(double valeur) {
-        hysteresisPhPlus = valeur;
+        hysteresisPhPlus = consignePh - valeur;
     }
 
     public double obtenirHysteresisPhMoins() {
@@ -1171,7 +1182,7 @@ public class Donnees {
     }
 
     public void definirHysteresisPhMoins(double valeur) {
-        hysteresisPhMoins = valeur;
+        hysteresisPhMoins = consignePh + valeur;
     }
 
     public double obtenirConsigneOrp() {
@@ -1187,7 +1198,7 @@ public class Donnees {
     }
 
     public void definirHysteresisOrp(double valeur) {
-        hysteresisOrp = valeur;
+        hysteresisOrp = consigneOrp - valeur;
     }
 
     public double obtenirConsigneAmpero() {
@@ -1203,7 +1214,7 @@ public class Donnees {
     }
 
     public void definirHysteresisAmpero(double valeur) {
-        hysteresisAmpero = valeur;
+        hysteresisAmpero = consigneAmpero - valeur;
     }
 
     public double obtenirChloreLibreActif() {
