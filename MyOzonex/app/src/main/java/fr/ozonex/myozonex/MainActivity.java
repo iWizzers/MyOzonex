@@ -211,10 +211,6 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_deconnexion_layout) {
             showNavigationViewButton(false);
             stopService(serviceIntent);
-            if (!premierDemarrage) {
-                Donnees.setPreferences(Donnees.ID_SYSTEME, "");
-                Donnees.setPreferences(Donnees.MOTDEPASSE, "");
-            }
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame
                             , fragmentConnexion)
@@ -466,6 +462,7 @@ public class MainActivity extends AppCompatActivity
                             Donnees.instance().definirHysteresisInjectionPh(object.getDouble("hyst_injection_ph"));
                             Donnees.instance().definirHysteresisInjectionORP(object.getInt("hyst_injection_orp"));
                             Donnees.instance().definirHysteresisInjectionAmpero(object.getDouble("hyst_injection_ampero"));
+                            Donnees.instance().definirEtatRegulations(object.getInt("etat_regulations") > 0);
                         } catch (JSONException e) {
                             Log.d("ERROR", "Bassin");
                         }
@@ -570,6 +567,7 @@ public class MainActivity extends AppCompatActivity
                             Donnees.instance().definirPlage(Donnees.Equipement.Chauffage, 1, object.getString("plage_2"));
                             Donnees.instance().definirPlage(Donnees.Equipement.Chauffage, 2, object.getString("plage_3"));
                             Donnees.instance().definirPlage(Donnees.Equipement.Chauffage, 3, object.getString("plage_4"));
+                            Donnees.instance().definirTypeChauffage(object.getInt("type_chauffage"));
                         } catch (JSONException e) {
                             Log.d("ERROR", "Chauffage");
                         }

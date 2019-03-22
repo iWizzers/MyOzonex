@@ -2,6 +2,7 @@
 
 <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/horizontal_scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -31,9 +32,112 @@
                     android:paddingBottom="@dimen/layout_widget_space"
                     android:orientation="vertical" >
                     <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/layout_widget_space"
+                            android:layout_marginRight="@dimen/layout_widget_space"
+                            android:orientation="horizontal" >
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal" >
+                                <ImageView
+                                    android:layout_width="60dp"
+                                    android:layout_height="60dp"
+                                    android:scaleType="fitCenter"
+                                    app:srcCompat="@drawable/horloge" />
+                                
+                                <TextView
+                                    android:id="@+id/label_derniere_connexion"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginRight="@dimen/layout_space"
+                                    android:text="Dernière connexion le %1"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/couleurTexteGeneral"
+                                    android:textSize="@dimen/texteGeneral" />
+
+                                <Space
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1" />
+
+                                <View
+                                    android:id="@+id/ligne_separatrice_3"
+                                    android:layout_width="2dp"
+                                    android:layout_height="match_parent"
+                                    android:background="@android:color/white" />
+
+                                <RadioButton
+                                    android:id="@+id/radio_button_etat_regulations"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="@dimen/layout_space"
+                                    android:layout_gravity="center"
+                                    android:text="Régulations activées"
+                                    android:textColor="@color/couleurTexteGeneral"
+                                    android:textSize="@dimen/texteGeneral"
+                                    android:textStyle="bold"
+                                    android:checked="true"
+                                    android:buttonTint="@color/autoMarche" />
+
+                                <View
+                                    android:id="@+id/ligne_separatrice_2"
+                                    android:layout_width="2dp"
+                                    android:layout_height="match_parent"
+                                    android:background="@android:color/white" />
+
+                                <TextView
+                                    android:id="@+id/label_type_regulation"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="@dimen/layout_space"
+                                    android:layout_marginRight="@dimen/layout_space"
+                                    android:text="Type de régulation : TOR"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/couleurTexteGeneral"
+                                    android:textSize="@dimen/texteGeneral" />
+
+                                <View
+                                    android:id="@+id/ligne_separatrice"
+                                    android:layout_width="2dp"
+                                    android:layout_height="match_parent"
+                                    android:background="@android:color/white" />
+
+                                <TextView
+                                    android:id="@+id/led_pompe_filtration"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="@dimen/layout_space"
+                                    android:layout_marginRight="@dimen/layout_space"
+                                    android:background="@drawable/led_etat_systeme" />
+
+                                <TextView
+                                    android:id="@+id/label_etat_pompe_filtration"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginRight="@dimen/layout_space"
+                                    android:text="Pompe filtration amorcée"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/couleurTexteGeneral"
+                                    android:textSize="@dimen/texteGeneral" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:id="@+id/layout_ph"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/layout_container_space"
                         android:orientation="vertical">
                         <LinearLayout
                             android:layout_width="match_parent"
