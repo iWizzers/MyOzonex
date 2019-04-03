@@ -151,6 +151,9 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
     TextView texteValeurTempExterne;
     TextView texteValeurHumiditeExterne;
     TextView texteValeurPressionAtmExterne;
+    ImageButton boutonEclairage1;
+    ImageButton boutonEclairage2;
+    TextView texteModeEclairage;
     ImageButton boutonPompeFiltration;
     TextView texteModePompeFiltration;
     ImageButton boutonOzonateur;
@@ -159,6 +162,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
     TextView texteModeSurpresseur;
     ImageButton boutonFiltre;
     TextView texteCapteurPression;
+    TextView texteRincageFiltre;
     ImageView helicePac;
     View backgroundHelicePac;
     Rotate rotateHelicePac;
@@ -311,6 +315,9 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
         texteValeurTempExterne = (TextView) view.findViewById(R.id.texte_valeur_temperature_externe);
         texteValeurHumiditeExterne = (TextView) view.findViewById(R.id.texte_valeur_humidite_externe);
         texteValeurPressionAtmExterne = (TextView) view.findViewById(R.id.texte_valeur_pression_atm_externe);
+        boutonEclairage1 = (ImageButton) view.findViewById(R.id.eclairage_1);
+        boutonEclairage2 = (ImageButton) view.findViewById(R.id.eclairage_2);
+        texteModeEclairage = (TextView) view.findViewById(R.id.texte_mode_eclairage);
         boutonPompeFiltration = (ImageButton) view.findViewById(R.id.pompe_filtration);
         texteModePompeFiltration = (TextView) view.findViewById(R.id.texte_mode_pompe_filtration);
         boutonOzonateur = (ImageButton) view.findViewById(R.id.ozonateur);
@@ -319,6 +326,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
         texteModeSurpresseur = (TextView) view.findViewById(R.id.texte_mode_surpresseur);
         boutonFiltre = (ImageButton) view.findViewById(R.id.filtre);
         texteCapteurPression = (TextView) view.findViewById(R.id.texte_capteur_pression);
+        texteRincageFiltre = (TextView) view.findViewById(R.id.texte_rincage_filtre);
         helicePac = (ImageView) view.findViewById(R.id.helice_pac);
         backgroundHelicePac = view.findViewById(R.id.background_helice_pac);
         rotateHelicePac = new Rotate(helicePac, 120);
@@ -352,6 +360,8 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
         boutonAccueil.setVisibility(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? View.VISIBLE : View.GONE);
         boutonMenu.setVisibility(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? View.VISIBLE : View.GONE);
 
+        boutonEclairage1.setOnClickListener(this);
+        boutonEclairage2.setOnClickListener(this);
         boutonPompeFiltration.setOnClickListener(this);
         boutonFiltre.setOnClickListener(this);
         boutonOzonateur.setOnClickListener(this);
@@ -403,6 +413,12 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             texteValeurHumiditeExterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.HumiditeExterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.HumiditeExterne) + " %" : "Err");
             texteValeurPressionAtmExterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.PressionAtmospheriqueExterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.PressionAtmospheriqueExterne) + " hPa" : "Err");
 
+            boutonEclairage1.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Eclairage));
+            boutonEclairage2.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Eclairage));
+            definirImageBouton(boutonEclairage1, Donnees.Equipement.Eclairage);
+            definirImageBouton(boutonEclairage2, Donnees.Equipement.Eclairage);
+            definirTexteMode(texteModeEclairage, Donnees.Equipement.Eclairage);
+
             boutonPompeFiltration.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PompeFiltration));
             definirImageBouton(boutonPompeFiltration, Donnees.Equipement.PompeFiltration);
             definirTexteMode(texteModePompeFiltration, Donnees.Equipement.PompeFiltration);
@@ -410,6 +426,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             boutonFiltre.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Filtre));
             texteCapteurPression.setVisibility(Donnees.instance().presence(Donnees.Capteur.Pression) ? View.VISIBLE : View.GONE);
             texteCapteurPression.setText("Pression : " + (Donnees.instance().obtenirEtat(Donnees.Capteur.Pression) ? Donnees.instance().obtenirValeur(Donnees.Capteur.Pression) + " bar" : "Err"));
+            texteRincageFiltre.setVisibility(Donnees.instance().presence(Donnees.Capteur.Pression) && Donnees.instance().obtenirEtat(Donnees.Capteur.Pression) && (Donnees.instance().obtenirValeur(Donnees.Capteur.Pression) >= Donnees.instance().obtenirPressionProchainLavage()) ? View.VISIBLE : View.GONE);
 
             afficherElementsEquipement(Donnees.Equipement.Surpresseur,
                     texteModeSurpresseur,
@@ -910,6 +927,10 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             case Algicide: case Orp: case PhMoins: case PhPlus:
                 imageActif = R.drawable.pomperegulation_actif;
                 imageInactif = R.drawable.pomperegulation_inactif;
+                break;
+            case Eclairage:
+                imageActif = R.drawable.lumiere_actif;
+                imageInactif = R.drawable.lumiere_inactif;
                 break;
             default:
                 imageActif = -1;

@@ -90,6 +90,7 @@ public class Donnees {
     boolean regulateur_ph_plus_installe = false;
     boolean regulateur_orp_installe = false;
     boolean regulateur_algicide_installe = false;
+    boolean eclairage_installe = false;
 
     private int modePompeFiltration = ARRET;
     private int modeSurpresseur = ARRET;
@@ -101,6 +102,7 @@ public class Donnees {
     private int modePhPlus = ARRET;
     private int modeOrp = ARRET;
     private int modeAlgicide = ARRET;
+    private int modeEclairage = ARRET;
 
     private String dateDebutConsoPompeFiltration = null;
     private String dateDebutConsoSurpresseur = null;
@@ -151,6 +153,7 @@ public class Donnees {
     private List<Object> listePlageSurpresseur = new ArrayList<Object>();
     private List<Object> listePlageChauffage = new ArrayList<Object>();
     private List<Object> listePlageHeuresCreuses = new ArrayList<Object>();
+    private List<Object> listePlageEclairage = new ArrayList<Object>();
 
     private String dateDernierLavage = null;
     private double pressionApresLavage = 0;
@@ -440,6 +443,8 @@ public class Donnees {
             etat = regulateur_orp_installe;
         } else if (equipement == Equipement.Algicide) {
             etat = regulateur_algicide_installe;
+        } else if (equipement == Equipement.Eclairage) {
+            etat = eclairage_installe;
         }
 
         return etat;
@@ -468,6 +473,8 @@ public class Donnees {
             regulateur_orp_installe = etat;
         } else if (equipement == Equipement.Algicide) {
             regulateur_algicide_installe = etat;
+        } else if (equipement == Equipement.Eclairage) {
+            eclairage_installe = etat;
         }
     }
 
@@ -494,6 +501,8 @@ public class Donnees {
             mode = modeOrp;
         } else if (equipement == Equipement.Algicide) {
             mode = modeAlgicide;
+        } else if (equipement == Equipement.Eclairage) {
+            mode = modeEclairage;
         }
 
         return mode;
@@ -584,6 +593,13 @@ public class Donnees {
 
             if (modeAlgicide != mode) {
                 modeAlgicide = mode;
+                sendNotification = true;
+            }
+        } else if (equipement == Equipement.Eclairage) {
+            titre = "Eclairage";
+
+            if (modeEclairage != mode) {
+                modeEclairage = mode;
                 sendNotification = true;
             }
         }
@@ -927,6 +943,9 @@ public class Donnees {
             case HeuresCreuses:
                 etat = (boolean) listePlageHeuresCreuses.get(index);
                 break;
+            case Eclairage:
+                etat = (boolean) listePlageEclairage.get(index);
+                break;
             default:
                 break;
         }
@@ -951,6 +970,9 @@ public class Donnees {
                 break;
             case HeuresCreuses:
                 plage = (String) listePlageHeuresCreuses.get(index + 1);
+                break;
+            case Eclairage:
+                plage = (String) listePlageEclairage.get(index + 1);
                 break;
             default:
                 break;
@@ -1006,6 +1028,15 @@ public class Donnees {
                 } else {
                     listePlageHeuresCreuses.set(index, etat);
                     listePlageHeuresCreuses.set(index + 1, plage);
+                }
+                break;
+            case Eclairage:
+                if (index >= listePlageEclairage.size()) {
+                    listePlageEclairage.add(etat);
+                    listePlageEclairage.add(plage);
+                } else {
+                    listePlageEclairage.set(index, etat);
+                    listePlageEclairage.set(index + 1, plage);
                 }
                 break;
             default:

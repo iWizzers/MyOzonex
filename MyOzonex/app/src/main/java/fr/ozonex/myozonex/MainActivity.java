@@ -509,6 +509,18 @@ public class MainActivity extends AppCompatActivity
                         }
 
                         try {
+                            object = new JSONObject(jsonObject.getString("Eclairage"));
+                            Donnees.instance().definirEquipementInstalle(Donnees.Equipement.Eclairage, object.getInt("installe") > 0);
+                            Donnees.instance().definirModeFonctionnement(Donnees.Equipement.Eclairage, object.getInt("etat"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.Eclairage, 0, object.getString("plage_1"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.Eclairage, 1, object.getString("plage_2"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.Eclairage, 2, object.getString("plage_3"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.Eclairage, 3, object.getString("plage_4"));
+                        } catch (JSONException e) {
+                            Log.d("ERROR", "Eclairage");
+                        }
+
+                        try {
                             object = new JSONObject(jsonObject.getString("Pompe filtration"));
                             Donnees.instance().definirEquipementInstalle(Donnees.Equipement.PompeFiltration, object.getInt("installe") > 0);
                             Donnees.instance().definirModeFonctionnement(Donnees.Equipement.PompeFiltration, object.getInt("etat"));
