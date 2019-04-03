@@ -837,6 +837,9 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.bouton_eclairage:
+                MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_eclairage_layout));
+                break;
             case R.id.pompe_filtration:
                 MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_pompe_filtration_layout));
                 break;

@@ -43,7 +43,8 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
         PageRegulateurPhPlus,
         PageRegulateurPhMoins,
         PageRegulateurORP,
-        PageAlgicide
+        PageAlgicide,
+        PageEclairage
     };
 
     private static String pageString[] = {
@@ -63,7 +64,8 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
         "reg_ph_plus",
         "reg_ph_moins",
         "reg_orp",
-        "algicide"
+        "algicide",
+        "eclairage"
     };
 
     private MainActivity mainActivity;

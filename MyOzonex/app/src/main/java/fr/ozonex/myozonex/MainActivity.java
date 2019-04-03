@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity
     private FragmentSynoptique fragmentSynoptique = new FragmentSynoptique();
     private FragmentMenu fragmentMenu = new FragmentMenu();
     private FragmentBassin fragmentBassin = new FragmentBassin();
+    private FragmentEclairage fragmentEclairage = new FragmentEclairage();
     private FragmentPompeFiltration fragmentPompeFiltration = new FragmentPompeFiltration();
     private FragmentFiltre fragmentFiltre = new FragmentFiltre();
     private FragmentSurpresseur fragmentSurpresseur = new FragmentSurpresseur();
@@ -242,6 +243,12 @@ public class MainActivity extends AppCompatActivity
                             , fragmentBassin)
                     .commit();
             toolbar.setTitle(getString(R.string.bassin));
+        } else if (id == R.id.nav_eclairage_layout) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame
+                            , fragmentEclairage)
+                    .commit();
+            toolbar.setTitle(getString(R.string.eclairage));
         } else if (id == R.id.nav_pompe_filtration_layout) {
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame
@@ -770,6 +777,7 @@ public class MainActivity extends AppCompatActivity
                             }
                         }
 
+                        menu.findItem(R.id.nav_eclairage_layout).setVisible(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Eclairage));
                         menu.findItem(R.id.nav_pompe_filtration_layout).setVisible(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PompeFiltration));
                         menu.findItem(R.id.nav_filtre_layout).setVisible(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Filtre));
                         menu.findItem(R.id.nav_surpresseur_layout).setVisible(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Surpresseur));
@@ -797,6 +805,7 @@ public class MainActivity extends AppCompatActivity
         fragmentSynoptique.update();
         fragmentMenu.update();
         fragmentBassin.update();
+        fragmentEclairage.update();
         fragmentPompeFiltration.update();
         fragmentFiltre.update();
         fragmentSurpresseur.update();

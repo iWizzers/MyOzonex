@@ -141,6 +141,9 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
             case R.id.bouton_retour:
                 MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_synoptique_layout));
                 break;
+            case R.id.bouton_eclairage:
+                MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_eclairage_layout));
+                break;
             case R.id.bouton_pompe_filtration:
                 MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_pompe_filtration_layout));
                 break;
@@ -161,9 +164,6 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
                 break;
             case R.id.bouton_ozonateur:
                 MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_ozone_layout));
-                break;
-            case R.id.bouton_eclairage:
-                //MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_pompe_filtration_layout));
                 break;
             case R.id.bouton_regulateur_ph_plus:
                 MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_regulateur_ph_plus_layout));
