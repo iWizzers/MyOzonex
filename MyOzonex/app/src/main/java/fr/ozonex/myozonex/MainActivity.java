@@ -815,7 +815,7 @@ public class MainActivity extends AppCompatActivity
                         updatePages();
                     } catch (JSONException e) {
                         //e.printStackTrace();
-                        Toast.makeText(this, "Un problème est survenu lors de la communication avec le serveur", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Une erreur s'est produite lors de la communication avec le serveur", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
