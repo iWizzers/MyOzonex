@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity
     private FragmentRegulateurORP fragmentRegulateurORP = new FragmentRegulateurORP();
     private FragmentAlgicide fragmentAlgicide = new FragmentAlgicide();
     private FragmentEvents fragmentEvents = new FragmentEvents();
+    private FragmentAutomatisation fragmentAutomatisation = new FragmentAutomatisation();
 
     Bundle savedInstanceState;
 
@@ -315,6 +316,12 @@ public class MainActivity extends AppCompatActivity
                             , fragmentEvents)
                     .commit();
             toolbar.setTitle(getString(R.string.events));
+        } else if (id == R.id.nav_automatisation_layout) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame
+                            , fragmentAutomatisation)
+                    .commit();
+            toolbar.setTitle(getString(R.string.automatisation));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -459,6 +466,21 @@ public class MainActivity extends AppCompatActivity
                     try {
                         jsonObject = new JSONObject(result);
                         JSONObject object;
+
+                        try {
+                            object = new JSONObject(jsonObject.getString("Automatisation"));
+                            Donnees.instance().definirHeuresCreusesAuto(object.getInt("heures_creuses") > 0);
+                            Donnees.instance().definirDonneesEquipementsAuto(object.getInt("donnees_equipement") > 0);
+                            Donnees.instance().definirPlagesAuto(object.getInt("plages_auto") > 0);
+                            Donnees.instance().definirDebutPlageAuto(object.getString("debut_plage_auto"));
+                            Donnees.instance().definirTempsFiltrationJour(object.getString("temps_filtration_jour"));
+                            Donnees.instance().definirAsservissementAuto(Donnees.Equipement.PhPlus, object.getInt("asservissement_ph_plus") > 0);
+                            Donnees.instance().definirAsservissementAuto(Donnees.Equipement.PhMoins, object.getInt("asservissement_ph_moins") > 0);
+                            Donnees.instance().definirAsservissementAuto(Donnees.Equipement.Orp, object.getInt("asservissement_orp") > 0);
+                            Donnees.instance().definirConsigneOrpAuto(object.getInt("consigne_orp_auto") > 0);
+                        } catch (JSONException e) {
+                            Log.d("ERROR", "Automatisation");
+                        }
 
                         try {
                             object = new JSONObject(jsonObject.getString("Bassin"));
@@ -817,5 +839,6 @@ public class MainActivity extends AppCompatActivity
         fragmentRegulateurORP.update();
         fragmentAlgicide.update();
         fragmentEvents.update();
+        fragmentAutomatisation.update();
     }
 }

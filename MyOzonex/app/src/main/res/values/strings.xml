@@ -26,5 +26,6 @@
     <string name="eclairage">Eclairage</string>
     <string name="capteurs">Capteurs</string>
     <string name="events">Evenements</string>
+    <string name="automatisation">Automatisation</string>
     <string name="deconnexion">Déconnexion</string>
 </resources>

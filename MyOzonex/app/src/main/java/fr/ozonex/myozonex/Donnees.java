@@ -179,8 +179,8 @@ public class Donnees {
     private double consignePh;
     private double hysteresisPhPlus;
     private double hysteresisPhMoins;
-    private double consigneOrp;
-    private double hysteresisOrp;
+    private int consigneOrp;
+    private int hysteresisOrp;
     private double consigneAmpero;
     private double hysteresisAmpero;
     private double chloreLibreActif;
@@ -266,6 +266,16 @@ public class Donnees {
     private boolean etatLectureCapteurs = false;
 
     private List<Event> events = new ArrayList<Event>();
+
+    private boolean heuresCreusesAuto = false;
+    private boolean donneesEquipementsAuto = false;
+    private boolean plagesAuto = false;
+    private String debutPlageAuto = "00h00";
+    private String tempsFiltrationJour = "00h00";
+    private boolean asservissementPhPlusAuto = false;
+    private boolean asservissementPhMoinsAuto = false;
+    private boolean asservissementOrpAuto = false;
+    private boolean consigneOrpAuto = false;
 
     static SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.instance());
 
@@ -1216,19 +1226,19 @@ public class Donnees {
         hysteresisPhMoins = consignePh + valeur;
     }
 
-    public double obtenirConsigneOrp() {
+    public int obtenirConsigneOrp() {
         return consigneOrp;
     }
 
-    public void definirConsigneOrp(double valeur) {
+    public void definirConsigneOrp(int valeur) {
         consigneOrp = valeur;
     }
 
-    public double obtenirHysteresisOrp() {
+    public int obtenirHysteresisOrp() {
         return hysteresisOrp;
     }
 
-    public void definirHysteresisOrp(double valeur) {
+    public void definirHysteresisOrp(int valeur) {
         hysteresisOrp = consigneOrp - valeur;
     }
 
@@ -1730,10 +1740,80 @@ public class Donnees {
         return etatRegulations;
     }
 
-
-
     public void definirEtatRegulations(boolean etat) {
         etatRegulations = etat;
+    }
+
+    public boolean obtenirHeuresCreusesAuto() {
+        return heuresCreusesAuto;
+    }
+
+    public void definirHeuresCreusesAuto(boolean actif) {
+        heuresCreusesAuto = actif;
+    }
+
+    public boolean obtenirDonneesEquipementsAuto() {
+        return donneesEquipementsAuto;
+    }
+
+    public void definirDonneesEquipementsAuto(boolean actif) {
+        donneesEquipementsAuto = actif;
+    }
+
+    public boolean obtenirPlagesAuto() {
+        return plagesAuto;
+    }
+
+    public void definirPlagesAuto(boolean actif) {
+        plagesAuto = actif;
+    }
+
+    public String obtenirDebutPlageAuto() {
+        return debutPlageAuto;
+    }
+
+    public void definirDebutPlageAuto(String heure) {
+        debutPlageAuto = heure;
+    }
+
+    public String obtenirTempsFiltrationJour() {
+        return tempsFiltrationJour;
+    }
+
+    public void definirTempsFiltrationJour(String heure) {
+        tempsFiltrationJour = heure;
+    }
+
+    public boolean obtenirAsservissementAuto(Equipement equipement) {
+        boolean ret = false;
+
+        if (equipement == Equipement.PhPlus) {
+            ret = asservissementPhPlusAuto;
+        } else if (equipement == Equipement.PhMoins) {
+            ret = asservissementPhMoinsAuto;
+        } else if (equipement == Equipement.Orp) {
+            ret = asservissementOrpAuto;
+        }
+
+        return ret;
+    }
+
+    public void definirAsservissementAuto(Equipement equipement, boolean actif) {
+        if (equipement == Equipement.PhPlus) {
+            asservissementPhPlusAuto = actif;
+        } else if (equipement == Equipement.PhMoins) {
+            asservissementPhMoinsAuto = actif;
+        } else if (equipement == Equipement.Orp) {
+            asservissementOrpAuto = actif;
+        }
+    }
+
+    public boolean obtenirConsigneOrpAuto() {
+        return consigneOrpAuto;
+    }
+
+    public void definirConsigneOrpAuto(boolean actif) {
+        consigneOrpAuto = actif;
     }
 
     private String formatValeur(double valeur) {

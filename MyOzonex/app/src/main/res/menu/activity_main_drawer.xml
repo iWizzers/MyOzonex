@@ -89,6 +89,11 @@
                 android:id="@+id/nav_events_layout"
                 android:icon="@drawable/ic_menu_show"
                 android:title="@string/events" />
+
+            <item
+                android:id="@+id/nav_automatisation_layout"
+                android:icon="@drawable/ic_menu_show"
+                android:title="@string/automatisation" />
         </menu>
     </item>
 

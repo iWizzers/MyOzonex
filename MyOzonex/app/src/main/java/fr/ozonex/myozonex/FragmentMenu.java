@@ -34,6 +34,7 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
     ImageButton boutonBassin;
     ImageButton boutonCapteurs;
     ImageButton boutonJournalEvenements;
+    ImageButton boutonAutomatisation;
     ImageButton boutonDeconnexion;
 
     @Nullable
@@ -64,6 +65,7 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
             boutonBassin = (ImageButton) view.findViewById(R.id.bouton_bassin);
             boutonCapteurs = (ImageButton) view.findViewById(R.id.bouton_capteurs);
             boutonJournalEvenements = (ImageButton) view.findViewById(R.id.bouton_journal_evenements);
+            boutonAutomatisation = (ImageButton) view.findViewById(R.id.bouton_automatisation);
             boutonDeconnexion = (ImageButton) view.findViewById(R.id.bouton_deconnexion);
 
             boutonRetour.setOnClickListener(this);
@@ -82,6 +84,7 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
             boutonBassin.setOnClickListener(this);
             boutonCapteurs.setOnClickListener(this);
             boutonJournalEvenements.setOnClickListener(this);
+            boutonAutomatisation.setOnClickListener(this);
             boutonDeconnexion.setOnClickListener(this);
         }
 
@@ -125,6 +128,7 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
                 definirCouleur(R.id.texte_bassin);
                 definirCouleur(R.id.texte_capteurs);
                 definirCouleur(R.id.texte_events);
+                definirCouleur(R.id.texte_automatisation);
                 definirCouleur(R.id.texte_deconnexion);
             }
         }
@@ -185,6 +189,9 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
                 break;
             case R.id.bouton_journal_evenements:
                 MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_events_layout));
+                break;
+            case R.id.bouton_automatisation:
+                MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_automatisation_layout));
                 break;
             case R.id.bouton_deconnexion:
                 MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_deconnexion_layout));

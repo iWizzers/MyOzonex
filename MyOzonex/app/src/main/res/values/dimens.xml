@@ -9,6 +9,7 @@
     <dimen name="texteTitre">30sp</dimen>
     <dimen name="texteSousTitre">20sp</dimen>
     <dimen name="texteGeneral">16sp</dimen>
+    <dimen name="texteIndication">14sp</dimen>
     <dimen name="texteValeurPageDonnee">64sp</dimen>
 
     <dimen name="layout_widget_space">25dp</dimen>
