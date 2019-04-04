@@ -44,7 +44,7 @@ public class FragmentAutomatisation extends Fragment implements View.OnClickList
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.algicide_layout, container, false);
+        view = inflater.inflate(R.layout.automatisation_layout, container, false);
 
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -87,6 +87,8 @@ public class FragmentAutomatisation extends Fragment implements View.OnClickList
     }
 
     public void update() {
+        calculConsigneAuto();
+
         if ((view != null) && isAdded()) {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
@@ -98,19 +100,19 @@ public class FragmentAutomatisation extends Fragment implements View.OnClickList
             checkBoxHeuresCreuses.setChecked(Donnees.instance().obtenirHeuresCreusesAuto());
             checkBoxDonneesEquipements.setClickable(Donnees.instance().obtenirActiviteIHM());
             checkBoxDonneesEquipements.setChecked(Donnees.instance().obtenirDonneesEquipementsAuto());
-            checkBoxPlagesAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
+            checkBoxPlagesAuto.setClickable(Donnees.instance().obtenirActiviteIHM() && Donnees.instance().presence(Donnees.Capteur.TemperatureBassin));
             checkBoxPlagesAuto.setChecked(Donnees.instance().obtenirPlagesAuto());
             updateTexteTempsFiltrationJour();
-            checkBoxAsservissementPhPlus.setClickable(Donnees.instance().obtenirActiviteIHM());
+            checkBoxAsservissementPhPlus.setClickable(Donnees.instance().obtenirActiviteIHM() && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus));
             checkBoxAsservissementPhPlus.setChecked(Donnees.instance().obtenirAsservissementAuto(Donnees.Equipement.PhPlus));
-            checkBoxAsservissementPhMoins.setClickable(Donnees.instance().obtenirActiviteIHM());
+            checkBoxAsservissementPhMoins.setClickable(Donnees.instance().obtenirActiviteIHM() && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins));
             checkBoxAsservissementPhMoins.setChecked(Donnees.instance().obtenirAsservissementAuto(Donnees.Equipement.PhMoins));
-            checkBoxAsservissementOrp.setClickable(Donnees.instance().obtenirActiviteIHM());
+            checkBoxAsservissementOrp.setClickable(Donnees.instance().obtenirActiviteIHM() && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp));
             checkBoxAsservissementOrp.setChecked(Donnees.instance().obtenirAsservissementAuto(Donnees.Equipement.Orp));
             updateTexteAsservissements();
-            checkBoxConsigne.setClickable(Donnees.instance().obtenirActiviteIHM());
+            checkBoxConsigne.setClickable(Donnees.instance().obtenirActiviteIHM() && Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp));
             checkBoxConsigne.setChecked(Donnees.instance().obtenirConsigneOrpAuto());
-            calculConsigneAuto();
+            updateTexteConsigne();
         }
     }
 
@@ -164,6 +166,7 @@ public class FragmentAutomatisation extends Fragment implements View.OnClickList
     }
 
     private void activerPlageAuto() {
+        Donnees.instance().definirModifPlagesAuto(checkBoxPlagesAuto.isChecked());
         updateTexteTempsFiltrationJour();
 
         MainActivity.instance().sendData(false,
@@ -171,13 +174,17 @@ public class FragmentAutomatisation extends Fragment implements View.OnClickList
                 "",
                 HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
                 HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageAutomatisation),
-                "plages_auto=" + String.valueOf(checkBoxPlagesAuto.isChecked() ? 1 : 0));
+                "plages_auto=" + String.valueOf(checkBoxPlagesAuto.isChecked() ? 1 : 0) + "&modif_plage_auto=1");
     }
 
     private void updateTexteTempsFiltrationJour() {
         if (checkBoxPlagesAuto.isEnabled()) {
             if (checkBoxPlagesAuto.isChecked()) {
-                MainActivity.instance().setHtmlText(texteIndicPlagesAuto, "<i>Temps filtration / jour : <b>" + Donnees.instance().obtenirTempsFiltrationJour() + "</b></i>");
+                if (Donnees.instance().obtenirModifPlagesAuto()) {
+                    MainActivity.instance().setHtmlText(texteIndicPlagesAuto, "<i>Calcul en cours...</i>");
+                } else {
+                    MainActivity.instance().setHtmlText(texteIndicPlagesAuto, "<i>Temps filtration / jour : <b>" + Donnees.instance().obtenirTempsFiltrationJour() + "</b></i>");
+                }
             } else {
                 MainActivity.instance().setHtmlText(texteIndicPlagesAuto, "<i>Estimation en fonction de la température du bassin</i>");
             }
@@ -220,7 +227,7 @@ public class FragmentAutomatisation extends Fragment implements View.OnClickList
     }
 
     private void updateTexteAsservissements() {
-        if (checkBoxAsservissementPhPlus.isChecked() || checkBoxAsservissementPhMoins.isChecked() || checkBoxAsservissementOrp.isChecked()) {
+        if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus) || Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins) || Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp)) {
             MainActivity.instance().setHtmlText(texteIndicAsservissements, "<i>Estimation des valeurs en fonction du volume du bassin</i>");
         } else {
             MainActivity.instance().setHtmlText(texteIndicAsservissements, "<i>Nécessite l'installation d'au moins un régulateur</i>");
@@ -229,6 +236,7 @@ public class FragmentAutomatisation extends Fragment implements View.OnClickList
 
     private void activerConsigneOrp() {
         calculConsigneAuto();
+        updateTexteConsigne();
 
         MainActivity.instance().sendData(false,
                 "",
@@ -239,7 +247,7 @@ public class FragmentAutomatisation extends Fragment implements View.OnClickList
     }
 
     private void calculConsigneAuto() {
-        if (checkBoxConsigne.isChecked()) {
+        if (Donnees.instance().obtenirConsigneOrpAuto()) {
             if (Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureBassin)) {
                 if (Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin) <= Global.TEMPERATURE_MINIMUM_CONSIGNE_ORP) {
                     Donnees.instance().definirConsigneOrp(Donnees.instance().obtenirConsigneOrp());
@@ -259,8 +267,6 @@ public class FragmentAutomatisation extends Fragment implements View.OnClickList
             Donnees.instance().definirConsigneOrp(Donnees.instance().obtenirConsigneOrp());
             Donnees.instance().definirConsigneAmpero(Donnees.instance().obtenirConsigneAmpero());
         }
-
-        updateTexteConsigne();
     }
 
     private void updateTexteConsigne() {

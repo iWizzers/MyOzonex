@@ -74,7 +74,7 @@ public class FragmentEclairage extends Fragment implements View.OnClickListener 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.pompe_filtration_layout, container, false);
+        view = inflater.inflate(R.layout.eclairage_layout, container, false);
 
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {

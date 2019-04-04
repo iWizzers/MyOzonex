@@ -329,6 +329,7 @@
                                 android:textSize="@dimen/texteGeneral" />
 
                             <TextView
+                                android:id="@+id/texte_indic_asservissements"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Estimation des valeurs en fonction du volume du bassin"

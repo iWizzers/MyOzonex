@@ -10,7 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class HttpGetRequest extends AsyncTask<String, Void, String> {
-    //private static final String BDD = "http://192.168.42.204/myozonexserver";    // Local
+    //private static final String BDD = "http://192.168.1.8/myozonexserver";    // Local
     private static final String BDD = "http://www.g-pac.online";              // Serveur
     private static final String REQUEST_METHOD = "GET";
 

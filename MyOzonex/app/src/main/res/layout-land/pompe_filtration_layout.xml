@@ -316,6 +316,7 @@
                                     app:srcCompat="@drawable/poubelle" />
 
                                 <TextView
+                                    android:id="@+id/texte_info_plage_1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_row="0"

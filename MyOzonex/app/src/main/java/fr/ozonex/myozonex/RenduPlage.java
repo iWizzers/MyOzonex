@@ -23,11 +23,15 @@ public class RenduPlage extends View {
         paint.setStrokeWidth(4);
 
         if (equipement != Donnees.Equipement.HeuresCreuses) {
-            for (int i = 0; i < Global.MAX_PLAGES_EQUIPEMENTS; i++) {
-                if (Donnees.instance().obtenirEtatPlage(equipement, i)) {
-                    dessinerPlage(equipement, i, canvas, paint);
-                } else {
-                    break;
+            if ((equipement == Donnees.Equipement.PompeFiltration) && Donnees.instance().obtenirPlagesAuto()) {
+                dessinerPlageAuto(equipement, canvas, paint);
+            } else {
+                for (int i = 0; i < Global.MAX_PLAGES_EQUIPEMENTS; i++) {
+                    if (Donnees.instance().obtenirEtatPlage(equipement, i)) {
+                        dessinerPlage(equipement, i, canvas, paint);
+                    } else {
+                        break;
+                    }
                 }
             }
 
@@ -41,11 +45,15 @@ public class RenduPlage extends View {
 
             if ((equipement == Donnees.Equipement.Surpresseur)
                     || (equipement == Donnees.Equipement.Chauffage)) {
-                for (int i = 0; i < Global.MAX_PLAGES_EQUIPEMENTS; i++) {
-                    if (Donnees.instance().obtenirEtatPlage(Donnees.Equipement.PompeFiltration, i)) {
-                        dessinerPlageTrait(Donnees.Equipement.PompeFiltration, i, 2, canvas, paint);
-                    } else {
-                        break;
+                if (Donnees.instance().obtenirPlagesAuto()) {
+                    dessinerPlageTraitAuto(Donnees.Equipement.PompeFiltration, 2, canvas, paint);
+                } else {
+                    for (int i = 0; i < Global.MAX_PLAGES_EQUIPEMENTS; i++) {
+                        if (Donnees.instance().obtenirEtatPlage(Donnees.Equipement.PompeFiltration, i)) {
+                            dessinerPlageTrait(Donnees.Equipement.PompeFiltration, i, 2, canvas, paint);
+                        } else {
+                            break;
+                        }
                     }
                 }
             }
@@ -77,6 +85,37 @@ public class RenduPlage extends View {
 
     private void dessinerPlageTrait(Donnees.Equipement equipement, int index, int decalage, Canvas canvas, Paint paint) {
         String plage = Donnees.instance().obtenirPlage(equipement, index);
+        int offsetHeure = getWidth() / 25;
+        int offsetMinute = offsetHeure / 60;
+        int offset = offsetHeure / 2;
+        int yOffset = getHeight() / 3;
+        String[] split = plage.split(" - ");
+        String[] splitDebut = split[0].split("h");
+        String[] splitFin = split[1].split("h");
+
+        paint.setColor(obtenirCouleur(equipement));
+
+        canvas.drawLine(offset + Integer.parseInt(splitDebut[0]) * offsetHeure + Integer.parseInt(splitDebut[1]) * offsetMinute, decalage * yOffset,
+                offset + Integer.parseInt(splitFin[0]) * offsetHeure + Integer.parseInt(splitFin[1]) * offsetMinute, decalage * yOffset, paint);
+    }
+
+    private void dessinerPlageAuto(Donnees.Equipement equipement, Canvas canvas, Paint paint) {
+        String plage = Donnees.instance().obtenirPlageAuto();
+        int offsetHeure = getWidth() / 25;
+        int offsetMinute = offsetHeure / 60;
+        int offset = offsetHeure / 2;
+        String[] split = plage.split(" - ");
+        String[] splitDebut = split[0].split("h");
+        String[] splitFin = split[1].split("h");
+
+        paint.setColor(obtenirCouleur(equipement));
+
+        canvas.drawRect(new Rect(offset + Integer.parseInt(splitDebut[0]) * offsetHeure + Integer.parseInt(splitDebut[1]) * offsetMinute, 0,
+                offset + Integer.parseInt(splitFin[0]) * offsetHeure + Integer.parseInt(splitFin[1]) * offsetMinute, getHeight()), paint);
+    }
+
+    private void dessinerPlageTraitAuto(Donnees.Equipement equipement, int decalage, Canvas canvas, Paint paint) {
+        String plage = Donnees.instance().obtenirPlageAuto();
         int offsetHeure = getWidth() / 25;
         int offsetMinute = offsetHeure / 60;
         int offset = offsetHeure / 2;

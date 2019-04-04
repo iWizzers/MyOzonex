@@ -110,7 +110,7 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
                 boutonRegulateurPhPlus.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus));
                 boutonRegulateurORP.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp));
                 boutonAlgicide.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Algicide));
-                boutonEclairage.setEnabled(false);
+                boutonEclairage.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Eclairage));
                 boutonCapteurs.setEnabled(false);
 
                 definirCouleur(R.id.texte_pompe_filtration);

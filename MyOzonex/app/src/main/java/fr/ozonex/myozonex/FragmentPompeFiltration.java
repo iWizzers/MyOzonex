@@ -40,6 +40,7 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
     GridLayout widgetPlage1;
     ImageButton boutonSupprimerPlage1;
     ImageButton boutonModifierPlage1;
+    TextView texteInfoPlage1;
     TextView textePlage1;
     GridLayout widgetPlage2;
     ImageButton boutonSupprimerPlage2;
@@ -117,6 +118,7 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
         widgetPlage1 = (GridLayout) view.findViewById(R.id.widget_plage_1);
         boutonSupprimerPlage1 = (ImageButton) view.findViewById(R.id.bouton_supprimer_plage_1);
         boutonModifierPlage1 = (ImageButton) view.findViewById(R.id.bouton_modifier_plage_1);
+        texteInfoPlage1 = (TextView) view.findViewById(R.id.texte_info_plage_1);
         textePlage1 = (TextView) view.findViewById(R.id.texte_plage_1);
         widgetPlage2 = (GridLayout) view.findViewById(R.id.widget_plage_2);
         boutonSupprimerPlage2 = (ImageButton) view.findViewById(R.id.bouton_supprimer_plage_2);
@@ -520,15 +522,16 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
     }
 
     private void plageModifie() {
-        widgetPlage1.setVisibility(Donnees.instance().obtenirEtatPlage(Donnees.Equipement.PompeFiltration, 0) ? View.VISIBLE : View.GONE);
-        textePlage1.setText(Donnees.instance().obtenirPlage(Donnees.Equipement.PompeFiltration, 0));
-        widgetPlage2.setVisibility(Donnees.instance().obtenirEtatPlage(Donnees.Equipement.PompeFiltration, 1) ? View.VISIBLE : View.GONE);
+        widgetPlage1.setVisibility(Donnees.instance().obtenirPlagesAuto() || Donnees.instance().obtenirEtatPlage(Donnees.Equipement.PompeFiltration, 0) ? View.VISIBLE : View.GONE);
+        texteInfoPlage1.setText(Donnees.instance().obtenirPlagesAuto() ? "Plage auto" : "Plage 1");
+        textePlage1.setText(Donnees.instance().obtenirPlagesAuto() ? Donnees.instance().obtenirPlageAuto() : Donnees.instance().obtenirPlage(Donnees.Equipement.PompeFiltration, 0));
+        widgetPlage2.setVisibility(!Donnees.instance().obtenirPlagesAuto() && Donnees.instance().obtenirEtatPlage(Donnees.Equipement.PompeFiltration, 1) ? View.VISIBLE : View.GONE);
         textePlage2.setText(Donnees.instance().obtenirPlage(Donnees.Equipement.PompeFiltration, 1));
-        widgetPlage3.setVisibility(Donnees.instance().obtenirEtatPlage(Donnees.Equipement.PompeFiltration, 2) ? View.VISIBLE : View.GONE);
+        widgetPlage3.setVisibility(!Donnees.instance().obtenirPlagesAuto() && Donnees.instance().obtenirEtatPlage(Donnees.Equipement.PompeFiltration, 2) ? View.VISIBLE : View.GONE);
         textePlage3.setText(Donnees.instance().obtenirPlage(Donnees.Equipement.PompeFiltration, 2));
-        widgetPlage4.setVisibility(Donnees.instance().obtenirEtatPlage(Donnees.Equipement.PompeFiltration, 3) ? View.VISIBLE : View.GONE);
+        widgetPlage4.setVisibility(!Donnees.instance().obtenirPlagesAuto() && Donnees.instance().obtenirEtatPlage(Donnees.Equipement.PompeFiltration, 3) ? View.VISIBLE : View.GONE);
         textePlage4.setText(Donnees.instance().obtenirPlage(Donnees.Equipement.PompeFiltration, 3));
-        boutonAjouterPlage.setVisibility(Donnees.instance().obtenirEtatPlage(Donnees.Equipement.PompeFiltration, 3) ? View.GONE : View.VISIBLE);
+        boutonAjouterPlage.setVisibility(Donnees.instance().obtenirPlagesAuto() || Donnees.instance().obtenirEtatPlage(Donnees.Equipement.PompeFiltration, 3) ? View.GONE : View.VISIBLE);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             renduPlage.invalidate();

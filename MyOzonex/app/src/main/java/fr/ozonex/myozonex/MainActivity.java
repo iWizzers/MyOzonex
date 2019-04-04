@@ -471,9 +471,11 @@ public class MainActivity extends AppCompatActivity
                             object = new JSONObject(jsonObject.getString("Automatisation"));
                             Donnees.instance().definirHeuresCreusesAuto(object.getInt("heures_creuses") > 0);
                             Donnees.instance().definirDonneesEquipementsAuto(object.getInt("donnees_equipement") > 0);
+                            Donnees.instance().definirModifPlagesAuto(object.getInt("modif_plage_auto") > 0);
                             Donnees.instance().definirPlagesAuto(object.getInt("plages_auto") > 0);
                             Donnees.instance().definirDebutPlageAuto(object.getString("debut_plage_auto"));
                             Donnees.instance().definirTempsFiltrationJour(object.getString("temps_filtration_jour"));
+                            Donnees.instance().definirPlageAuto(object.getString("plage_auto"));
                             Donnees.instance().definirAsservissementAuto(Donnees.Equipement.PhPlus, object.getInt("asservissement_ph_plus") > 0);
                             Donnees.instance().definirAsservissementAuto(Donnees.Equipement.PhMoins, object.getInt("asservissement_ph_moins") > 0);
                             Donnees.instance().definirAsservissementAuto(Donnees.Equipement.Orp, object.getInt("asservissement_orp") > 0);
@@ -823,7 +825,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void updatePages() {
-        fragmentDonnees.update();
+        fragmentEvents.update();
+        fragmentAutomatisation.update();
         fragmentSynoptique.update();
         fragmentMenu.update();
         fragmentBassin.update();
@@ -838,7 +841,6 @@ public class MainActivity extends AppCompatActivity
         fragmentRegulateurPhMoins.update();
         fragmentRegulateurORP.update();
         fragmentAlgicide.update();
-        fragmentEvents.update();
-        fragmentAutomatisation.update();
+        fragmentDonnees.update();
     }
 }

@@ -269,9 +269,11 @@ public class Donnees {
 
     private boolean heuresCreusesAuto = false;
     private boolean donneesEquipementsAuto = false;
+    private boolean modifPlagesAuto = false;
     private boolean plagesAuto = false;
     private String debutPlageAuto = "00h00";
     private String tempsFiltrationJour = "00h00";
+    private String plageAuto = "00h00 - 00h00";
     private boolean asservissementPhPlusAuto = false;
     private boolean asservissementPhMoinsAuto = false;
     private boolean asservissementOrpAuto = false;
@@ -1215,7 +1217,7 @@ public class Donnees {
     }
 
     public void definirHysteresisPhPlus(double valeur) {
-        hysteresisPhPlus = consignePh - valeur;
+        hysteresisPhPlus = valeur;
     }
 
     public double obtenirHysteresisPhMoins() {
@@ -1223,7 +1225,7 @@ public class Donnees {
     }
 
     public void definirHysteresisPhMoins(double valeur) {
-        hysteresisPhMoins = consignePh + valeur;
+        hysteresisPhMoins = valeur;
     }
 
     public int obtenirConsigneOrp() {
@@ -1239,7 +1241,7 @@ public class Donnees {
     }
 
     public void definirHysteresisOrp(int valeur) {
-        hysteresisOrp = consigneOrp - valeur;
+        hysteresisOrp = valeur;
     }
 
     public double obtenirConsigneAmpero() {
@@ -1255,7 +1257,7 @@ public class Donnees {
     }
 
     public void definirHysteresisAmpero(double valeur) {
-        hysteresisAmpero = consigneAmpero - valeur;
+        hysteresisAmpero = valeur;
     }
 
     public double obtenirChloreLibreActif() {
@@ -1760,6 +1762,14 @@ public class Donnees {
         donneesEquipementsAuto = actif;
     }
 
+    public boolean obtenirModifPlagesAuto() {
+        return modifPlagesAuto;
+    }
+
+    public void definirModifPlagesAuto(boolean actif) {
+        modifPlagesAuto = actif;
+    }
+
     public boolean obtenirPlagesAuto() {
         return plagesAuto;
     }
@@ -1782,6 +1792,14 @@ public class Donnees {
 
     public void definirTempsFiltrationJour(String heure) {
         tempsFiltrationJour = heure;
+    }
+
+    public String obtenirPlageAuto() {
+        return plageAuto;
+    }
+
+    public void definirPlageAuto(String plage) {
+        plageAuto = plage;
     }
 
     public boolean obtenirAsservissementAuto(Equipement equipement) {
