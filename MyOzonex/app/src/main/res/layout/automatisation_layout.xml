@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/global_layout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/fond_portrait_2">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="false">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/layout_widget_space"
+            android:paddingBottom="@dimen/layout_widget_space"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/layout_widget_space"
+                android:background="@color/transparentBackground"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:maxLines="1"
+                        android:text="Horlogerie"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textColor="@color/couleurSousTitre"
+                        android:textSize="@dimen/texteSousTitre" />
+
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/layout_widget_space"
+                    android:paddingRight="@dimen/layout_widget_space">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Heures creuses"
+                            android:textStyle="bold"
+                            android:textColor="@color/couleurTexteGeneral"
+                            android:textSize="@dimen/texteGeneral" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Un branchement est nécessaire"
+                            android:textStyle="italic"
+                            android:textColor="@color/couleurTexteGeneral"
+                            android:textSize="@dimen/texteIndication" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/white"
+                        android:layerType="software" />
+
+                    <CheckBox
+                        android:id="@+id/checkbox_heures_creuses"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:buttonTint="#00FFFF" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/layout_widget_space"
+                android:paddingBottom="@dimen/layout_widget_space"
+                android:background="@color/transparentBackground"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:maxLines="1"
+                        android:text="Général"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textColor="@color/couleurSousTitre"
+                        android:textSize="@dimen/texteSousTitre" />
+
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/layout_widget_space"
+                    android:paddingRight="@dimen/layout_widget_space">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Données équipements"
+                            android:textStyle="bold"
+                            android:textColor="@color/couleurTexteGeneral"
+                            android:textSize="@dimen/texteGeneral" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Estimation des valeurs en fonction du volume du bassin"
+                            android:textStyle="italic"
+                            android:textColor="@color/couleurTexteGeneral"
+                            android:textSize="@dimen/texteIndication" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/white"
+                        android:layerType="software" />
+
+                    <CheckBox
+                        android:id="@+id/checkbox_donnees_equipements"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:buttonTint="#00FFFF" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/layout_widget_space"
+                android:paddingBottom="@dimen/layout_widget_space"
+                android:background="@color/transparentBackground"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:maxLines="1"
+                        android:text="Pompe filtration"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textColor="@color/couleurSousTitre"
+                        android:textSize="@dimen/texteSousTitre" />
+
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/layout_widget_space"
+                    android:paddingRight="@dimen/layout_widget_space">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Plage de fonctionnement (pompe filtration uniquement)"
+                            android:textStyle="bold"
+                            android:textColor="@color/couleurTexteGeneral"
+                            android:textSize="@dimen/texteGeneral" />
+
+                        <TextView
+                            android:id="@+id/texte_indic_plage_auto"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Estimation des valeurs en fonction du volume du bassin"
+                            android:textStyle="italic"
+                            android:textColor="@color/couleurTexteGeneral"
+                            android:textSize="@dimen/texteIndication" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/white"
+                        android:layerType="software" />
+
+                    <CheckBox
+                        android:id="@+id/checkbox_plages_auto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:buttonTint="#00FFFF" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/layout_widget_space"
+                android:paddingBottom="@dimen/layout_widget_space"
+                android:background="@color/transparentBackground"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:maxLines="1"
+                        android:text="Régulations"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textColor="@color/couleurSousTitre"
+                        android:textSize="@dimen/texteSousTitre" />
+
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/layout_widget_space"
+                    android:paddingRight="@dimen/layout_widget_space">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_gravity="center"
+                            android:layout_weight="1">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Asservissements"
+                                android:textStyle="bold"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral" />
+
+                            <TextView
+                                android:id="@+id/texte_indic_asservissements"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Estimation des valeurs en fonction du volume du bassin"
+                                android:textStyle="italic"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteIndication" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="2dp"
+                            android:layout_height="match_parent"
+                            android:background="@android:color/white"
+                            android:layerType="software" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="pH+"
+                                android:layout_gravity="center"
+                                android:textStyle="italic"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteIndication" />
+
+                            <CheckBox
+                                android:id="@+id/checkbox_asservissement_ph_plus"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:buttonTint="#00FFFF" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="pH-"
+                                android:layout_gravity="center"
+                                android:textStyle="italic"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteIndication" />
+
+                            <CheckBox
+                                android:id="@+id/checkbox_asservissement_ph_moins"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:buttonTint="#00FFFF" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="ORP"
+                                android:layout_gravity="center"
+                                android:textStyle="italic"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteIndication" />
+
+                            <CheckBox
+                                android:id="@+id/checkbox_asservissement_orp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:buttonTint="#00FFFF" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_weight="1">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Consigne (régulateur ORP uniquement)"
+                                android:textStyle="bold"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteGeneral" />
+
+                            <TextView
+                                android:id="@+id/texte_indic_consigne"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Nécessite la température du bassin"
+                                android:textStyle="italic"
+                                android:textColor="@color/couleurTexteGeneral"
+                                android:textSize="@dimen/texteIndication" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="2dp"
+                            android:layout_height="match_parent"
+                            android:background="@android:color/white"
+                            android:layerType="software" />
+
+                        <CheckBox
+                            android:id="@+id/checkbox_consigne"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:buttonTint="#00FFFF" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

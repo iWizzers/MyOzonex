@@ -10,7 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class HttpGetRequest extends AsyncTask<String, Void, String> {
-    //private static final String BDD = "http://192.168.42.204/myozonexserver";    // Local
+    //private static final String BDD = "http://192.168.1.8/myozonexserver";    // Local
     private static final String BDD = "http://www.g-pac.online";              // Serveur
     private static final String REQUEST_METHOD = "GET";
 
@@ -30,6 +30,7 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
         PageLogin,
         PageData,
         PageEvents,
+        PageAutomatisation,
         PageHorlogerie,
         PageBassin,
         PageCapteurs,
@@ -43,13 +44,15 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
         PageRegulateurPhPlus,
         PageRegulateurPhMoins,
         PageRegulateurORP,
-        PageAlgicide
+        PageAlgicide,
+        PageEclairage
     };
 
     private static String pageString[] = {
         "login",
-        "app_data",
+        "data",
         "events",
+        "automatisation",
         "horlogerie",
         "bassin",
         "capteurs",
@@ -63,7 +66,8 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
         "reg_ph_plus",
         "reg_ph_moins",
         "reg_orp",
-        "algicide"
+        "algicide",
+        "eclairage"
     };
 
     private MainActivity mainActivity;

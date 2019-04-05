@@ -34,6 +34,7 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
     ImageButton boutonBassin;
     ImageButton boutonCapteurs;
     ImageButton boutonJournalEvenements;
+    ImageButton boutonAutomatisation;
     ImageButton boutonDeconnexion;
 
     @Nullable
@@ -64,6 +65,7 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
             boutonBassin = (ImageButton) view.findViewById(R.id.bouton_bassin);
             boutonCapteurs = (ImageButton) view.findViewById(R.id.bouton_capteurs);
             boutonJournalEvenements = (ImageButton) view.findViewById(R.id.bouton_journal_evenements);
+            boutonAutomatisation = (ImageButton) view.findViewById(R.id.bouton_automatisation);
             boutonDeconnexion = (ImageButton) view.findViewById(R.id.bouton_deconnexion);
 
             boutonRetour.setOnClickListener(this);
@@ -82,6 +84,7 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
             boutonBassin.setOnClickListener(this);
             boutonCapteurs.setOnClickListener(this);
             boutonJournalEvenements.setOnClickListener(this);
+            boutonAutomatisation.setOnClickListener(this);
             boutonDeconnexion.setOnClickListener(this);
         }
 
@@ -107,7 +110,7 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
                 boutonRegulateurPhPlus.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus));
                 boutonRegulateurORP.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp));
                 boutonAlgicide.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Algicide));
-                boutonEclairage.setEnabled(false);
+                boutonEclairage.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Eclairage));
                 boutonCapteurs.setEnabled(false);
 
                 definirCouleur(R.id.texte_pompe_filtration);
@@ -125,6 +128,7 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
                 definirCouleur(R.id.texte_bassin);
                 definirCouleur(R.id.texte_capteurs);
                 definirCouleur(R.id.texte_events);
+                definirCouleur(R.id.texte_automatisation);
                 definirCouleur(R.id.texte_deconnexion);
             }
         }
@@ -140,6 +144,9 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.bouton_retour:
                 MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_synoptique_layout));
+                break;
+            case R.id.bouton_eclairage:
+                MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_eclairage_layout));
                 break;
             case R.id.bouton_pompe_filtration:
                 MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_pompe_filtration_layout));
@@ -162,9 +169,6 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
             case R.id.bouton_ozonateur:
                 MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_ozone_layout));
                 break;
-            case R.id.bouton_eclairage:
-                //MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_pompe_filtration_layout));
-                break;
             case R.id.bouton_regulateur_ph_plus:
                 MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_regulateur_ph_plus_layout));
                 break;
@@ -185,6 +189,9 @@ public class FragmentMenu extends Fragment implements View.OnClickListener {
                 break;
             case R.id.bouton_journal_evenements:
                 MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_events_layout));
+                break;
+            case R.id.bouton_automatisation:
+                MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_automatisation_layout));
                 break;
             case R.id.bouton_deconnexion:
                 MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_deconnexion_layout));

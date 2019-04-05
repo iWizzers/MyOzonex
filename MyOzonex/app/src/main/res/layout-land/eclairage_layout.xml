@@ -58,7 +58,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0"
                         android:maxLines="1"
-                        android:text="@string/pompe_filtration"
+                        android:text="@string/eclairage"
                         android:textStyle="bold"
                         android:gravity="center"
                         android:textColor="@android:color/black"
@@ -73,133 +73,6 @@
                 <GridLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" >
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_column="0"
-                        android:layout_row="0"
-                        android:layout_rowWeight="1"
-                        android:background="@color/transparentBackground"
-                        android:paddingTop="@dimen/layout_widget_space"
-                        android:paddingBottom="@dimen/layout_widget_space"
-                        android:orientation="vertical">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical" >
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal" >
-                                <View
-                                    android:layout_width="50dp"
-                                    android:layout_height="2dp"
-                                    android:layout_weight="1"
-                                    android:layout_gravity="center"
-                                    android:background="@color/couleurSousTitre"
-                                    android:layerType="software" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="0"
-                                    android:maxLines="1"
-                                    android:text="Consommations"
-                                    android:textStyle="bold"
-                                    android:gravity="center"
-                                    android:textColor="@color/couleurSousTitre"
-                                    android:textSize="@dimen/texteSousTitre" />
-
-                                <View
-                                    android:layout_width="50dp"
-                                    android:layout_height="2dp"
-                                    android:layout_weight="1"
-                                    android:layout_gravity="center"
-                                    android:background="@color/couleurSousTitre"
-                                    android:layerType="software" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:paddingLeft="@dimen/layout_widget_space"
-                                android:paddingRight="@dimen/layout_widget_space">
-                                <TextView
-                                    android:id="@+id/texte_donnees_conso"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="Depuis :\nHeures pleines :\nHeures creuses :"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/couleurTexteGeneral"
-                                    android:textSize="@dimen/texteGeneral" />
-                            </LinearLayout>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_marginTop="@dimen/layout_container_space" >
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal" >
-                                <View
-                                    android:layout_width="50dp"
-                                    android:layout_height="2dp"
-                                    android:layout_weight="1"
-                                    android:layout_gravity="center"
-                                    android:background="@color/couleurSousTitre"
-                                    android:layerType="software" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="0"
-                                    android:maxLines="1"
-                                    android:text="Dernier nettoyage panier"
-                                    android:textStyle="bold"
-                                    android:gravity="center"
-                                    android:textColor="@color/couleurSousTitre"
-                                    android:textSize="@dimen/texteSousTitre" />
-
-                                <View
-                                    android:layout_width="50dp"
-                                    android:layout_height="2dp"
-                                    android:layout_weight="1"
-                                    android:layout_gravity="center"
-                                    android:background="@color/couleurSousTitre"
-                                    android:layerType="software" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:paddingLeft="@dimen/layout_widget_space"
-                                android:paddingRight="@dimen/layout_widget_space">
-                                <TextView
-                                    android:id="@+id/texte_date_nettoyage"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="Date :"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/couleurTexteGeneral"
-                                    android:textSize="@dimen/texteGeneral" />
-
-                                <TextView
-                                    android:id="@+id/texte_total_heures_filtration"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="Heures filtration :"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/couleurTexteGeneral"
-                                    android:textSize="@dimen/texteGeneral" />
-                            </LinearLayout>
-                        </LinearLayout>
-                    </LinearLayout>
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -316,7 +189,6 @@
                                     app:srcCompat="@drawable/poubelle" />
 
                                 <TextView
-                                    android:id="@+id/texte_info_plage_1"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_row="0"

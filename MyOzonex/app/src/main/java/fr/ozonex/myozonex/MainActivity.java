@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity
     private FragmentSynoptique fragmentSynoptique = new FragmentSynoptique();
     private FragmentMenu fragmentMenu = new FragmentMenu();
     private FragmentBassin fragmentBassin = new FragmentBassin();
+    private FragmentEclairage fragmentEclairage = new FragmentEclairage();
     private FragmentPompeFiltration fragmentPompeFiltration = new FragmentPompeFiltration();
     private FragmentFiltre fragmentFiltre = new FragmentFiltre();
     private FragmentSurpresseur fragmentSurpresseur = new FragmentSurpresseur();
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity
     private FragmentRegulateurORP fragmentRegulateurORP = new FragmentRegulateurORP();
     private FragmentAlgicide fragmentAlgicide = new FragmentAlgicide();
     private FragmentEvents fragmentEvents = new FragmentEvents();
+    private FragmentAutomatisation fragmentAutomatisation = new FragmentAutomatisation();
 
     Bundle savedInstanceState;
 
@@ -242,6 +244,12 @@ public class MainActivity extends AppCompatActivity
                             , fragmentBassin)
                     .commit();
             toolbar.setTitle(getString(R.string.bassin));
+        } else if (id == R.id.nav_eclairage_layout) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame
+                            , fragmentEclairage)
+                    .commit();
+            toolbar.setTitle(getString(R.string.eclairage));
         } else if (id == R.id.nav_pompe_filtration_layout) {
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame
@@ -308,6 +316,12 @@ public class MainActivity extends AppCompatActivity
                             , fragmentEvents)
                     .commit();
             toolbar.setTitle(getString(R.string.events));
+        } else if (id == R.id.nav_automatisation_layout) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame
+                            , fragmentAutomatisation)
+                    .commit();
+            toolbar.setTitle(getString(R.string.automatisation));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -454,6 +468,23 @@ public class MainActivity extends AppCompatActivity
                         JSONObject object;
 
                         try {
+                            object = new JSONObject(jsonObject.getString("Automatisation"));
+                            Donnees.instance().definirHeuresCreusesAuto(object.getInt("heures_creuses") > 0);
+                            Donnees.instance().definirDonneesEquipementsAuto(object.getInt("donnees_equipement") > 0);
+                            Donnees.instance().definirModifPlagesAuto(object.getInt("modif_plage_auto") > 0);
+                            Donnees.instance().definirPlagesAuto(object.getInt("plages_auto") > 0);
+                            Donnees.instance().definirDebutPlageAuto(object.getString("debut_plage_auto"));
+                            Donnees.instance().definirTempsFiltrationJour(object.getString("temps_filtration_jour"));
+                            Donnees.instance().definirPlageAuto(object.getString("plage_auto"));
+                            Donnees.instance().definirAsservissementAuto(Donnees.Equipement.PhPlus, object.getInt("asservissement_ph_plus") > 0);
+                            Donnees.instance().definirAsservissementAuto(Donnees.Equipement.PhMoins, object.getInt("asservissement_ph_moins") > 0);
+                            Donnees.instance().definirAsservissementAuto(Donnees.Equipement.Orp, object.getInt("asservissement_orp") > 0);
+                            Donnees.instance().definirConsigneOrpAuto(object.getInt("consigne_orp_auto") > 0);
+                        } catch (JSONException e) {
+                            Log.d("ERROR", "Automatisation");
+                        }
+
+                        try {
                             object = new JSONObject(jsonObject.getString("Bassin"));
                             Donnees.instance().definirVolumeBassin(object.getInt("volume"));
                             Donnees.instance().definirTypeRefoulement(object.getString("type_refoulement"));
@@ -506,6 +537,18 @@ public class MainActivity extends AppCompatActivity
                             Donnees.instance().definirValeur(Donnees.Capteur.Ampero, object.getJSONObject("Ampéro").getDouble("valeur"));
                         } catch (JSONException e) {
                             Log.d("ERROR", "Capteurs");
+                        }
+
+                        try {
+                            object = new JSONObject(jsonObject.getString("Eclairage"));
+                            Donnees.instance().definirEquipementInstalle(Donnees.Equipement.Eclairage, object.getInt("installe") > 0);
+                            Donnees.instance().definirModeFonctionnement(Donnees.Equipement.Eclairage, object.getInt("etat"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.Eclairage, 0, object.getString("plage_1"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.Eclairage, 1, object.getString("plage_2"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.Eclairage, 2, object.getString("plage_3"));
+                            Donnees.instance().definirPlage(Donnees.Equipement.Eclairage, 3, object.getString("plage_4"));
+                        } catch (JSONException e) {
+                            Log.d("ERROR", "Eclairage");
                         }
 
                         try {
@@ -758,6 +801,7 @@ public class MainActivity extends AppCompatActivity
                             }
                         }
 
+                        menu.findItem(R.id.nav_eclairage_layout).setVisible(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Eclairage));
                         menu.findItem(R.id.nav_pompe_filtration_layout).setVisible(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PompeFiltration));
                         menu.findItem(R.id.nav_filtre_layout).setVisible(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Filtre));
                         menu.findItem(R.id.nav_surpresseur_layout).setVisible(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Surpresseur));
@@ -773,7 +817,7 @@ public class MainActivity extends AppCompatActivity
                         updatePages();
                     } catch (JSONException e) {
                         //e.printStackTrace();
-                        Toast.makeText(this, "Un problème est survenu lors de la communication avec le serveur", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Une erreur s'est produite lors de la communication avec le serveur", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -781,10 +825,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void updatePages() {
-        fragmentDonnees.update();
+        fragmentEvents.update();
+        fragmentAutomatisation.update();
         fragmentSynoptique.update();
         fragmentMenu.update();
         fragmentBassin.update();
+        fragmentEclairage.update();
         fragmentPompeFiltration.update();
         fragmentFiltre.update();
         fragmentSurpresseur.update();
@@ -795,6 +841,6 @@ public class MainActivity extends AppCompatActivity
         fragmentRegulateurPhMoins.update();
         fragmentRegulateurORP.update();
         fragmentAlgicide.update();
-        fragmentEvents.update();
+        fragmentDonnees.update();
     }
 }

@@ -24,7 +24,7 @@ import android.widget.TextView;
 import java.sql.Time;
 import java.text.DecimalFormat;
 
-public class FragmentPompeFiltration extends Fragment implements View.OnClickListener {
+public class FragmentEclairage extends Fragment implements View.OnClickListener {
     View view = null;
 
     ImageButton boutonModifierPlage;
@@ -40,7 +40,6 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
     GridLayout widgetPlage1;
     ImageButton boutonSupprimerPlage1;
     ImageButton boutonModifierPlage1;
-    TextView texteInfoPlage1;
     TextView textePlage1;
     GridLayout widgetPlage2;
     ImageButton boutonSupprimerPlage2;
@@ -66,8 +65,6 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
     // Orientation paysage
     HorizontalScrollView globalLayoutPaysage;
     ImageButton boutonRetour;
-    TextView texteDatenettoyage;
-    TextView texteTotalHeuresFiltration;
     ImageView bouton3Etats;
     Button boutonAuto;
     Button boutonArret;
@@ -77,7 +74,7 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.pompe_filtration_layout, container, false);
+        view = inflater.inflate(R.layout.eclairage_layout, container, false);
 
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -97,14 +94,12 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
 
             globalLayoutPaysage = view.findViewById(R.id.horizontal_scroll);
             boutonRetour = (ImageButton) view.findViewById(R.id.bouton_retour);
-            texteDatenettoyage = (TextView) view.findViewById(R.id.texte_date_nettoyage);
-            texteTotalHeuresFiltration = (TextView) view.findViewById(R.id.texte_total_heures_filtration);
             bouton3Etats = (ImageView) view.findViewById(R.id.bouton_3_etats);
             boutonAuto = (Button) view.findViewById(R.id.bouton_auto);
             boutonArret = (Button) view.findViewById(R.id.bouton_arret);
             boutonMarche = (Button) view.findViewById(R.id.bouton_marche);
             LinearLayout viewPlage = (LinearLayout) view.findViewById(R.id.view_plage);
-            renduPlage = new RenduPlage(MainActivity.instance(), Donnees.Equipement.PompeFiltration);
+            renduPlage = new RenduPlage(MainActivity.instance(), Donnees.Equipement.Eclairage);
             viewPlage.addView(renduPlage);
 
             boutonRetour.setOnClickListener(this);
@@ -118,7 +113,6 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
         widgetPlage1 = (GridLayout) view.findViewById(R.id.widget_plage_1);
         boutonSupprimerPlage1 = (ImageButton) view.findViewById(R.id.bouton_supprimer_plage_1);
         boutonModifierPlage1 = (ImageButton) view.findViewById(R.id.bouton_modifier_plage_1);
-        texteInfoPlage1 = (TextView) view.findViewById(R.id.texte_info_plage_1);
         textePlage1 = (TextView) view.findViewById(R.id.texte_plage_1);
         widgetPlage2 = (GridLayout) view.findViewById(R.id.widget_plage_2);
         boutonSupprimerPlage2 = (ImageButton) view.findViewById(R.id.bouton_supprimer_plage_2);
@@ -175,12 +169,8 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
             boutonModifierPlage4.setClickable(Donnees.instance().obtenirActiviteIHM());
             boutonAjouterPlage.setClickable(Donnees.instance().obtenirActiviteIHM());
 
-            modeAEteModifie(Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PompeFiltration));
-
-            consoAEteModifie(Donnees.instance().obtenirDateDebutConso(Donnees.Equipement.PompeFiltration),
-                    Donnees.instance().obtenirConsoHP(Donnees.Equipement.PompeFiltration),
-                    Donnees.instance().obtenirConsoHC(Donnees.Equipement.PompeFiltration));
-
+            modeAEteModifie(Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Eclairage));
+            
             plageModifie();
         }
     }
@@ -226,7 +216,7 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
     }
 
     private void modifierMode(RadioButton rb) {
-        int etat = Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PompeFiltration);
+        int etat = Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Eclairage);
         String data = "etat=";
 
         if (rb == rbAuto) {
@@ -237,19 +227,19 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
             etat = Donnees.ARRET;
         }
 
-        Donnees.instance().definirModeFonctionnement(Donnees.Equipement.PompeFiltration, etat);
+        Donnees.instance().definirModeFonctionnement(Donnees.Equipement.Eclairage, etat);
         modeAEteModifie(etat);
 
         MainActivity.instance().sendData(false,
                 "",
                 "",
                 HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PagePompeFiltration),
+                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageEclairage),
                 data + String.valueOf(etat));
     }
 
     private void modifierMode(Button bouton) {
-        int etat = Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PompeFiltration);
+        int etat = Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Eclairage);
         String data = "etat=";
 
         if (bouton == boutonAuto) {
@@ -260,14 +250,14 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
             etat = Donnees.ARRET;
         }
 
-        Donnees.instance().definirModeFonctionnement(Donnees.Equipement.PompeFiltration, etat);
+        Donnees.instance().definirModeFonctionnement(Donnees.Equipement.Eclairage, etat);
         modeAEteModifie(etat);
 
         MainActivity.instance().sendData(false,
                 "",
                 "",
                 HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PagePompeFiltration),
+                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageEclairage),
                 data + String.valueOf(etat));
     }
 
@@ -326,19 +316,13 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
 
         layoutPlagesFct.setVisibility(mode == Donnees.MARCHE ? View.GONE : View.VISIBLE);
     }
-
-    private void consoAEteModifie(String date, double consoHP, double consoHC) {
-        texteConso.setText("Depuis : " + date +
-                "\nHeures pleines : " + consoHP + " kWh" +
-                "\nHeures creuses : " + consoHC + " kWh");
-    }
-
+    
     private void ajouterIndex(boolean raz) {
         Intent intent = new Intent(MainActivity.instance(), ClavierActivity.class);
 
         if (raz) {
             for (int i = 0; i < Global.MAX_PLAGES_EQUIPEMENTS; i++) {
-                if (!Donnees.instance().obtenirEtatPlage(Donnees.Equipement.PompeFiltration, i)) {
+                if (!Donnees.instance().obtenirEtatPlage(Donnees.Equipement.Eclairage, i)) {
                     indexPlage = i;
                     break;
                 }
@@ -350,7 +334,7 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
 
         if (heureDebutPlage == null) {
             intent.putExtra(ClavierActivity.EXTRA_QUESTION, "Donnez l'heure de début de la nouvelle plage séparée par une virgule");
-            heureMinimumPlage = indexPlage > 0 ? Donnees.instance().obtenirPlage(Donnees.Equipement.PompeFiltration, indexPlage - 1).split(" - ")[1] : "00h00";
+            heureMinimumPlage = indexPlage > 0 ? Donnees.instance().obtenirPlage(Donnees.Equipement.Eclairage, indexPlage - 1).split(" - ")[1] : "00h00";
         } else {
             intent.putExtra(ClavierActivity.EXTRA_QUESTION, "Donnez l'heure de fin de la nouvelle plage séparée par une virgule");
             heureMinimumPlage = heureDebutPlage;
@@ -378,11 +362,11 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
 
         if (index < (Global.MAX_PLAGES_EQUIPEMENTS - 1)) {
             for (int i = index; i < (Global.MAX_PLAGES_EQUIPEMENTS - 1); i++) {
-                Donnees.instance().definirPlage(Donnees.Equipement.PompeFiltration, i, Donnees.instance().obtenirPlage(Donnees.Equipement.PompeFiltration, i + 1));
+                Donnees.instance().definirPlage(Donnees.Equipement.Eclairage, i, Donnees.instance().obtenirPlage(Donnees.Equipement.Eclairage, i + 1));
             }
-            Donnees.instance().definirPlage(Donnees.Equipement.PompeFiltration, Global.MAX_PLAGES_EQUIPEMENTS - 1, "00h00 - 00h00");
+            Donnees.instance().definirPlage(Donnees.Equipement.Eclairage, Global.MAX_PLAGES_EQUIPEMENTS - 1, "00h00 - 00h00");
         } else {
-            Donnees.instance().definirPlage(Donnees.Equipement.PompeFiltration, index, "00h00 - 00h00");
+            Donnees.instance().definirPlage(Donnees.Equipement.Eclairage, index, "00h00 - 00h00");
         }
 
         plageModifie();
@@ -392,8 +376,8 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
                     "",
                     "",
                     HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                    HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PagePompeFiltration),
-                    data + String.valueOf(i + 1) + '=' + Donnees.instance().obtenirPlage(Donnees.Equipement.PompeFiltration, i));
+                    HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageEclairage),
+                    data + String.valueOf(i + 1) + '=' + Donnees.instance().obtenirPlage(Donnees.Equipement.Eclairage, i));
         }
     }
 
@@ -418,12 +402,12 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
 
         if (heureDebutPlage == null) {
             intent.putExtra(ClavierActivity.EXTRA_QUESTION, "Donnez l'heure de début de la plage séparée par une virgule");
-            heureMinimumPlage = indexPlage > 0 ? Donnees.instance().obtenirPlage(Donnees.Equipement.PompeFiltration, indexPlage - 1).split(" - ")[1] : "00h00";
+            heureMinimumPlage = indexPlage > 0 ? Donnees.instance().obtenirPlage(Donnees.Equipement.Eclairage, indexPlage - 1).split(" - ")[1] : "00h00";
         } else {
             intent.putExtra(ClavierActivity.EXTRA_QUESTION, "Donnez l'heure de fin de la plage séparée par une virgule");
             heureMinimumPlage = heureDebutPlage;
         }
-        heureMaximumPlage = indexPlage == (Global.MAX_PLAGES_EQUIPEMENTS - 1) ? (Donnees.instance().obtenirEtatPlage(Donnees.Equipement.PompeFiltration, indexPlage + 1) ? Donnees.instance().obtenirPlage(Donnees.Equipement.PompeFiltration, indexPlage + 1).split(" - ")[1] : "23h59") : "23h59";
+        heureMaximumPlage = indexPlage == (Global.MAX_PLAGES_EQUIPEMENTS - 1) ? (Donnees.instance().obtenirEtatPlage(Donnees.Equipement.Eclairage, indexPlage + 1) ? Donnees.instance().obtenirPlage(Donnees.Equipement.Eclairage, indexPlage + 1).split(" - ")[1] : "23h59") : "23h59";
 
         intent.putExtra(ClavierActivity.EXTRA_INDICE, "Exemple : 9h15 → 09.15\nMinimum : " + heureMinimumPlage + "\nMaximum : " + heureMaximumPlage);
         intent.putExtra(ClavierActivity.EXTRA_AUTRE, "modifier");
@@ -496,44 +480,41 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
     private void ajouterPlage() {
         String data = "plage_";
 
-        Donnees.instance().definirPlage(Donnees.Equipement.PompeFiltration, indexPlage, heureDebutPlage + " - " + heureFinPlage);
+        Donnees.instance().definirPlage(Donnees.Equipement.Eclairage, indexPlage, heureDebutPlage + " - " + heureFinPlage);
         plageModifie();
 
         MainActivity.instance().sendData(false,
                 "",
                 "",
                 HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PagePompeFiltration),
-                data + String.valueOf(indexPlage + 1) + '=' + Donnees.instance().obtenirPlage(Donnees.Equipement.PompeFiltration, indexPlage));
+                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageEclairage),
+                data + String.valueOf(indexPlage + 1) + '=' + Donnees.instance().obtenirPlage(Donnees.Equipement.Eclairage, indexPlage));
     }
 
     private void modifierPlage() {
         String data = "plage_";
 
-        Donnees.instance().definirPlage(Donnees.Equipement.PompeFiltration, indexPlage, heureDebutPlage + " - " + heureFinPlage);
+        Donnees.instance().definirPlage(Donnees.Equipement.Eclairage, indexPlage, heureDebutPlage + " - " + heureFinPlage);
         plageModifie();
 
         MainActivity.instance().sendData(false,
                 "",
                 "",
                 HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PagePompeFiltration),
-                data + String.valueOf(indexPlage + 1) + '=' + Donnees.instance().obtenirPlage(Donnees.Equipement.PompeFiltration, indexPlage));
+                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageEclairage),
+                data + String.valueOf(indexPlage + 1) + '=' + Donnees.instance().obtenirPlage(Donnees.Equipement.Eclairage, indexPlage));
     }
 
     private void plageModifie() {
-        widgetPlage1.setVisibility(Donnees.instance().obtenirPlagesAuto() || Donnees.instance().obtenirEtatPlage(Donnees.Equipement.PompeFiltration, 0) ? View.VISIBLE : View.GONE);
-        texteInfoPlage1.setText(Donnees.instance().obtenirPlagesAuto() ? "Plage auto" : "Plage 1");
-        textePlage1.setText(Donnees.instance().obtenirPlagesAuto() ? Donnees.instance().obtenirPlageAuto() : Donnees.instance().obtenirPlage(Donnees.Equipement.PompeFiltration, 0));
-        boutonSupprimerPlage1.setVisibility(Donnees.instance().obtenirPlagesAuto() ? View.GONE : View.VISIBLE);
-        boutonModifierPlage1.setVisibility(Donnees.instance().obtenirPlagesAuto() ? View.GONE : View.VISIBLE);
-        widgetPlage2.setVisibility(!Donnees.instance().obtenirPlagesAuto() && Donnees.instance().obtenirEtatPlage(Donnees.Equipement.PompeFiltration, 1) ? View.VISIBLE : View.GONE);
-        textePlage2.setText(Donnees.instance().obtenirPlage(Donnees.Equipement.PompeFiltration, 1));
-        widgetPlage3.setVisibility(!Donnees.instance().obtenirPlagesAuto() && Donnees.instance().obtenirEtatPlage(Donnees.Equipement.PompeFiltration, 2) ? View.VISIBLE : View.GONE);
-        textePlage3.setText(Donnees.instance().obtenirPlage(Donnees.Equipement.PompeFiltration, 2));
-        widgetPlage4.setVisibility(!Donnees.instance().obtenirPlagesAuto() && Donnees.instance().obtenirEtatPlage(Donnees.Equipement.PompeFiltration, 3) ? View.VISIBLE : View.GONE);
-        textePlage4.setText(Donnees.instance().obtenirPlage(Donnees.Equipement.PompeFiltration, 3));
-        boutonAjouterPlage.setVisibility(Donnees.instance().obtenirPlagesAuto() || Donnees.instance().obtenirEtatPlage(Donnees.Equipement.PompeFiltration, 3) ? View.GONE : View.VISIBLE);
+        widgetPlage1.setVisibility(Donnees.instance().obtenirEtatPlage(Donnees.Equipement.Eclairage, 0) ? View.VISIBLE : View.GONE);
+        textePlage1.setText(Donnees.instance().obtenirPlage(Donnees.Equipement.Eclairage, 0));
+        widgetPlage2.setVisibility(Donnees.instance().obtenirEtatPlage(Donnees.Equipement.Eclairage, 1) ? View.VISIBLE : View.GONE);
+        textePlage2.setText(Donnees.instance().obtenirPlage(Donnees.Equipement.Eclairage, 1));
+        widgetPlage3.setVisibility(Donnees.instance().obtenirEtatPlage(Donnees.Equipement.Eclairage, 2) ? View.VISIBLE : View.GONE);
+        textePlage3.setText(Donnees.instance().obtenirPlage(Donnees.Equipement.Eclairage, 2));
+        widgetPlage4.setVisibility(Donnees.instance().obtenirEtatPlage(Donnees.Equipement.Eclairage, 3) ? View.VISIBLE : View.GONE);
+        textePlage4.setText(Donnees.instance().obtenirPlage(Donnees.Equipement.Eclairage, 3));
+        boutonAjouterPlage.setVisibility(Donnees.instance().obtenirEtatPlage(Donnees.Equipement.Eclairage, 3) ? View.GONE : View.VISIBLE);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             renduPlage.invalidate();
