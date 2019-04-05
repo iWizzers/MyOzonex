@@ -525,6 +525,8 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
         widgetPlage1.setVisibility(Donnees.instance().obtenirPlagesAuto() || Donnees.instance().obtenirEtatPlage(Donnees.Equipement.PompeFiltration, 0) ? View.VISIBLE : View.GONE);
         texteInfoPlage1.setText(Donnees.instance().obtenirPlagesAuto() ? "Plage auto" : "Plage 1");
         textePlage1.setText(Donnees.instance().obtenirPlagesAuto() ? Donnees.instance().obtenirPlageAuto() : Donnees.instance().obtenirPlage(Donnees.Equipement.PompeFiltration, 0));
+        boutonSupprimerPlage1.setVisibility(Donnees.instance().obtenirPlagesAuto() ? View.GONE : View.VISIBLE);
+        boutonModifierPlage1.setVisibility(Donnees.instance().obtenirPlagesAuto() ? View.GONE : View.VISIBLE);
         widgetPlage2.setVisibility(!Donnees.instance().obtenirPlagesAuto() && Donnees.instance().obtenirEtatPlage(Donnees.Equipement.PompeFiltration, 1) ? View.VISIBLE : View.GONE);
         textePlage2.setText(Donnees.instance().obtenirPlage(Donnees.Equipement.PompeFiltration, 1));
         widgetPlage3.setVisibility(!Donnees.instance().obtenirPlagesAuto() && Donnees.instance().obtenirEtatPlage(Donnees.Equipement.PompeFiltration, 2) ? View.VISIBLE : View.GONE);

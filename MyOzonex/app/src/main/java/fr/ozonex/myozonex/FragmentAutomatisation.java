@@ -130,6 +130,7 @@ public class FragmentAutomatisation extends Fragment implements View.OnClickList
                 break;
             case R.id.checkbox_plages_auto:
                 activerPlageAuto();
+                break;
             case R.id.checkbox_asservissement_ph_plus:
                 activerAsservissementPhPlus();
                 break;
