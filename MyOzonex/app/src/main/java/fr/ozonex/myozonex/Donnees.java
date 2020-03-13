@@ -6,10 +6,15 @@ import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 public class Donnees {
     private static Donnees inst = new Donnees();
@@ -259,6 +264,7 @@ public class Donnees {
     public static final String ID_SYSTEME = "id system";
     public static final String MOTDEPASSE = "password";
 
+    private String gmt = "GMT+02:00";
     private String derniereConnexion = "";
     private boolean activiteIHM = false;
     private int background;
@@ -291,6 +297,10 @@ public class Donnees {
         editor.commit();
     }
 
+    public void definirGMT(String str) {
+        gmt = str;
+    }
+
     public boolean obtenirActiviteIHM() {
         return activiteIHM;
     }
@@ -300,19 +310,40 @@ public class Donnees {
     }
 
     public void definirActiviteIHM(String strDateHeure) {
+        Calendar calendarIHM = Calendar.getInstance();
+        TimeZone tz = calendarIHM.getTimeZone();
+
+        float ONE_HOUR_MILLIS = 60 * 60 * 1000;
+        double offsetGMTIHM = Integer.parseInt(gmt.replace("GMT", "").split(":")[0]) + Integer.parseInt(gmt.replace("GMT", "").split(":")[1]) / 60.0;
+        double offsetFromUtc = tz.getOffset(calendarIHM.getTime().getTime()) / ONE_HOUR_MILLIS;
+        int offsetHrs = 0;
+        int offsetMins = 0;
+
+        /*if (tz.inDaylightTime(calendarIHM.getTime())) {
+            offsetFromUtc = offsetFromUtc - tz.getDSTSavings() / ONE_HOUR_MILLIS;
+        } else {
+            offsetGMTIHM = offsetGMTIHM + 1;
+        }*/
+
+        if (offsetGMTIHM != offsetFromUtc) {
+            offsetHrs = (int)(offsetFromUtc - offsetGMTIHM);
+            offsetMins = (int)(((offsetFromUtc - (int)offsetFromUtc) - (offsetGMTIHM - (int)offsetGMTIHM)) * 60);
+        }
+
         derniereConnexion = strDateHeure;
 
         String date = strDateHeure.split("-")[0];
         String heure = strDateHeure.split("-")[1];
 
-        Calendar calendarIHM = Calendar.getInstance();
         calendarIHM.set(Calendar.DAY_OF_MONTH, Integer.parseInt(date.split("/")[0]));
         calendarIHM.set(Calendar.MONTH, Integer.parseInt(date.split("/")[1]) - 1);
         calendarIHM.set(Calendar.YEAR, Integer.parseInt(date.split("/")[2]));
         calendarIHM.set(Calendar.HOUR_OF_DAY, Integer.parseInt(heure.split(":")[0]));
         calendarIHM.set(Calendar.MINUTE, Integer.parseInt(heure.split(":")[1]));
         calendarIHM.set(Calendar.SECOND, 0);
-        calendarIHM.add(Calendar.MINUTE, -5);
+
+        calendarIHM.add(Calendar.HOUR_OF_DAY, offsetHrs);
+        calendarIHM.add(Calendar.MINUTE, offsetMins - 5);
 
         Calendar calendarIHMPlus = (Calendar) calendarIHM.clone();
         calendarIHMPlus.add(Calendar.MINUTE, 10);

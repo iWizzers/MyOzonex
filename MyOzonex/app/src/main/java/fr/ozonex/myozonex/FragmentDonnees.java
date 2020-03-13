@@ -359,8 +359,8 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
                                 || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Chauffage) == Donnees.MARCHE)) {
                             valeurTemperatureBassin.setTextColor(Color.parseColor("#FFAA00"));
                         } else if (Donnees.instance().obtenirControlePompeFiltration() == Donnees.CONTROLE_PAR_POMPE_FILTRATION) {
-                            if ((Donnees.instance().obtenirTemperatureArret() <= Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin))
-                                    && (Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin) <= Donnees.instance().obtenirTemperatureEnclenchement())) {
+                            if ((Donnees.instance().obtenirTemperatureEnclenchement() <= Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin))
+                                    && (Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin) <= Donnees.instance().obtenirTemperatureArret())) {
                                 valeurTemperatureBassin.setTextColor(Color.GREEN);
                             } else {
                                 valeurTemperatureBassin.setTextColor(Color.RED);

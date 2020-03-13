@@ -380,7 +380,7 @@ public class FragmentChauffage extends Fragment implements View.OnClickListener 
             }
         }
 
-        layoutPlagesFct.setVisibility((mode == Donnees.MARCHE && Donnees.instance().presence(Donnees.Capteur.TemperatureBassin)) ? View.GONE : View.VISIBLE);
+        layoutPlagesFct.setVisibility((mode != Donnees.MARCHE && Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) && (Donnees.instance().obtenirControlePompeFiltration() == Donnees.CONTROLE_PAR_POMPE_FILTRATION)) ? View.VISIBLE : View.GONE);
     }
 
     private void modifierGestionTemperature(int idRadioButton) {
@@ -469,6 +469,8 @@ public class FragmentChauffage extends Fragment implements View.OnClickListener 
         boutonPlusEnclenchement.setEnabled(radioButtonPlage.isChecked());
         boutonMoinsConsigne.setEnabled(radioButtonConsigne.isChecked());
         boutonPlusConsigne.setEnabled(radioButtonConsigne.isChecked());
+
+        layoutPlagesFct.setVisibility((Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Chauffage) != Donnees.MARCHE && Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) && (Donnees.instance().obtenirControlePompeFiltration() == Donnees.CONTROLE_PAR_POMPE_FILTRATION)) ? View.VISIBLE : View.GONE);
     }
 
     private void valeurGestionTemperatureAEteModifie() {

@@ -2,6 +2,7 @@ package fr.ozonex.myozonex;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -100,49 +101,69 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params) {
-        String stringUrl = BDD + '/' + params[0] + '_' + params[1] + "?id_systeme=" + Donnees.getPreferences(Donnees.ID_SYSTEME);
+        String urls[] = {"", ""};
+
+        String stringChanges = BDD + '/' + "update_changes?id_systeme=" + Donnees.getPreferences(Donnees.ID_SYSTEME) + "&changes_from_app=1";
+        String stringDonnees = BDD + '/' + params[0] + '_' + params[1] + "?id_systeme=" + Donnees.getPreferences(Donnees.ID_SYSTEME);
         if (params.length > 2) {
-            stringUrl += '&' + params[2];
+            stringDonnees += '&' + params[2];
         }
+
+        urls[0] = stringDonnees;
+        if (!params[0].equals(HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Get))) {
+            urls[1] = stringChanges;
+        }
+
         String result = "";
         String inputLine;
 
-        try {
-            // Create a URL object holding our url
-            URL url = new URL(stringUrl);
+        for (int i = 0; i < urls.length; i++) {
+            try {
+                Log.d("TEST", urls[i]);
+                if (urls[i].isEmpty()) {
+                    break;
+                }
 
-            // Create a connection
-            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+                // Create a URL object holding our url
+                URL url = new URL(urls[i]);
 
-            // Set methods and timeouts
-            connection.setRequestMethod(REQUEST_METHOD);
-            connection.setReadTimeout(Global.TEMPO_RAFRAICHISSEMENT / 2);
-            connection.setConnectTimeout(Global.TEMPO_RAFRAICHISSEMENT / 2);
+                // Create a connection
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
-            // Connect to our url
-            connection.connect();
+                // Set methods and timeouts
+                connection.setRequestMethod(REQUEST_METHOD);
+                connection.setReadTimeout(Global.TEMPO_RAFRAICHISSEMENT / 2);
+                connection.setConnectTimeout(Global.TEMPO_RAFRAICHISSEMENT / 2);
 
-            // Create a new InputStreamReader
-            InputStreamReader streamReader = new InputStreamReader(connection.getInputStream());
+                // Connect to our url
+                connection.connect();
 
-            // Create a new buffered reader and String Builder
-            BufferedReader reader = new BufferedReader(streamReader);
-            StringBuilder stringBuilder = new StringBuilder();
+                // Create a new InputStreamReader
+                InputStreamReader streamReader = new InputStreamReader(connection.getInputStream());
 
-            // Check if the line we are reading is not null
-            while ((inputLine = reader.readLine()) != null) {
-                stringBuilder.append(inputLine);
+                // Create a new buffered reader and String Builder
+                BufferedReader reader = new BufferedReader(streamReader);
+                StringBuilder stringBuilder = new StringBuilder();
+
+                // Check if the line we are reading is not null
+                while ((inputLine = reader.readLine()) != null) {
+                    stringBuilder.append(inputLine);
+                }
+
+                // Close our InputStream and Buffered reader
+                reader.close();
+                streamReader.close();
+
+                // Set our result equal to our stringBuilder
+                if (i == 0) {
+                    result = stringBuilder.toString();
+                }
+            } catch (IOException e) {
+                //e.printStackTrace();
+                if (i == 0) {
+                    result = null;
+                }
             }
-
-            // Close our InputStream and Buffered reader
-            reader.close();
-            streamReader.close();
-
-            // Set our result equal to our stringBuilder
-            result = stringBuilder.toString();
-        } catch(IOException e){
-            //e.printStackTrace();
-            result = null;
         }
 
         return result;
