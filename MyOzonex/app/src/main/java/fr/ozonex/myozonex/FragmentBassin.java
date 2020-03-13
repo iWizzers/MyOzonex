@@ -17,13 +17,6 @@ import android.widget.TextView;
 public class FragmentBassin extends Fragment implements View.OnClickListener {
     View view = null;
 
-    ImageButton boutonModifierPlage;
-    int indexPlage;
-    String heureMinimumPlage;
-    String heureMaximumPlage;
-    String heureDebutPlage;
-    String heureFinPlage;
-
     // Tout orientations
     TextView texteDonnees;
     LinearLayout layoutAsservissement;

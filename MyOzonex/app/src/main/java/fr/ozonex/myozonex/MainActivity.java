@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity
     TextView texteEtatSysteme;
 
     private ActionBarDrawerToggle toggle;
+    private TextView idSysteme;
     private FragmentConnexion fragmentConnexion = new FragmentConnexion();
     private FragmentDonnees fragmentDonnees = new FragmentDonnees();
     private FragmentSynoptique fragmentSynoptique = new FragmentSynoptique();
@@ -102,8 +103,7 @@ public class MainActivity extends AppCompatActivity
             menu.findItem(R.id.nav_menu_layout).setVisible(false);
 
             View headerView = navigationView.getHeaderView(0);
-            TextView idSysteme = (TextView) headerView.findViewById(R.id.id_systeme);
-            idSysteme.setText("Système : " + Donnees.getPreferences(Donnees.ID_SYSTEME));
+            idSysteme = (TextView) headerView.findViewById(R.id.id_systeme);
             ledEtatSysteme = headerView.findViewById(R.id.led_etat_systeme);
             texteEtatSysteme = headerView.findViewById(R.id.texte_etat_systeme);
 
@@ -451,6 +451,7 @@ public class MainActivity extends AppCompatActivity
                 if (result.contains("LOG")) {
                     if (result.contains("OK")) {
                         premierDemarrage = false;
+                        idSysteme.setText("Système : " + Donnees.getPreferences(Donnees.ID_SYSTEME));
                         showNavigationViewButton(true);
                         onNavigationItemSelected(menu.findItem(R.id.nav_donnees_layout));
 
@@ -746,6 +747,7 @@ public class MainActivity extends AppCompatActivity
                             Donnees.instance().definirPlage(Donnees.Equipement.HeuresCreuses, 0, object.getString("plage_1"));
                             Donnees.instance().definirPlage(Donnees.Equipement.HeuresCreuses, 1, object.getString("plage_2"));
                             Donnees.instance().definirPlage(Donnees.Equipement.HeuresCreuses, 2, object.getString("plage_3"));
+                            Donnees.instance().definirGMT(object.getString("index_gmt"));
                         } catch (JSONException e) {
                             Log.d("ERROR", "Horlogerie");
                         }

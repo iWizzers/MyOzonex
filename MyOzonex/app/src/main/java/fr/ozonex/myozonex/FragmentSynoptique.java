@@ -625,7 +625,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
                 if (Donnees.instance().obtenirEtat(Donnees.Capteur.Pression)) {
                     if ((Donnees.instance().obtenirSeuilBasPression() <= Donnees.instance().obtenirValeur(Donnees.Capteur.Pression))
                             && (Donnees.instance().obtenirValeur(Donnees.Capteur.Pression) <= Donnees.instance().obtenirSeuilHautPression())) {
-                        texteCapteurPression.setTextColor(Color.GREEN);
+                        texteCapteurPression.setTextColor(Color.parseColor("#00AA00"));
                     } else {
                         texteCapteurPression.setTextColor(Color.RED);
                     }
@@ -643,7 +643,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
                         } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Ph) > (Donnees.instance().obtenirConsignePh() + Donnees.instance().obtenirHysteresisPhMoins())) {
                             texteCapteurPh.setTextColor(Color.RED);
                         } else {
-                            texteCapteurPh.setTextColor(Color.GREEN);
+                            texteCapteurPh.setTextColor(Color.parseColor("#00AA00"));
                         }
                     } else if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus)) {
                         if (Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.PhPlus)) {
@@ -651,7 +651,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
                         } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Ph) < (Donnees.instance().obtenirConsignePh() - Donnees.instance().obtenirHysteresisPhPlus())) {
                             texteCapteurPh.setTextColor(Color.RED);
                         } else {
-                            texteCapteurPh.setTextColor(Color.GREEN);
+                            texteCapteurPh.setTextColor(Color.parseColor("#00AA00"));
                         }
                     } else if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins)) {
                         if (Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.PhMoins)) {
@@ -659,7 +659,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
                         } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Ph) > (Donnees.instance().obtenirConsignePh() + Donnees.instance().obtenirHysteresisPhMoins())) {
                             texteCapteurPh.setTextColor(Color.RED);
                         } else {
-                            texteCapteurPh.setTextColor(Color.GREEN);
+                            texteCapteurPh.setTextColor(Color.parseColor("#00AA00"));
                         }
                     } else {
                         texteCapteurPh.setTextColor(Color.BLACK);
@@ -676,7 +676,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
                             } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Ampero) < (Donnees.instance().obtenirConsigneAmpero() - Donnees.instance().obtenirHysteresisAmpero())) {
                                 texteCapteurAmpero.setTextColor(Color.RED);
                             } else {
-                                texteCapteurAmpero.setTextColor(Color.GREEN);
+                                texteCapteurAmpero.setTextColor(Color.parseColor("#00AA00"));
                             }
                         } else {
                             texteCapteurAmpero.setTextColor(Color.BLACK);
@@ -693,7 +693,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
                             } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Redox) < (Donnees.instance().obtenirConsigneOrp() - Donnees.instance().obtenirHysteresisOrp())) {
                                 texteCapteurOrp.setTextColor(Color.RED);
                             } else {
-                                texteCapteurOrp.setTextColor(Color.GREEN);
+                                texteCapteurOrp.setTextColor(Color.parseColor("#00AA00"));
                             }
                         } else {
                             texteCapteurOrp.setTextColor(Color.BLACK);
@@ -709,7 +709,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
                             } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Redox) < (Donnees.instance().obtenirConsigneOrp() - Donnees.instance().obtenirHysteresisOrp())) {
                                 texteCapteurOrp.setTextColor(Color.RED);
                             } else {
-                                texteCapteurOrp.setTextColor(Color.GREEN);
+                                texteCapteurOrp.setTextColor(Color.parseColor("#00AA00"));
                             }
                         } else {
                             texteCapteurOrp.setTextColor(Color.BLACK);
@@ -725,15 +725,15 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
                                 || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Chauffage) == Donnees.AUTO_MARCHE)) {
                             texteCapteurPt.setTextColor(Color.parseColor("#FFAA00"));
                         } else if (Donnees.instance().obtenirControlePompeFiltration() == Donnees.CONTROLE_PAR_POMPE_FILTRATION) {
-                            if ((Donnees.instance().obtenirTemperatureArret() <= Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin))
-                                    && (Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin) <= Donnees.instance().obtenirTemperatureEnclenchement())) {
-                                texteCapteurPt.setTextColor(Color.GREEN);
+                            if ((Donnees.instance().obtenirTemperatureEnclenchement() <= Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin))
+                                    && (Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin) <= Donnees.instance().obtenirTemperatureArret())) {
+                                texteCapteurPt.setTextColor(Color.parseColor("#00AA00"));
                             } else {
                                 texteCapteurPt.setTextColor(Color.RED);
                             }
                         } else {
                             if (Donnees.instance().obtenirTemperatureConsigne() <= Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin)) {
-                                texteCapteurPt.setTextColor(Color.GREEN);
+                                texteCapteurPt.setTextColor(Color.parseColor("#00AA00"));
                             } else {
                                 texteCapteurPt.setTextColor(Color.RED);
                             }
@@ -1039,7 +1039,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
         } else if (conso < (consoMax * Global.HYSTERESIS_BIDON_PRESQUE_VIDE / 100.0)) {
             couleurTexte = getResources().getColor(android.R.color.holo_orange_light);
         } else {
-            couleurTexte = getResources().getColor(android.R.color.holo_green_light);
+            couleurTexte = Color.GREEN;
         }
 
         textView.setTextColor(couleurTexte);
