@@ -18,12 +18,13 @@ public class FragmentFiltre extends Fragment implements View.OnClickListener {
     View view = null;
 
     // Tout orientations
+    LinearLayout layoutDonnees;
+    TextView texteSeuilRincage;
+    TextView texteSeuils;
     TextView texteConso;
 
     // Orientation portrait
     LinearLayout globalLayoutPortrait;
-    LinearLayout layoutConfiguration;
-    TextView texteDonneesConfiguration;
 
     // Orientation paysage
     HorizontalScrollView globalLayoutPaysage;
@@ -37,8 +38,6 @@ public class FragmentFiltre extends Fragment implements View.OnClickListener {
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             globalLayoutPortrait = view.findViewById(R.id.global_layout);
-            layoutConfiguration = view.findViewById(R.id.layout_configuration);
-            texteDonneesConfiguration = (TextView) view.findViewById(R.id.texte_donnees_configuration);
         } else {
             new ScaleListener((HorizontalScrollView) view.findViewById(R.id.horizontal_scroll),
                     (ScrollView) view.findViewById(R.id.vertical_scroll),
@@ -50,6 +49,9 @@ public class FragmentFiltre extends Fragment implements View.OnClickListener {
             boutonRetour.setOnClickListener(this);
         }
 
+        layoutDonnees = view.findViewById(R.id.layout_donnees);
+        texteSeuilRincage = (TextView) view.findViewById(R.id.texte_seuil_rincage);
+        texteSeuils = (TextView) view.findViewById(R.id.texte_seuils);
         texteConso = (TextView) view.findViewById(R.id.texte_donnees_conso);
 
 
@@ -63,12 +65,12 @@ public class FragmentFiltre extends Fragment implements View.OnClickListener {
         if ((view != null) && isAdded()) {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
-                layoutConfiguration.setVisibility(Donnees.instance().presence(Donnees.Capteur.Pression) ? View.VISIBLE : View.GONE);
-                modifierConfiguration();
             } else {
                 globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());
             }
 
+            layoutDonnees.setVisibility(Donnees.instance().presence(Donnees.Capteur.Pression) ? View.VISIBLE : View.GONE);
+            modifierDonnees();
             modifierDernierLavage();
         }
     }
@@ -88,6 +90,22 @@ public class FragmentFiltre extends Fragment implements View.OnClickListener {
         }
     }
 
+    private void modifierDonnees() {
+        String donnees;
+
+        donnees = "Seuil rinçage : ";
+        donnees += Donnees.instance().obtenirSeuilRincage() + "%";
+        texteSeuilRincage.setText(donnees);
+        
+        donnees = "Seuil sécurité surpression : ";
+        donnees += Donnees.instance().obtenirSeuilSecuriteSurpression() + " bar";
+        donnees += "\nSeuil haut pression : ";
+        donnees += Donnees.instance().obtenirSeuilHautPression() + " bar";
+        donnees += "\nSeuil bas pression : ";
+        donnees += Donnees.instance().obtenirSeuilBasPression() + " bar";
+        texteSeuils.setText(donnees);
+    }
+
     private void modifierDernierLavage() {
         String donnees;
         donnees = "Date : ";
@@ -98,17 +116,5 @@ public class FragmentFiltre extends Fragment implements View.OnClickListener {
         donnees += Donnees.instance().obtenirPressionProchainLavage() + " bar";
 
         texteConso.setText(donnees);
-    }
-
-    private void modifierConfiguration() {
-        String donnees;
-        donnees = "Seuil sécurité surpression : ";
-        donnees += Donnees.instance().obtenirSeuilSecuriteSurpression() + " bar";
-        donnees += "\nSeuil haut pression : ";
-        donnees += Donnees.instance().obtenirSeuilHautPression() + " bar";
-        donnees += "\nSeuil bas pression : ";
-        donnees += Donnees.instance().obtenirSeuilBasPression() + " bar";
-
-        texteDonneesConfiguration.setText(donnees);
     }
 }

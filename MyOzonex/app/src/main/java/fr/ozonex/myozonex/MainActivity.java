@@ -5,6 +5,8 @@ import android.app.ActivityManager;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity
 
     private ActionBarDrawerToggle toggle;
     private TextView idSysteme;
+    private TextView versionApplication;
     private FragmentConnexion fragmentConnexion = new FragmentConnexion();
     private FragmentDonnees fragmentDonnees = new FragmentDonnees();
     private FragmentSynoptique fragmentSynoptique = new FragmentSynoptique();
@@ -104,8 +107,18 @@ public class MainActivity extends AppCompatActivity
 
             View headerView = navigationView.getHeaderView(0);
             idSysteme = (TextView) headerView.findViewById(R.id.id_systeme);
+            versionApplication = (TextView) headerView.findViewById(R.id.version_application);
             ledEtatSysteme = headerView.findViewById(R.id.led_etat_systeme);
             texteEtatSysteme = headerView.findViewById(R.id.texte_etat_systeme);
+
+            idSysteme.setText("Système : " + Donnees.getPreferences(Donnees.ID_SYSTEME));
+            try {
+                PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+                versionApplication.setText("Version : " + pInfo.versionName);
+            } catch (PackageManager.NameNotFoundException e) {
+                //e.printStackTrace();
+                versionApplication.setText("Version : visible dans les paramètres de l'application");
+            }
 
             decorView.setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -564,6 +577,10 @@ public class MainActivity extends AppCompatActivity
                             Donnees.instance().definirPlage(Donnees.Equipement.PompeFiltration, 1, object.getString("plage_2"));
                             Donnees.instance().definirPlage(Donnees.Equipement.PompeFiltration, 2, object.getString("plage_3"));
                             Donnees.instance().definirPlage(Donnees.Equipement.PompeFiltration, 3, object.getString("plage_4"));
+                            Donnees.instance().definirEtatHorsGel(object.getInt("etat_hors_gel") > 0);
+                            Donnees.instance().definirEnclenchementHorsGel(object.getInt("enclenchement_hors_gel"));
+                            Donnees.instance().definirArretHorsGel(object.getInt("arret_hors_gel"));
+                            Donnees.instance().definirFrequenceHorsGel(object.getInt("frequence_hors_gel"));
                         } catch (JSONException e) {
                             Log.d("ERROR", "Pompe filtration");
                         }
@@ -574,6 +591,7 @@ public class MainActivity extends AppCompatActivity
                             Donnees.instance().definirDateDernierLavage(object.getString("date_dernier_lavage"));
                             Donnees.instance().definirPressionApresLavage(object.getDouble("pression_apres_lavage"));
                             Donnees.instance().definirPressionProchainLavage(object.getDouble("pression_prochain_lavage"));
+                            Donnees.instance().definirSeuilRincage(object.getInt("seuil_rincage"));
                             Donnees.instance().definirSeuilSecuriteSurpression(object.getDouble("seuil_securite_surpression"));
                             Donnees.instance().definirSeuilHautPression(object.getDouble("seuil_haut_pression"));
                             Donnees.instance().definirSeuilBasPression(object.getDouble("seuil_bas_pression"));
@@ -607,11 +625,9 @@ public class MainActivity extends AppCompatActivity
                             Donnees.instance().definirTemperatureArret(object.getInt("temperature_arret"));
                             Donnees.instance().definirTemperatureEnclenchement(object.getInt("temperature_encl"));
                             Donnees.instance().definirTemperatureConsigne(object.getInt("temperature_consigne"));
-                            Donnees.instance().definirPlage(Donnees.Equipement.Chauffage, 0, object.getString("plage_1"));
-                            Donnees.instance().definirPlage(Donnees.Equipement.Chauffage, 1, object.getString("plage_2"));
-                            Donnees.instance().definirPlage(Donnees.Equipement.Chauffage, 2, object.getString("plage_3"));
-                            Donnees.instance().definirPlage(Donnees.Equipement.Chauffage, 3, object.getString("plage_4"));
                             Donnees.instance().definirTypeChauffage(object.getInt("type_chauffage"));
+                            Donnees.instance().definirAlarmeSeuilBas(Donnees.Equipement.Chauffage, object.getInt("alarme_seuil_bas"), null);
+                            Donnees.instance().definirAlarmeSeuilHaut(Donnees.Equipement.Chauffage, object.getInt("alarme_seuil_haut"), null);
                         } catch (JSONException e) {
                             Log.d("ERROR", "Chauffage");
                         }
@@ -654,6 +670,8 @@ public class MainActivity extends AppCompatActivity
                             Donnees.instance().definirConsignePh(object.getDouble("point_consigne"));
                             Donnees.instance().definirHysteresisPhPlus(object.getDouble("hysteresis_plus"));
                             Donnees.instance().definirHysteresisPhMoins(object.getDouble("hysteresis_moins"));
+                            Donnees.instance().definirAlarmeSeuilBas(Donnees.Equipement.PhGlobal, object.getDouble("alarme_seuil_bas"), null);
+                            Donnees.instance().definirAlarmeSeuilHaut(Donnees.Equipement.PhGlobal, object.getDouble("alarme_seuil_haut"), null);
                         } catch (JSONException e) {
                             Log.d("ERROR", "Régulateur pH");
                         }
@@ -724,6 +742,10 @@ public class MainActivity extends AppCompatActivity
                             Donnees.instance().definirTempsInjectionJournalierMaxRestant(Donnees.Equipement.Orp, object.getInt("temps_injection_jour_max_restant"));
                             Donnees.instance().definirEtat(Donnees.Equipement.Orp, object.getInt("surchloration"));
                             Donnees.instance().definirDonneesSurchloration("Fréquence : <b>" + object.getString("frequence") + "</b><br /><b>" + object.getInt("mv_ajoute") + " mV </b>ajouté<br /><font color=\"#00FF00\"><i>Prochaine dans <b>" + object.getInt("prochaine_surchloration") + " jour(s)</b></i></font>");
+                            Donnees.instance().definirAlarmeSeuilBas(Donnees.Equipement.Orp, object.getDouble("alarme_seuil_bas_ampero"), Donnees.Capteur.Ampero);
+                            Donnees.instance().definirAlarmeSeuilHaut(Donnees.Equipement.Orp, object.getDouble("alarme_seuil_haut_ampero"), Donnees.Capteur.Ampero);
+                            Donnees.instance().definirAlarmeSeuilBas(Donnees.Equipement.Orp, object.getInt("alarme_seuil_bas_orp"), Donnees.Capteur.Redox);
+                            Donnees.instance().definirAlarmeSeuilHaut(Donnees.Equipement.Orp, object.getInt("alarme_seuil_haut_orp"), Donnees.Capteur.Redox);
                         } catch (JSONException e) {
                             Log.d("ERROR", "Régulateur ORP");
                         }
@@ -762,24 +784,18 @@ public class MainActivity extends AppCompatActivity
 
                         try {
                             object = new JSONObject(jsonObject.getString( "Events"));
-                            Donnees.instance().supprimerEvents();
+
+                            Donnees.instance().configurationEvents();
+
                             for (int i = 1; i < (object.length() + 1); i++) {
                                 if (!object.getString("event" + i).isEmpty()) {
                                     Donnees.instance().ajouterEvent(object.getJSONObject("event" + i).getString("texte"), object.getJSONObject("event" + i).getInt("couleur"), object.getJSONObject("event" + i).getString("dateheure"));
-
-                                    if (object.getJSONObject("event" + i).getInt("lu") == 0) {
-                                        Notification.instance().ajouter("Nouvel evenement", object.getJSONObject("event" + i).getString("texte") + " à " + object.getJSONObject("event" + i).getString("dateheure"));
-                                        MainActivity.instance().sendData(false,
-                                                "",
-                                                "",
-                                                HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                                                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageEvents),
-                                                "texte=" + object.getJSONObject("event" + i).getString("texte") + "&dateheure=" + object.getJSONObject("event" + i).getString("dateheure") + "&lu=1");
-                                    }
                                 } else {
                                     break;
                                 }
                             }
+
+                            Donnees.instance().supprimerEvents();
                         } catch (JSONException e) {
                             Log.d("ERROR", "Events");
                         }
@@ -792,14 +808,14 @@ public class MainActivity extends AppCompatActivity
                         if (!Donnees.instance().obtenirActiviteIHM()) {
                             if (!msgEtatSysteme) {
                                 msgEtatSysteme = true;
-                                Toast.makeText(this, "Le système s'est déconnecté du serveur", Toast.LENGTH_SHORT).show();
-                                Notification.instance().ajouter("Déconnexion", "Le système s'est déconnecté du serveur");
+                                Toast.makeText(this, "L'appareil est déconnecté du serveur", Toast.LENGTH_SHORT).show();
+                                Notification.instance().ajouter("Déconnexion", "L'appareil est déconnecté du serveur");
                             }
                         } else {
                             if (msgEtatSysteme) {
                                 msgEtatSysteme = false;
-                                Toast.makeText(this, "Le système s'est connecté au serveur", Toast.LENGTH_SHORT).show();
-                                Notification.instance().ajouter("Connexion", "Le système s'est connecté au serveur");
+                                Toast.makeText(this, "L'appareil est connecté au serveur", Toast.LENGTH_SHORT).show();
+                                Notification.instance().ajouter("Connexion", "L'appareil est connecté au serveur");
                             }
                         }
 

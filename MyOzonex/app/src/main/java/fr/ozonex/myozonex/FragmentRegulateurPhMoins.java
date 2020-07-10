@@ -27,6 +27,8 @@ public class FragmentRegulateurPhMoins extends Fragment implements View.OnClickL
     RadioButton rbTOR;
     RadioButton rbLineaire;
     TextView texteDonneesAsservissement;
+    TextView texteInstallation;
+    TextView texteAlarmes;
 
     // Orientation portrait
     LinearLayout globalLayoutPortrait;
@@ -82,6 +84,8 @@ public class FragmentRegulateurPhMoins extends Fragment implements View.OnClickL
         rbTOR = (RadioButton) view.findViewById(R.id.radio_bouton_tor);
         rbLineaire = (RadioButton) view.findViewById(R.id.radio_bouton_lineaire);
         texteDonneesAsservissement = (TextView) view.findViewById(R.id.texte_donnees_asservissement);
+        texteInstallation = (TextView) view.findViewById(R.id.texte_installation);
+        texteAlarmes = (TextView) view.findViewById(R.id.texte_alarmes);
 
 
         update();
@@ -119,6 +123,9 @@ public class FragmentRegulateurPhMoins extends Fragment implements View.OnClickL
                     + "<b>" + Donnees.instance().obtenirConsoJour(Donnees.Equipement.PhMoins) + "</b> / "
                     + "<b>" + Donnees.instance().obtenirConsoSemaine(Donnees.Equipement.PhMoins) + "</b> / "
                     + "<b>" + Donnees.instance().obtenirConsoMois(Donnees.Equipement.PhMoins) + "</b>");
+
+            installationAEteModifie();
+            alarmesAEteModifie();
         }
     }
 
@@ -294,5 +301,27 @@ public class FragmentRegulateurPhMoins extends Fragment implements View.OnClickL
         MainActivity.instance().setHtmlText(texteConso, "Depuis : " + date +
                 "<br />Volume : <b>" + consoVolume + " L</b>" +
                 "<br /><font color=\"" + color + "\"><i>Volume restant : <b>" + consoVolumeRestant + " L</b></i></font>");
+    }
+
+    private void installationAEteModifie() {
+        String donnees;
+
+        donnees = "Point de consigne : ";
+        donnees += Donnees.instance().obtenirConsignePh();
+        donnees += "\nHystérésis : ";
+        donnees += Donnees.instance().obtenirHysteresisPhMoins();
+
+        texteInstallation.setText(donnees);
+    }
+
+    private void alarmesAEteModifie() {
+        String donnees;
+
+        donnees = "Seuil alerte bas : ";
+        donnees += Donnees.instance().obtenirAlarmeSeuilBas(Donnees.Equipement.PhGlobal, null);
+        donnees += "\nSeuil alerte haut : ";
+        donnees += Donnees.instance().obtenirAlarmeSeuilHaut(Donnees.Equipement.PhGlobal, null);
+
+        texteAlarmes.setText(donnees);
     }
 }

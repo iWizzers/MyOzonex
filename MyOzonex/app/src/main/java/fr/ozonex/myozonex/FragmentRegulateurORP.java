@@ -30,6 +30,8 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
     TextView texteDonneesAsservissement;
     CheckBox checkBoxSurchloration;
     TextView texteDonneesSurchloration;
+    TextView texteInstallation;
+    TextView texteAlarmes;
 
     // Orientation portrait
     LinearLayout globalLayoutPortrait;
@@ -87,6 +89,8 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
         texteDonneesAsservissement = (TextView) view.findViewById(R.id.texte_donnees_asservissement);
         checkBoxSurchloration = (CheckBox) view.findViewById(R.id.checkbox_surchloration);
         texteDonneesSurchloration = (TextView) view.findViewById(R.id.texte_donnees_surchloration);
+        texteInstallation = (TextView) view.findViewById(R.id.texte_installation);
+        texteAlarmes = (TextView) view.findViewById(R.id.texte_alarmes);
 
 
         update();
@@ -124,6 +128,9 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
                     + "<b>" + Donnees.instance().obtenirConsoJour(Donnees.Equipement.Orp) + "</b> / "
                     + "<b>" + Donnees.instance().obtenirConsoSemaine(Donnees.Equipement.Orp) + "</b> / "
                     + "<b>" + Donnees.instance().obtenirConsoMois(Donnees.Equipement.Orp) + "</b>");
+
+            installationAEteModifie();
+            alarmesAEteModifie();
         }
     }
 
@@ -304,5 +311,31 @@ public class FragmentRegulateurORP extends Fragment implements View.OnClickListe
         MainActivity.instance().setHtmlText(texteConso, "Depuis : " + date +
                 "<br />Volume : <b>" + consoVolume + " L</b>" +
                 "<br /><font color=\"" + color + "\"><i>Volume restant : <b>" + consoVolumeRestant + " L</b></i></font>");
+    }
+
+    private void installationAEteModifie() {
+        String donnees;
+
+        donnees = "Point de consigne : ";
+        donnees += Donnees.instance().presence(Donnees.Capteur.Ampero) ? Donnees.instance().obtenirConsigneAmpero() + " ppm / " : "";
+        donnees += Donnees.instance().obtenirConsigneOrp() + " mV";
+        donnees += "\nHystérésis : ";
+        donnees += Donnees.instance().presence(Donnees.Capteur.Ampero) ? Donnees.instance().obtenirHysteresisAmpero() + " ppm / " : "";
+        donnees += Donnees.instance().obtenirHysteresisOrp() + " mV";
+
+        texteInstallation.setText(donnees);
+    }
+
+    private void alarmesAEteModifie() {
+        String donnees;
+
+        donnees = "Seuil alerte bas : ";
+        donnees += Donnees.instance().presence(Donnees.Capteur.Ampero) ? Donnees.instance().obtenirAlarmeSeuilBas(Donnees.Equipement.Orp, Donnees.Capteur.Ampero) + " ppm / " : "";
+        donnees += Donnees.instance().obtenirAlarmeSeuilBas(Donnees.Equipement.Orp, Donnees.Capteur.Redox) + " mV";
+        donnees += "\nSeuil alerte haut : ";
+        donnees += Donnees.instance().presence(Donnees.Capteur.Ampero) ? Donnees.instance().obtenirAlarmeSeuilHaut(Donnees.Equipement.Orp, Donnees.Capteur.Ampero) + " ppm / " : "";
+        donnees += Donnees.instance().obtenirAlarmeSeuilHaut(Donnees.Equipement.Orp, Donnees.Capteur.Redox) + " mV";
+
+        texteAlarmes.setText(donnees);
     }
 }

@@ -289,6 +289,110 @@
                     android:textColor="@color/couleurTexteGeneral"
                     android:textSize="@dimen/texteGeneral" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/layout_widget_space"
+                android:paddingBottom="@dimen/layout_widget_space"
+                android:background="@color/transparentBackground"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:maxLines="1"
+                        android:text="Installation"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textColor="@color/couleurSousTitre"
+                        android:textSize="@dimen/texteSousTitre" />
+
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/texte_installation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/layout_widget_space"
+                    android:layout_marginRight="@dimen/layout_widget_space"
+                    android:text="Point de consigne : X ppm / X mV\nHystérésis : X ppm / X mV"
+                    android:textColor="@color/couleurTexteGeneral"
+                    android:textSize="@dimen/texteGeneral"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/layout_widget_space"
+                android:paddingBottom="@dimen/layout_widget_space"
+                android:background="@color/transparentBackground"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:maxLines="1"
+                        android:text="Alarmes"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textColor="@color/couleurSousTitre"
+                        android:textSize="@dimen/texteSousTitre" />
+
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/texte_alarmes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/layout_widget_space"
+                    android:layout_marginRight="@dimen/layout_widget_space"
+                    android:text="Seuil alerte bas : X ppm / X mV\nSeuil alerte haut : X ppm / X mV"
+                    android:textColor="@color/couleurTexteGeneral"
+                    android:textSize="@dimen/texteGeneral"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

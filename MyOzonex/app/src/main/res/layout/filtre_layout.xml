@@ -10,6 +10,7 @@
         android:layout_height="match_parent"
         android:fillViewport="false">
         <LinearLayout
+            android:id="@+id/layout_donnees"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/layout_widget_space"
@@ -18,6 +19,79 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:paddingBottom="@dimen/layout_widget_space"
+                android:background="@color/transparentBackground"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:maxLines="1"
+                        android:text="Données"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textColor="@color/couleurSousTitre"
+                        android:textSize="@dimen/texteSousTitre" />
+
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/texte_seuil_rincage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/layout_widget_space"
+                    android:layout_marginRight="@dimen/layout_widget_space"
+                    android:text="Seuil rinçage : X %"
+                    android:textColor="@color/couleurTexteGeneral"
+                    android:textSize="@dimen/texteGeneral"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="@dimen/layout_space"
+                    android:layout_marginLeft="@dimen/layout_widget_space"
+                    android:layout_marginRight="@dimen/layout_widget_space"
+                    android:background="@android:color/white"
+                    android:layerType="software" />
+
+                <TextView
+                    android:id="@+id/texte_seuils"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_space"
+                    android:layout_marginLeft="@dimen/layout_widget_space"
+                    android:layout_marginRight="@dimen/layout_widget_space"
+                    android:text="Seuil sécurité surpression : X.X bar\nSeuil haut pression : X.X bar\nSeuil bas pression : X.X bar"
+                    android:textColor="@color/couleurTexteGeneral"
+                    android:textSize="@dimen/texteGeneral"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/layout_widget_space"
                 android:paddingBottom="@dimen/layout_widget_space"
                 android:background="@color/transparentBackground"
                 android:orientation="vertical">
@@ -61,59 +135,6 @@
                     android:layout_marginLeft="@dimen/layout_widget_space"
                     android:layout_marginRight="@dimen/layout_widget_space"
                     android:text="Date : 26/05/2014\nPression après rinçage / lavage : X.X bar\nProchain rinçage / lavage si pression > X.X bar"
-                    android:textColor="@color/couleurTexteGeneral"
-                    android:textSize="@dimen/texteGeneral"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_configuration"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/layout_widget_space"
-                android:paddingBottom="@dimen/layout_widget_space"
-                android:background="@color/transparentBackground"
-                android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/layout_widget_space"
-                    android:orientation="horizontal" >
-                    <View
-                        android:layout_width="50dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:layout_gravity="center"
-                        android:background="@color/couleurSousTitre"
-                        android:layerType="software" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:maxLines="1"
-                        android:text="Configuration"
-                        android:textStyle="bold"
-                        android:gravity="center"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre" />
-
-                    <View
-                        android:layout_width="50dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:layout_gravity="center"
-                        android:background="@color/couleurSousTitre"
-                        android:layerType="software" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/texte_donnees_configuration"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space"
-                    android:text="Seuil sécurité surpression : X.X bar\nSeuil haut pression : X.X bar\nSeuil bas pression : X.X bar"
                     android:textColor="@color/couleurTexteGeneral"
                     android:textSize="@dimen/texteGeneral"
                     android:textStyle="bold" />

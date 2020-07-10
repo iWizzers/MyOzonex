@@ -2,7 +2,6 @@ package fr.ozonex.myozonex;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -103,8 +102,8 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... params) {
         String urls[] = {"", ""};
 
-        String stringChanges = BDD + '/' + "update_changes?id_systeme=" + Donnees.getPreferences(Donnees.ID_SYSTEME) + "&changes_from_app=1";
-        String stringDonnees = BDD + '/' + params[0] + '_' + params[1] + "?id_systeme=" + Donnees.getPreferences(Donnees.ID_SYSTEME);
+        String stringChanges = BDD + "/release/update_changes?id_systeme=" + Donnees.getPreferences(Donnees.ID_SYSTEME) + "&changes_from_app=1";
+        String stringDonnees = BDD + "/release/" + params[0] + '_' + params[1] + "?id_systeme=" + Donnees.getPreferences(Donnees.ID_SYSTEME);
         if (params.length > 2) {
             stringDonnees += '&' + params[2];
         }
@@ -119,7 +118,7 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
 
         for (int i = 0; i < urls.length; i++) {
             try {
-                Log.d("TEST", urls[i]);
+                //Log.d("URL", urls[i]);
                 if (urls[i].isEmpty()) {
                     break;
                 }

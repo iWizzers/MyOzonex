@@ -30,9 +30,10 @@
                     android:background="@drawable/title" >
                     <ImageButton
                         android:id="@+id/bouton_retour"
-                        android:layout_width="121dp"
+                        android:layout_width="81dp"
                         android:layout_height="121dp"
                         android:background="@android:color/transparent"
+                        android:layout_marginLeft="@dimen/layout_widget_space"
                         android:contentDescription="TODO"
                         android:scaleType="fitCenter"
                         app:srcCompat="@drawable/bouton_retour"
@@ -48,27 +49,23 @@
                         android:textColor="@android:color/black"
                         android:textSize="@dimen/texteSousTitre" />
 
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="0"
+                        android:layout_marginRight="170dp"
                         android:maxLines="1"
                         android:text="@string/eclairage"
                         android:textStyle="bold"
                         android:gravity="center"
                         android:textColor="@android:color/black"
                         android:textSize="@dimen/texteTitre" />
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
                 </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:background="@android:color/black"
+                    android:layerType="software" />
 
                 <GridLayout
                     android:layout_width="match_parent"

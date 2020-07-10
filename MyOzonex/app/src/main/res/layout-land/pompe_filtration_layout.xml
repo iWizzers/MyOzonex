@@ -30,9 +30,10 @@
                     android:background="@drawable/title" >
                     <ImageButton
                         android:id="@+id/bouton_retour"
-                        android:layout_width="121dp"
+                        android:layout_width="81dp"
                         android:layout_height="121dp"
                         android:background="@android:color/transparent"
+                        android:layout_marginLeft="@dimen/layout_widget_space"
                         android:contentDescription="TODO"
                         android:scaleType="fitCenter"
                         app:srcCompat="@drawable/bouton_retour"
@@ -48,27 +49,23 @@
                         android:textColor="@android:color/black"
                         android:textSize="@dimen/texteSousTitre" />
 
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="0"
+                        android:layout_marginRight="170dp"
                         android:maxLines="1"
                         android:text="@string/pompe_filtration"
                         android:textStyle="bold"
                         android:gravity="center"
                         android:textColor="@android:color/black"
                         android:textSize="@dimen/texteTitre" />
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
                 </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:background="@android:color/black"
+                    android:layerType="software" />
 
                 <GridLayout
                     android:layout_width="match_parent"
@@ -86,6 +83,131 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginTop="@dimen/layout_container_space" >
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal" >
+                                <View
+                                    android:layout_width="50dp"
+                                    android:layout_height="2dp"
+                                    android:layout_weight="1"
+                                    android:layout_gravity="center"
+                                    android:background="@color/couleurSousTitre"
+                                    android:layerType="software" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0"
+                                    android:maxLines="1"
+                                    android:text="Données"
+                                    android:textStyle="bold"
+                                    android:gravity="center"
+                                    android:textColor="@color/couleurSousTitre"
+                                    android:textSize="@dimen/texteSousTitre" />
+
+                                <View
+                                    android:layout_width="50dp"
+                                    android:layout_height="2dp"
+                                    android:layout_weight="1"
+                                    android:layout_gravity="center"
+                                    android:background="@color/couleurSousTitre"
+                                    android:layerType="software" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:paddingLeft="@dimen/layout_widget_space"
+                                android:paddingRight="@dimen/layout_widget_space">
+                                <CheckBox
+                                    android:id="@+id/checkbox_hors_gel"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:text="Hors gel"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/couleurTexteGeneral"
+                                    android:textSize="@dimen/texteGeneral"
+                                    android:buttonTint="#00FFFF" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/layout_space"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical" >
+                                    <TextView
+                                        android:id="@+id/texte_enclenchement_hors_gel"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="Enclenchement"
+                                        android:gravity="center"
+                                        android:textColor="@color/couleurTexteGeneral"
+                                        android:textSize="@dimen/texteGeneral"
+                                        android:textStyle="bold" />
+
+                                    <Spinner
+                                        android:id="@+id/combobox_enclenchement_hors_gel"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:entries="@array/valeurs_enclenchement_hors_gel" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/layout_space"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical" >
+                                    <TextView
+                                        android:id="@+id/texte_arret_hors_gel"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="Arrêt"
+                                        android:gravity="center"
+                                        android:textColor="@color/couleurTexteGeneral"
+                                        android:textSize="@dimen/texteGeneral"
+                                        android:textStyle="bold" />
+
+                                    <Spinner
+                                        android:id="@+id/combobox_arret_hors_gel"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/layout_space"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical" >
+                                    <TextView
+                                        android:id="@+id/texte_frequence_hors_gel"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="Fréquence"
+                                        android:gravity="center"
+                                        android:textColor="@color/couleurTexteGeneral"
+                                        android:textSize="@dimen/texteGeneral"
+                                        android:textStyle="bold" />
+
+                                    <Spinner
+                                        android:id="@+id/combobox_frequence_hors_gel"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:entries="@array/valeurs_frequence_hors_gel" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/layout_container_space"
                             android:orientation="vertical" >
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -130,69 +252,6 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="Depuis :\nHeures pleines :\nHeures creuses :"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/couleurTexteGeneral"
-                                    android:textSize="@dimen/texteGeneral" />
-                            </LinearLayout>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_marginTop="@dimen/layout_container_space" >
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal" >
-                                <View
-                                    android:layout_width="50dp"
-                                    android:layout_height="2dp"
-                                    android:layout_weight="1"
-                                    android:layout_gravity="center"
-                                    android:background="@color/couleurSousTitre"
-                                    android:layerType="software" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="0"
-                                    android:maxLines="1"
-                                    android:text="Dernier nettoyage panier"
-                                    android:textStyle="bold"
-                                    android:gravity="center"
-                                    android:textColor="@color/couleurSousTitre"
-                                    android:textSize="@dimen/texteSousTitre" />
-
-                                <View
-                                    android:layout_width="50dp"
-                                    android:layout_height="2dp"
-                                    android:layout_weight="1"
-                                    android:layout_gravity="center"
-                                    android:background="@color/couleurSousTitre"
-                                    android:layerType="software" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:paddingLeft="@dimen/layout_widget_space"
-                                android:paddingRight="@dimen/layout_widget_space">
-                                <TextView
-                                    android:id="@+id/texte_date_nettoyage"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="Date :"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/couleurTexteGeneral"
-                                    android:textSize="@dimen/texteGeneral" />
-
-                                <TextView
-                                    android:id="@+id/texte_total_heures_filtration"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="Heures filtration :"
                                     android:textStyle="bold"
                                     android:textColor="@color/couleurTexteGeneral"
                                     android:textSize="@dimen/texteGeneral" />

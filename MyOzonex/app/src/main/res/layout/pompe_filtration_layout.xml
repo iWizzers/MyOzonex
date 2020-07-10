@@ -123,6 +123,133 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:maxLines="1"
+                        android:text="Données"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textColor="@color/couleurSousTitre"
+                        android:textSize="@dimen/texteSousTitre" />
+
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/layout_widget_space"
+                    android:layout_marginRight="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <CheckBox
+                        android:id="@+id/checkbox_hors_gel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="Hors gel"
+                        android:textStyle="bold"
+                        android:textColor="@color/couleurTexteGeneral"
+                        android:textSize="@dimen/texteGeneral"
+                        android:buttonTint="#00FFFF" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:layout_weight="1"
+                        android:orientation="vertical" >
+                        <TextView
+                            android:id="@+id/texte_enclenchement_hors_gel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Enclenchement"
+                            android:gravity="center"
+                            android:textColor="@color/couleurTexteGeneral"
+                            android:textSize="@dimen/texteGeneral"
+                            android:textStyle="bold" />
+
+                        <Spinner
+                            android:id="@+id/combobox_enclenchement_hors_gel"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:entries="@array/valeurs_enclenchement_hors_gel" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:layout_weight="1"
+                        android:orientation="vertical" >
+                        <TextView
+                            android:id="@+id/texte_arret_hors_gel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Arrêt"
+                            android:gravity="center"
+                            android:textColor="@color/couleurTexteGeneral"
+                            android:textSize="@dimen/texteGeneral"
+                            android:textStyle="bold" />
+
+                        <Spinner
+                            android:id="@+id/combobox_arret_hors_gel"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:layout_weight="1"
+                        android:orientation="vertical" >
+                        <TextView
+                            android:id="@+id/texte_frequence_hors_gel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Fréquence"
+                            android:gravity="center"
+                            android:textColor="@color/couleurTexteGeneral"
+                            android:textSize="@dimen/texteGeneral"
+                            android:textStyle="bold" />
+
+                        <Spinner
+                            android:id="@+id/combobox_frequence_hors_gel"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:entries="@array/valeurs_frequence_hors_gel" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/layout_widget_space"
+                android:paddingBottom="@dimen/layout_widget_space"
+                android:background="@color/transparentBackground"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="2dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:background="@color/couleurSousTitre"
+                        android:layerType="software" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:maxLines="1"
                         android:text="Consommations"
                         android:textStyle="bold"
                         android:gravity="center"

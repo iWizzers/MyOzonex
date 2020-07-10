@@ -72,4 +72,12 @@
             android:textColor="@color/couleurTexteGeneral"
             android:textSize="@dimen/texteGeneral" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/version_application"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Version : x.x.x"
+        android:textColor="@color/couleurTexteGeneral"
+        android:textSize="@dimen/texteGeneral" />
 </LinearLayout>

@@ -328,7 +328,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/layout_plages_fct"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/layout_widget_space"
@@ -353,7 +352,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:maxLines="1"
-                        android:text="Plages de fonctionnement"
+                        android:text="Alarmes"
                         android:textStyle="bold"
                         android:gravity="center"
                         android:textColor="@color/couleurSousTitre"
@@ -368,252 +367,16 @@
                         android:layerType="software" />
                 </LinearLayout>
 
-                <GridLayout
-                    android:id="@+id/widget_plage_1"
+                <TextView
+                    android:id="@+id/texte_alarmes"
                     android:layout_width="match_parent"
-                    android:layout_height="61dp"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space">
-                    <ImageButton
-                        android:id="@+id/bouton_supprimer_plage_1"
-                        android:layout_width="61dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_marginEnd="@dimen/layout_space"
-                        android:layout_row="0"
-                        android:layout_column="0"
-                        android:layout_rowSpan="2"
-                        android:background="@drawable/back_button_delete_range"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/poubelle" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_row="0"
-                        android:layout_column="1"
-                        android:layout_gravity="center"
-                        android:text="Plage 1"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/texte_plage_1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_row="1"
-                        android:layout_column="1"
-                        android:layout_gravity="center"
-                        android:text="05h10 - 11h05"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold" />
-
-                    <ImageButton
-                        android:id="@+id/bouton_modifier_plage_1"
-                        android:layout_width="61dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/layout_space"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_marginStart="@dimen/layout_space"
-                        android:layout_marginEnd="@dimen/layout_space"
-                        android:layout_row="0"
-                        android:layout_column="2"
-                        android:layout_rowSpan="2"
-                        android:background="@drawable/back_button_change_range"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/engrenages" />
-                </GridLayout>
-
-                <GridLayout
-                    android:id="@+id/widget_plage_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="61dp"
-                    android:layout_marginTop="@dimen/layout_space"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space">
-                    <ImageButton
-                        android:id="@+id/bouton_supprimer_plage_2"
-                        android:layout_width="61dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_marginEnd="@dimen/layout_space"
-                        android:layout_row="0"
-                        android:layout_column="0"
-                        android:layout_rowSpan="2"
-                        android:background="@drawable/back_button_delete_range"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/poubelle" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_row="0"
-                        android:layout_column="1"
-                        android:layout_gravity="center"
-                        android:text="Plage 2"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/texte_plage_2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_row="1"
-                        android:layout_column="1"
-                        android:layout_gravity="center"
-                        android:text="05h10 - 11h05"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold" />
-
-                    <ImageButton
-                        android:id="@+id/bouton_modifier_plage_2"
-                        android:layout_width="61dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/layout_space"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_marginStart="@dimen/layout_space"
-                        android:layout_marginEnd="@dimen/layout_space"
-                        android:layout_row="0"
-                        android:layout_column="2"
-                        android:layout_rowSpan="2"
-                        android:background="@drawable/back_button_change_range"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/engrenages" />
-                </GridLayout>
-
-                <GridLayout
-                    android:id="@+id/widget_plage_3"
-                    android:layout_width="match_parent"
-                    android:layout_height="61dp"
-                    android:layout_marginTop="@dimen/layout_space"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space">
-                    <ImageButton
-                        android:id="@+id/bouton_supprimer_plage_3"
-                        android:layout_width="61dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_marginEnd="@dimen/layout_space"
-                        android:layout_row="0"
-                        android:layout_column="0"
-                        android:layout_rowSpan="2"
-                        android:background="@drawable/back_button_delete_range"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/poubelle" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_row="0"
-                        android:layout_column="1"
-                        android:layout_gravity="center"
-                        android:text="Plage 3"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/texte_plage_3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_row="1"
-                        android:layout_column="1"
-                        android:layout_gravity="center"
-                        android:text="05h10 - 11h05"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold" />
-
-                    <ImageButton
-                        android:id="@+id/bouton_modifier_plage_3"
-                        android:layout_width="61dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/layout_space"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_marginStart="@dimen/layout_space"
-                        android:layout_marginEnd="@dimen/layout_space"
-                        android:layout_row="0"
-                        android:layout_column="2"
-                        android:layout_rowSpan="2"
-                        android:background="@drawable/back_button_change_range"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/engrenages" />
-                </GridLayout>
-
-                <GridLayout
-                    android:id="@+id/widget_plage_4"
-                    android:layout_width="match_parent"
-                    android:layout_height="61dp"
-                    android:layout_marginTop="@dimen/layout_space"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space">
-                    <ImageButton
-                        android:id="@+id/bouton_supprimer_plage_4"
-                        android:layout_width="61dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_marginEnd="@dimen/layout_space"
-                        android:layout_row="0"
-                        android:layout_column="0"
-                        android:layout_rowSpan="2"
-                        android:background="@drawable/back_button_delete_range"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/poubelle" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_row="0"
-                        android:layout_column="1"
-                        android:layout_gravity="center"
-                        android:text="Plage 4"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/texte_plage_4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_row="1"
-                        android:layout_column="1"
-                        android:layout_gravity="center"
-                        android:text="05h10 - 11h05"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold" />
-
-                    <ImageButton
-                        android:id="@+id/bouton_modifier_plage_4"
-                        android:layout_width="61dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/layout_space"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_marginStart="@dimen/layout_space"
-                        android:layout_marginEnd="@dimen/layout_space"
-                        android:layout_row="0"
-                        android:layout_column="2"
-                        android:layout_rowSpan="2"
-                        android:background="@drawable/back_button_change_range"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/engrenages" />
-                </GridLayout>
-
-                <Button
-                    android:id="@+id/bouton_ajouter_plage"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/layout_space"
                     android:layout_marginLeft="@dimen/layout_widget_space"
                     android:layout_marginRight="@dimen/layout_widget_space"
-                    android:text="Ajouter plage"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/texteGeneral" />
+                    android:text="Seuil min : X°C\nSeuil max : X°C"
+                    android:textColor="@color/couleurTexteGeneral"
+                    android:textSize="@dimen/texteGeneral"
+                    android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

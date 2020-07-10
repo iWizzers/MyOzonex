@@ -4,17 +4,12 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 
 public class Donnees {
     private static Donnees inst = new Donnees();
@@ -134,6 +129,11 @@ public class Donnees {
     private double consoHCOzone = 0;
     private double consoHCElectrolyseur = 0;
 
+    private boolean etatHorsGel = false;
+    private int enclenchementHorsGel = 0;
+    private int arretHorsGel = 0;
+    private int frequenceHorsGel = 0;
+
     private double volumePhMoins = 0;
     private double volumePhPlus = 0;
     private double volumeOrp = 0;
@@ -156,13 +156,13 @@ public class Donnees {
 
     private List<Object> listePlagePompeFiltration = new ArrayList<Object>();
     private List<Object> listePlageSurpresseur = new ArrayList<Object>();
-    private List<Object> listePlageChauffage = new ArrayList<Object>();
     private List<Object> listePlageHeuresCreuses = new ArrayList<Object>();
     private List<Object> listePlageEclairage = new ArrayList<Object>();
 
     private String dateDernierLavage = null;
     private double pressionApresLavage = 0;
     private double pressionProchainLavage = 0;
+    private int seuilRincage = 0;
     private double seuilSecuriteSurpression = 0;
     private double seuilHautPression = 0;
     private double seuilBasPression = 0;
@@ -271,7 +271,9 @@ public class Donnees {
     private int pageSource;
     private boolean etatLectureCapteurs = false;
 
+    private boolean firstRead = true;
     private List<Event> events = new ArrayList<Event>();
+    private List<Event> eventsTmp = new ArrayList<Event>();
 
     private boolean heuresCreusesAuto = false;
     private boolean donneesEquipementsAuto = false;
@@ -285,7 +287,17 @@ public class Donnees {
     private boolean asservissementOrpAuto = false;
     private boolean consigneOrpAuto = false;
 
-    static SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.instance());
+    private double alarmeSeuilBasChauffage = 0;
+    private double alarmeSeuilHautChauffage = 0;
+    private double alarmeSeuilBasPh = 0;
+    private double alarmeSeuilHautPh = 0;
+    private double alarmeSeuilBasAmpero = 0;
+    private double alarmeSeuilHautAmpero = 0;
+    private double alarmeSeuilBasOrp = 0;
+    private double alarmeSeuilHautOrp = 0;
+
+
+static SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.instance());
 
     public static String getPreferences(String key) {
         return preferences.getString(key, "");
@@ -437,12 +449,54 @@ public class Donnees {
         return events;
     }
 
+    public void configurationEvents() {
+        eventsTmp.clear();
+    }
+
     public void ajouterEvent(String texte, int couleur, String dateHeure) {
-        events.add(new Event(texte, couleur, dateHeure));
+        boolean exists = false;
+
+        String[] split = dateHeure.split("-");
+        String body = split.length == 2 ? "Le " + split[0] + " à " + split[1] : "Erreur";
+
+        Event message = new Event(texte, couleur, body);
+        eventsTmp.add(message);
+
+        for (int i = 0; i < events.size(); i++) {
+            if ((events.get(i).getTexte().equals(texte)) && (events.get(i).getCouleur() == couleur) && (events.get(i).getDateHeure().equals(body))) {
+                exists = true;
+                break;
+            }
+        }
+
+        if (!exists) {
+            if (firstRead) {
+                events.add(message);
+            } else {
+                events.add(0, message);
+                Notification.instance().ajouter(texte, body);
+            }
+        }
     }
 
     public void supprimerEvents() {
-        events.clear();
+        for (int i = 0; i < events.size(); i++) {
+            boolean exists = false;
+
+            for (int j = 0; j < eventsTmp.size(); j++) {
+                if ((events.get(i).getTexte().equals(eventsTmp.get(j).getTexte())) && (events.get(i).getCouleur() == eventsTmp.get(j).getCouleur()) && (events.get(i).getDateHeure().equals(eventsTmp.get(j).getDateHeure()))) {
+                    exists = true;
+                    break;
+                }
+            }
+
+            if (!exists) {
+                events.remove(i);
+                i--;
+            }
+        }
+
+        firstRead = false;
     }
 
     public int obtenirPageSource() {
@@ -552,103 +606,50 @@ public class Donnees {
     }
 
     public void definirModeFonctionnement(Equipement equipement, int mode) {
-        boolean sendNotification = false;
-        String titre = "";
-        String contenu = "Son état a changé (";
-
-        if (mode == AUTO_MARCHE) {
-            contenu += "Auto marche";
-        } else if (mode == AUTO_ARRET) {
-            contenu += "Auto arrêt";
-        } else if (mode == MARCHE) {
-            contenu += "Marche";
-        } else {
-            contenu += "Arrêt";
-        }
-
-        contenu += ')';
-
         if (equipement == Equipement.PompeFiltration) {
-            titre = "Pompe filtration";
-
             if (modePompeFiltration != mode) {
                 modePompeFiltration = mode;
-                sendNotification = true;
             }
         } else if (equipement == Equipement.Surpresseur) {
-            titre = "Surpresseur";
-
             if (modeSurpresseur != mode) {
                 modeSurpresseur = mode;
-                sendNotification = true;
             }
         } else if (equipement == Equipement.Chauffage) {
-            titre = "Chauffage";
-
             if (modeChauffage != mode) {
                 modeChauffage = mode;
-                sendNotification = true;
             }
         } else if (equipement == Equipement.LampesUV) {
-            titre = "Lampes UV";
-
             if (modeLampesUV != mode) {
                 modeLampesUV = mode;
-                sendNotification = true;
             }
         } else if (equipement == Equipement.Ozone) {
-            titre = "Ozone";
-
             if (modeOzone != mode) {
                 modeOzone = mode;
-                sendNotification = true;
             }
         } else if (equipement == Equipement.Electrolyseur) {
-            titre = "Electrolyseur";
-
             if (modeElectrolyseur != mode) {
                 modeElectrolyseur = mode;
-                sendNotification = true;
             }
         } else if (equipement == Equipement.PhMoins) {
-            titre = "Régulateur pH-";
-
             if (modePhMoins != mode) {
                 modePhMoins = mode;
-                sendNotification = true;
             }
         } else if (equipement == Equipement.PhPlus) {
-            titre = "Régulateur pH+";
-
             if (modePhPlus != mode) {
                 modePhPlus = mode;
-                sendNotification = true;
             }
         } else if (equipement == Equipement.Orp) {
-            titre = "Régulateur ORP";
-
             if (modeOrp != mode) {
                 modeOrp = mode;
-                sendNotification = true;
             }
         } else if (equipement == Equipement.Algicide) {
-            titre = "Algicide";
-
             if (modeAlgicide != mode) {
                 modeAlgicide = mode;
-                sendNotification = true;
             }
         } else if (equipement == Equipement.Eclairage) {
-            titre = "Eclairage";
-
             if (modeEclairage != mode) {
                 modeEclairage = mode;
-                sendNotification = true;
             }
-        }
-
-        if (sendNotification && activiteIHM) {
-            Notification.instance().ajouter(titre, contenu);
         }
     }
 
@@ -774,6 +775,38 @@ public class Donnees {
         } else if (equipement == Equipement.Electrolyseur) {
             consoHCElectrolyseur = valeur;
         }
+    }
+
+    public boolean obtenirEtatHorsGel() {
+        return etatHorsGel;
+    }
+
+    public void definirEtatHorsGel(boolean etat) {
+        etatHorsGel = etat;
+    }
+
+    public int obtenirEnclenchementHorsGel() {
+        return enclenchementHorsGel;
+    }
+
+    public void definirEnclenchementHorsGel(int index) {
+        enclenchementHorsGel = index;
+    }
+
+    public int obtenirArretHorsGel() {
+        return arretHorsGel;
+    }
+
+    public void definirArretHorsGel(int index) {
+        arretHorsGel = index;
+    }
+
+    public int obtenirFrequenceHorsGel() {
+        return frequenceHorsGel;
+    }
+
+    public void definirFrequenceHorsGel(int index) {
+        frequenceHorsGel = index;
     }
 
     public double obtenirConsoVolume(Equipement equipement) {
@@ -980,9 +1013,6 @@ public class Donnees {
             case Surpresseur:
                 etat = (boolean) listePlageSurpresseur.get(index);
                 break;
-            case Chauffage:
-                etat = (boolean) listePlageChauffage.get(index);
-                break;
             case HeuresCreuses:
                 etat = (boolean) listePlageHeuresCreuses.get(index);
                 break;
@@ -1007,9 +1037,6 @@ public class Donnees {
                 break;
             case Surpresseur:
                 plage = (String) listePlageSurpresseur.get(index + 1);
-                break;
-            case Chauffage:
-                plage = (String) listePlageChauffage.get(index + 1);
                 break;
             case HeuresCreuses:
                 plage = (String) listePlageHeuresCreuses.get(index + 1);
@@ -1053,15 +1080,6 @@ public class Donnees {
                 } else {
                     listePlageSurpresseur.set(index, etat);
                     listePlageSurpresseur.set(index + 1, plage);
-                }
-                break;
-            case Chauffage:
-                if (index >= listePlageChauffage.size()) {
-                    listePlageChauffage.add(etat);
-                    listePlageChauffage.add(plage);
-                } else {
-                    listePlageChauffage.set(index, etat);
-                    listePlageChauffage.set(index + 1, plage);
                 }
                 break;
             case HeuresCreuses:
@@ -1109,6 +1127,14 @@ public class Donnees {
 
     public void definirPressionProchainLavage(double valeur) {
         pressionProchainLavage = valeur;
+    }
+
+    public int obtenirSeuilRincage() {
+        return seuilRincage;
+    }
+
+    public void definirSeuilRincage(int valeur) {
+        seuilRincage = valeur;
     }
 
     public double obtenirSeuilSecuriteSurpression() {
@@ -1863,6 +1889,70 @@ public class Donnees {
 
     public void definirConsigneOrpAuto(boolean actif) {
         consigneOrpAuto = actif;
+    }
+
+    public double obtenirAlarmeSeuilBas(Equipement equipement, Capteur capteur) {
+        double ret = 0;
+
+        if (equipement == Equipement.Chauffage) {
+            ret = alarmeSeuilBasChauffage;
+        } else if (equipement == Equipement.PhGlobal) {
+            ret = alarmeSeuilBasPh;
+        } else if (equipement == Equipement.Orp) {
+            if (capteur == Capteur.Ampero) {
+                ret = alarmeSeuilBasAmpero;
+            } else {
+                ret = alarmeSeuilBasOrp;
+            }
+        }
+
+        return ret;
+    }
+
+    public void definirAlarmeSeuilBas(Equipement equipement, double valeur, Capteur capteur) {
+        if (equipement == Equipement.Chauffage) {
+            alarmeSeuilBasChauffage = valeur;
+        } else if (equipement == Equipement.PhGlobal) {
+            alarmeSeuilBasPh = valeur;
+        } else if (equipement == Equipement.Orp) {
+            if (capteur == Capteur.Ampero) {
+                alarmeSeuilBasAmpero = valeur;
+            } else {
+                alarmeSeuilBasOrp = valeur;
+            }
+        }
+    }
+
+    public double obtenirAlarmeSeuilHaut(Equipement equipement, Capteur capteur) {
+        double ret = 0;
+
+        if (equipement == Equipement.Chauffage) {
+            ret = alarmeSeuilHautChauffage;
+        } else if (equipement == Equipement.PhGlobal) {
+            ret = alarmeSeuilHautPh;
+        } else if (equipement == Equipement.Orp) {
+            if (capteur == Capteur.Ampero) {
+                ret = alarmeSeuilHautAmpero;
+            } else {
+                ret = alarmeSeuilHautOrp;
+            }
+        }
+
+        return ret;
+    }
+
+    public void definirAlarmeSeuilHaut(Equipement equipement, double valeur, Capteur capteur) {
+        if (equipement == Equipement.Chauffage) {
+            alarmeSeuilHautChauffage = valeur;
+        } else if (equipement == Equipement.PhGlobal) {
+            alarmeSeuilHautPh = valeur;
+        } else if (equipement == Equipement.Orp) {
+            if (capteur == Capteur.Ampero) {
+                alarmeSeuilHautAmpero = valeur;
+            } else {
+                alarmeSeuilHautOrp = valeur;
+            }
+        }
     }
 
     private String formatValeur(double valeur) {

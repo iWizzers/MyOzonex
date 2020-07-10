@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="valeurs_enclenchement_hors_gel">
+        <item>0 °C</item>
+        <item>1 °C</item>
+        <item>2 °C</item>
+        <item>3 °C</item>
+        <item>4 °C</item>
+        <item>5 °C</item>
+    </string-array>
+
+    <string-array name="valeurs_frequence_hors_gel">
+        <item>2 h</item>
+        <item>4 h</item>
+        <item>6 h</item>
+        <item>8 h</item>
+        <item>10 h</item>
+        <item>12 h</item>
+    </string-array>
+</resources>

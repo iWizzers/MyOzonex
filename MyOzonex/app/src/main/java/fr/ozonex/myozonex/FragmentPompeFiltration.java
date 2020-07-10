@@ -6,11 +6,15 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -19,13 +23,19 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.sql.Time;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
-public class FragmentPompeFiltration extends Fragment implements View.OnClickListener {
+public class FragmentPompeFiltration extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
     View view = null;
+
+    ArrayAdapter<String> listeFrequenceHorsGelAdapter;
+    List<String> listeFrequenceHorsGel = new ArrayList<>();
 
     ImageButton boutonModifierPlage;
     int indexPlage;
@@ -35,6 +45,13 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
     String heureFinPlage;
 
     // Tout orientations
+    CheckBox checkboxHorsGel;
+    TextView texteEnclenchementHorsGel;
+    Spinner comboboxEnclenchementHorsGel;
+    TextView texteArretHorsGel;
+    Spinner comboboxArretHorsGel;
+    TextView texteFrequenceHorsGel;
+    Spinner comboboxFrequenceHorsGel;
     TextView texteConso;
     LinearLayout layoutPlagesFct;
     GridLayout widgetPlage1;
@@ -97,8 +114,6 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
 
             globalLayoutPaysage = view.findViewById(R.id.horizontal_scroll);
             boutonRetour = (ImageButton) view.findViewById(R.id.bouton_retour);
-            texteDatenettoyage = (TextView) view.findViewById(R.id.texte_date_nettoyage);
-            texteTotalHeuresFiltration = (TextView) view.findViewById(R.id.texte_total_heures_filtration);
             bouton3Etats = (ImageView) view.findViewById(R.id.bouton_3_etats);
             boutonAuto = (Button) view.findViewById(R.id.bouton_auto);
             boutonArret = (Button) view.findViewById(R.id.bouton_arret);
@@ -113,6 +128,13 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
             boutonMarche.setOnClickListener(this);
         }
 
+        checkboxHorsGel = (CheckBox) view.findViewById(R.id.checkbox_hors_gel);
+        texteEnclenchementHorsGel = (TextView) view.findViewById(R.id.texte_enclenchement_hors_gel);
+        comboboxEnclenchementHorsGel = (Spinner) view.findViewById(R.id.combobox_enclenchement_hors_gel);
+        texteArretHorsGel = (TextView) view.findViewById(R.id.texte_arret_hors_gel);
+        comboboxArretHorsGel = (Spinner) view.findViewById(R.id.combobox_arret_hors_gel);
+        texteFrequenceHorsGel = (TextView) view.findViewById(R.id.texte_frequence_hors_gel);
+        comboboxFrequenceHorsGel = (Spinner) view.findViewById(R.id.combobox_frequence_hors_gel);
         texteConso = (TextView) view.findViewById(R.id.texte_donnees_conso);
         layoutPlagesFct = view.findViewById(R.id.layout_plages_fct);
         widgetPlage1 = (GridLayout) view.findViewById(R.id.widget_plage_1);
@@ -133,6 +155,20 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
         boutonModifierPlage4 = (ImageButton) view.findViewById(R.id.bouton_modifier_plage_4);
         textePlage4 = (TextView) view.findViewById(R.id.texte_plage_4);
         boutonAjouterPlage = view.findViewById(R.id.bouton_ajouter_plage);
+
+        if (listeFrequenceHorsGel.size() == 0) {
+            for (int i = 0; i < 3; i++) {
+                listeFrequenceHorsGel.add(i, String.valueOf(i + 1));
+            }
+        }
+        listeFrequenceHorsGelAdapter = new ArrayAdapter<String>(MainActivity.instance(), android.R.layout.simple_spinner_item, listeFrequenceHorsGel);
+        listeFrequenceHorsGelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        comboboxArretHorsGel.setAdapter(listeFrequenceHorsGelAdapter);
+
+        checkboxHorsGel.setOnClickListener(this);
+        comboboxEnclenchementHorsGel.setOnItemSelectedListener(this);
+        comboboxArretHorsGel.setOnItemSelectedListener(this);
+        comboboxFrequenceHorsGel.setOnItemSelectedListener(this);
 
         boutonSupprimerPlage1.setOnClickListener(this);
         boutonModifierPlage1.setOnClickListener(this);
@@ -165,6 +201,10 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
                 boutonMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
             }
 
+            checkboxHorsGel.setClickable(Donnees.instance().obtenirActiviteIHM());
+            comboboxEnclenchementHorsGel.setEnabled(Donnees.instance().obtenirActiviteIHM());
+            comboboxArretHorsGel.setEnabled(Donnees.instance().obtenirActiviteIHM());
+            comboboxFrequenceHorsGel.setEnabled(Donnees.instance().obtenirActiviteIHM());
             boutonSupprimerPlage1.setClickable(Donnees.instance().obtenirActiviteIHM());
             boutonModifierPlage1.setClickable(Donnees.instance().obtenirActiviteIHM());
             boutonSupprimerPlage2.setClickable(Donnees.instance().obtenirActiviteIHM());
@@ -182,6 +222,8 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
                     Donnees.instance().obtenirConsoHC(Donnees.Equipement.PompeFiltration));
 
             plageModifie();
+
+            updateHorsGel();
         }
     }
 
@@ -194,6 +236,16 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
                 } else {
                     MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_menu_layout));
                 }
+                break;
+            case R.id.checkbox_hors_gel:
+                Donnees.instance().definirEtatHorsGel(checkboxHorsGel.isChecked());
+                MainActivity.instance().sendData(false,
+                        "",
+                        "",
+                        HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
+                        HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PagePompeFiltration),
+                        "etat_hors_gel=" + String.valueOf(Donnees.instance().obtenirEtatHorsGel() ? 1 : 0));
+                updateHorsGel();
                 break;
             case R.id.radio_bouton_auto:
             case R.id.radio_bouton_arret:
@@ -538,5 +590,66 @@ public class FragmentPompeFiltration extends Fragment implements View.OnClickLis
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             renduPlage.invalidate();
         }
+    }
+
+    private void updateHorsGel() {
+        checkboxHorsGel.setChecked(Donnees.instance().obtenirEtatHorsGel());
+
+        texteEnclenchementHorsGel.setVisibility(Donnees.instance().obtenirEtatHorsGel() ? View.VISIBLE : View.INVISIBLE);
+        comboboxEnclenchementHorsGel.setVisibility(Donnees.instance().obtenirEtatHorsGel() ? View.VISIBLE : View.INVISIBLE);
+        comboboxEnclenchementHorsGel.setSelection(Donnees.instance().obtenirEnclenchementHorsGel());
+
+        texteArretHorsGel.setVisibility(Donnees.instance().obtenirEtatHorsGel() ? View.VISIBLE : View.INVISIBLE);
+        comboboxArretHorsGel.setVisibility(Donnees.instance().obtenirEtatHorsGel() ? View.VISIBLE : View.INVISIBLE);
+        for (int i = 0; i < 3; i++) {
+            listeFrequenceHorsGel.set(i, String.valueOf(Integer.parseInt(comboboxEnclenchementHorsGel.getSelectedItem().toString().split(" ")[0]) + i + 1) + " °C");
+        }
+        listeFrequenceHorsGelAdapter.notifyDataSetChanged();
+        comboboxArretHorsGel.setSelection(Donnees.instance().obtenirArretHorsGel());
+
+        texteFrequenceHorsGel.setVisibility(Donnees.instance().obtenirEtatHorsGel() ? View.VISIBLE : View.INVISIBLE);
+        comboboxFrequenceHorsGel.setVisibility(Donnees.instance().obtenirEtatHorsGel() ? View.VISIBLE : View.INVISIBLE);
+        comboboxFrequenceHorsGel.setSelection(Donnees.instance().obtenirFrequenceHorsGel());
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        switch (adapterView.getId()) {
+            case R.id.combobox_enclenchement_hors_gel:
+                Donnees.instance().definirEnclenchementHorsGel(i);
+                MainActivity.instance().sendData(false,
+                        "",
+                        "",
+                        HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
+                        HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PagePompeFiltration),
+                        "enclenchement_hors_gel=" + String.valueOf(i));
+                updateHorsGel();
+                break;
+            case R.id.combobox_arret_hors_gel:
+                Donnees.instance().definirArretHorsGel(i);
+                MainActivity.instance().sendData(false,
+                        "",
+                        "",
+                        HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
+                        HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PagePompeFiltration),
+                        "arret_hors_gel=" + String.valueOf(i));
+                break;
+            case R.id.combobox_frequence_hors_gel:
+                Donnees.instance().definirFrequenceHorsGel(i);
+                MainActivity.instance().sendData(false,
+                        "",
+                        "",
+                        HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
+                        HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PagePompeFiltration),
+                        "frequence_hors_gel=" + String.valueOf(i));
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 }
