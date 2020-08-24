@@ -239,7 +239,7 @@ public class FragmentDonnees extends Fragment implements View.OnClickListener {
                 texteEtatChlore.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) ? View.VISIBLE : View.GONE);
                 updateEtat(Donnees.Equipement.Orp, ledEtatChlore, texteEtatChlore, "Chlore");
                 texteLibreActifAmpero.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) ? View.VISIBLE : View.GONE);
-                texteLibreActifAmpero.setText("Chlore libre actif : " + Donnees.instance().obtenirChloreLibreActif() + " ppm");
+                texteLibreActifAmpero.setText("Chlore actif : " + Donnees.instance().obtenirChloreLibreActif() + " ppm");
                 texteDonneesAmpero.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) ? View.VISIBLE : View.GONE);
                 texteDonneesAmpero.setText("Point de consigne : " + Donnees.instance().obtenirConsigneAmpero() + " ppm\nHystérésis : ↑" + (Donnees.instance().obtenirConsigneAmpero() - Donnees.instance().obtenirHysteresisAmpero()));
                 ligneSepChlore.setVisibility(Donnees.instance().presence(Donnees.Capteur.Redox) && Donnees.instance().presence(Donnees.Capteur.Ampero) ? View.VISIBLE : View.GONE);
