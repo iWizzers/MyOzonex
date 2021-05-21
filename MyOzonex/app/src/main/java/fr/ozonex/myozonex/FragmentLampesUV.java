@@ -1,241 +1,115 @@
 package fr.ozonex.myozonex;
 
 import android.app.Fragment;
-import android.content.res.Configuration;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsoluteLayout;
-import android.widget.Button;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class FragmentLampesUV extends Fragment implements View.OnClickListener {
     View view = null;
 
-    // Tout orientations
-    TextView texteConso;
+    LinearLayout viewBoutonMarche;
+    ImageView imageBoutonMarche;
+    TextView labelBoutonMarche;
+    LinearLayout viewBoutonArret;
+    ImageView imageBoutonArret;
+    TextView labelBoutonArret;
+    LinearLayout viewBoutonAuto;
+    ImageView imageBoutonAuto;
+    TextView labelBoutonAuto;
 
-    // Orientation portrait
-    LinearLayout globalLayoutPortrait;
-    RadioGroup rgBoutonsMode;
-    RadioButton rbAuto;
-    RadioButton rbArret;
-    RadioButton rbMarche;
-
-    // Orientation paysage
-    HorizontalScrollView globalLayoutPaysage;
-    ImageButton boutonRetour;
-    ImageView bouton3Etats;
-    Button boutonAuto;
-    Button boutonArret;
-    Button boutonMarche;
+    LinearLayout viewConsommations;
+    TextView labelConsommations;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.lampes_uv_layout, container, false);
 
+        viewBoutonMarche = view.findViewById(R.id.layout_mode_marche);
+        imageBoutonMarche = view.findViewById(R.id.image_mode_marche);
+        labelBoutonMarche = view.findViewById(R.id.texte_mode_marche);
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            globalLayoutPortrait = view.findViewById(R.id.global_layout);
-            rgBoutonsMode = (RadioGroup) view.findViewById(R.id.groupe_boutons_mode);
-            rbAuto = (RadioButton) view.findViewById(R.id.radio_bouton_auto);
-            rbArret = (RadioButton) view.findViewById(R.id.radio_bouton_arret);
-            rbMarche = (RadioButton) view.findViewById(R.id.radio_bouton_marche);
+        viewBoutonArret = view.findViewById(R.id.layout_mode_arret);
+        imageBoutonArret = view.findViewById(R.id.image_mode_arret);
+        labelBoutonArret = view.findViewById(R.id.texte_mode_arret);
 
-            rbAuto.setOnClickListener(this);
-            rbArret.setOnClickListener(this);
-            rbMarche.setOnClickListener(this);
-        } else {
-            new ScaleListener((HorizontalScrollView) view.findViewById(R.id.horizontal_scroll),
-                    (ScrollView) view.findViewById(R.id.vertical_scroll),
-                    (AbsoluteLayout) view.findViewById(R.id.layout));
+        viewBoutonAuto = view.findViewById(R.id.layout_mode_auto);
+        imageBoutonAuto = view.findViewById(R.id.image_mode_auto);
+        labelBoutonAuto = view.findViewById(R.id.texte_mode_auto);
 
-            globalLayoutPaysage = view.findViewById(R.id.horizontal_scroll);
-            boutonRetour = (ImageButton) view.findViewById(R.id.bouton_retour);
-            bouton3Etats = (ImageView) view.findViewById(R.id.bouton_3_etats);
-            boutonAuto = (Button) view.findViewById(R.id.bouton_auto);
-            boutonArret = (Button) view.findViewById(R.id.bouton_arret);
-            boutonMarche = (Button) view.findViewById(R.id.bouton_marche);
+        viewConsommations = view.findViewById(R.id.layout_consommations);
+        labelConsommations = view.findViewById(R.id.texte_consommations);
 
-            boutonRetour.setOnClickListener(this);
-            boutonAuto.setOnClickListener(this);
-            boutonArret.setOnClickListener(this);
-            boutonMarche.setOnClickListener(this);
-        }
-
-        texteConso = (TextView) view.findViewById(R.id.texte_donnees_conso);
-
+        viewBoutonMarche.setOnClickListener(this);
+        viewBoutonArret.setOnClickListener(this);
+        viewBoutonAuto.setOnClickListener(this);
 
         update();
-
 
         return view;
     }
 
     public void update() {
         if ((view != null) && isAdded()) {
-            if (!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.LampesUV)) {
-                MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_synoptique_layout));
-            }
+            modeAEteModifie();
 
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
-                rbAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
-                rbArret.setClickable(Donnees.instance().obtenirActiviteIHM());
-                rbMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
-            } else {
-                globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());
-                boutonAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
-                boutonArret.setClickable(Donnees.instance().obtenirActiviteIHM());
-                boutonMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
-            }
-
-            modeAEteModifie(Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.LampesUV));
-
-            consoAEteModifie(Donnees.instance().obtenirDateDebutConso(Donnees.Equipement.LampesUV),
-                    Donnees.instance().obtenirConsoHP(Donnees.Equipement.LampesUV),
-                    Donnees.instance().obtenirConsoHC(Donnees.Equipement.LampesUV));
+            viewConsommations.setVisibility(Donnees.instance().obtenirTypeAppareil() == Donnees.MYOZONEX ? View.VISIBLE : View.GONE);
+            labelConsommations.setText("Date : " + Donnees.instance().obtenirDateConso(Donnees.Equipement.LampesUV) + "\nHeures pleines : " + Donnees.instance().obtenirConsoHP(Donnees.Equipement.LampesUV) + " kWh \nHeures creuses : " + Donnees.instance().obtenirConsoHC(Donnees.Equipement.LampesUV) + " kWh");
         }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.bouton_retour:
-                if (Donnees.instance().obtenirPageSource() == Donnees.PAGE_SYNOPTIQUE) {
-                    MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_synoptique_layout));
-                } else {
-                    MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_menu_layout));
-                }
-                break;
-            case R.id.radio_bouton_auto:
-            case R.id.radio_bouton_arret:
-            case R.id.radio_bouton_marche:
-                modifierMode((RadioButton) view.findViewById(rgBoutonsMode.getCheckedRadioButtonId()));
-                break;
-            case R.id.bouton_auto:
-            case R.id.bouton_arret:
-            case R.id.bouton_marche:
-                modifierMode((Button) v.findViewById(v.getId()));
+            case R.id.layout_mode_marche:
+            case R.id.layout_mode_arret:
+            case R.id.layout_mode_auto:
+                modifierMode((LinearLayout) v.findViewById(v.getId()));
                 break;
             default:
                 break;
         }
     }
 
-    private void modifierMode(RadioButton rb) {
-        int etat = Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.LampesUV);
-        String data = "etat=";
+    private void modifierMode(LinearLayout sender) {
+        if (Donnees.instance().obtenirActiviteIHM()) {
+            int etat = Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.LampesUV);
 
-        if (rb == rbAuto) {
-            etat = (etat == Donnees.AUTO_MARCHE) ? Donnees.AUTO_MARCHE : Donnees.AUTO_ARRET;
-        } else if (rb == rbMarche) {
-            etat = Donnees.MARCHE;
-        } else {
-            etat = Donnees.ARRET;
-        }
-
-        Donnees.instance().definirModeFonctionnement(Donnees.Equipement.LampesUV, etat);
-        modeAEteModifie(etat);
-
-        MainActivity.instance().sendData(false,
-                "",
-                "",
-                HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageLampesUV),
-                data + String.valueOf(etat));
-    }
-
-    private void modifierMode(Button bouton) {
-        int etat = Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.LampesUV);
-        String data = "etat=";
-
-        if (bouton == boutonAuto) {
-            etat = (etat == Donnees.AUTO_MARCHE) ? Donnees.AUTO_MARCHE : Donnees.AUTO_ARRET;
-        } else if (bouton == boutonMarche) {
-            etat = Donnees.MARCHE;
-        } else {
-            etat = Donnees.ARRET;
-        }
-
-        Donnees.instance().definirModeFonctionnement(Donnees.Equipement.LampesUV, etat);
-        modeAEteModifie(etat);
-
-        MainActivity.instance().sendData(false,
-                "",
-                "",
-                HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageLampesUV),
-                data + String.valueOf(etat));
-    }
-
-    private void modeAEteModifie(int mode) {
-        String autoText;
-        LinearLayout.LayoutParams paramEtatOk = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                0,
-                1.0f
-        );
-        LinearLayout.LayoutParams paramEtatNok = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                0,
-                2.0f
-        );
-
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            autoText = "Auto (" + ((mode == Donnees.AUTO_MARCHE) ? "marche" : "arrêt") + ")";
-
-            if (mode > Donnees.AUTO) {
-                rbAuto.setChecked(true);
-            } else if (mode == Donnees.MARCHE) {
-                rbMarche.setChecked(true);
+            if (sender == viewBoutonAuto) {
+                etat = (etat == Donnees.AUTO_MARCHE) ? Donnees.AUTO_MARCHE : Donnees.AUTO_ARRET;
+            } else if (sender == viewBoutonMarche) {
+                etat = Donnees.MARCHE;
             } else {
-                rbArret.setChecked(true);
+                etat = Donnees.ARRET;
             }
 
-            rbAuto.setText(autoText);
-        } else {
-            if (mode > Donnees.AUTO) {
-                bouton3Etats.setImageResource(R.drawable.bouton_haut_vertical);
-                boutonAuto.setTextColor(getResources().getColor(R.color.bouton3EtatSelectionne));
-                boutonArret.setTextColor(getResources().getColor(R.color.bouton3EtatNonSelectionne));
-                boutonMarche.setTextColor(getResources().getColor(R.color.bouton3EtatNonSelectionne));
-                boutonAuto.setLayoutParams(paramEtatOk);
-                boutonArret.setLayoutParams(paramEtatNok);
-                boutonMarche.setLayoutParams(paramEtatNok);
-            } else if (mode == Donnees.MARCHE) {
-                bouton3Etats.setImageResource(R.drawable.bouton_bas_vertical);
-                boutonAuto.setTextColor(getResources().getColor(R.color.bouton3EtatNonSelectionne));
-                boutonArret.setTextColor(getResources().getColor(R.color.bouton3EtatNonSelectionne));
-                boutonMarche.setTextColor(getResources().getColor(R.color.bouton3EtatSelectionne));
-                boutonAuto.setLayoutParams(paramEtatNok);
-                boutonArret.setLayoutParams(paramEtatNok);
-                boutonMarche.setLayoutParams(paramEtatOk);
-            } else {
-                bouton3Etats.setImageResource(R.drawable.bouton_off_vertical);
-                boutonAuto.setTextColor(getResources().getColor(R.color.bouton3EtatNonSelectionne));
-                boutonArret.setTextColor(getResources().getColor(R.color.bouton3EtatSelectionne));
-                boutonMarche.setTextColor(getResources().getColor(R.color.bouton3EtatNonSelectionne));
-                boutonAuto.setLayoutParams(paramEtatNok);
-                boutonArret.setLayoutParams(paramEtatOk);
-                boutonMarche.setLayoutParams(paramEtatNok);
-            }
+            Donnees.instance().definirEtatEquipement(Donnees.Equipement.LampesUV, etat);
+            modeAEteModifie();
+            Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageLampesUV, "etat=" + etat, false);
         }
     }
 
-    private void consoAEteModifie(String date, double consoHP, double consoHC) {
-        texteConso.setText("Depuis : " + date +
-                "\nHeures pleines : " + consoHP + " kWh" +
-                "\nHeures creuses : " + consoHC + " kWh");
+    private void modeAEteModifie() {
+        int mode = Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.LampesUV);
+
+        viewBoutonMarche.setBackgroundTintList(ColorStateList.valueOf(mode == Donnees.MARCHE ? Color.rgb(255, 83, 13) : Color.rgb(245, 245, 220)));
+        labelBoutonMarche.setTextColor(mode == Donnees.MARCHE ? Color.rgb(40, 40, 40) : Color.rgb(128, 128, 128));
+        imageBoutonMarche.setColorFilter(mode == Donnees.MARCHE ? Color.rgb(40, 40, 40) : Color.rgb(128, 128, 128));
+
+        viewBoutonArret.setBackgroundColor(mode == Donnees.ARRET ? Color.rgb(255, 83, 13) : Color.rgb(245, 245, 220));
+        labelBoutonArret.setTextColor(mode == Donnees.ARRET ? Color.rgb(40, 40, 40) : Color.rgb(128, 128, 128));
+        imageBoutonArret.setColorFilter(mode == Donnees.ARRET ? Color.rgb(40, 40, 40) : Color.rgb(128, 128, 128));
+
+        viewBoutonAuto.setBackgroundTintList(ColorStateList.valueOf(mode > Donnees.AUTO ? Color.rgb(0, 174, 239) : Color.rgb(245, 245, 220)));
+        labelBoutonAuto.setTextColor(mode > Donnees.AUTO ? Color.rgb(40, 40, 40) : Color.rgb(128, 128, 128));
+        imageBoutonAuto.setColorFilter(mode > Donnees.AUTO ? Color.rgb(40, 40, 40) : Color.rgb(128, 128, 128));
     }
 }

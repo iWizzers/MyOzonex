@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/global_layout"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fond_portrait_2">
+    android:background="@color/colorPrimaryDark">
     <ScrollView
+        android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="false">
@@ -15,428 +15,690 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/layout_widget_space"
             android:paddingBottom="@dimen/layout_widget_space"
+            android:paddingLeft="@dimen/layout_widget_space"
+            android:paddingRight="@dimen/layout_widget_space"
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/layout_widget_space"
-                android:background="@color/transparentBackground"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="MODE DE FONCTIONNEMENT"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/layout_widget_space"
-                    android:orientation="horizontal" >
-                    <View
-                        android:layout_width="50dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:layout_gravity="center"
-                        android:background="@color/couleurSousTitre"
-                        android:layerType="software" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:maxLines="1"
-                        android:text="Mode de fonctionnement"
-                        android:textStyle="bold"
-                        android:gravity="center"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre" />
-
-                    <View
-                        android:layout_width="50dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:layout_gravity="center"
-                        android:background="@color/couleurSousTitre"
-                        android:layerType="software" />
-                </LinearLayout>
-
-                <RadioGroup
-                    android:id="@+id/groupe_boutons_mode"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space"
+                    android:gravity="center"
                     android:orientation="horizontal">
-                    <RadioButton
-                        android:id="@+id/radio_bouton_auto"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/layout_mode_marche"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:paddingTop="@dimen/layout_space"
+                        android:paddingBottom="@dimen/layout_space"
+                        android:paddingLeft="@dimen/layout_space"
+                        android:paddingRight="@dimen/layout_space"
                         android:layout_weight="1"
-                        android:text="Auto"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold"
-                        android:buttonTint="#00FFFF" />
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:background="@drawable/rounded_view_marche"
+                        android:orientation="vertical">
 
-                    <RadioButton
-                        android:id="@+id/radio_bouton_arret"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Arrêt"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold"
-                        android:buttonTint="#00FFFF" />
+                        <ImageView
+                            android:id="@+id/image_mode_marche"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:tint="@color/colorPrimaryDark"
+                            app:srcCompat="@android:drawable/ic_lock_power_off" />
 
-                    <RadioButton
-                        android:id="@+id/radio_bouton_marche"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        <TextView
+                            android:id="@+id/texte_mode_marche"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="MARCHE"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="@dimen/texteGeneral" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_mode_arret"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:paddingTop="@dimen/layout_space"
+                        android:paddingBottom="@dimen/layout_space"
+                        android:paddingLeft="@dimen/layout_space"
+                        android:paddingRight="@dimen/layout_space"
                         android:layout_weight="1"
-                        android:text="Marche"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold"
-                        android:buttonTint="#00FFFF" />
-                </RadioGroup>
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:background="@color/colorAccent1"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/image_mode_arret"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:tint="@color/colorPrimaryDark"
+                            app:srcCompat="@android:drawable/ic_lock_power_off" />
+
+                        <TextView
+                            android:id="@+id/texte_mode_arret"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ARRÊT"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="@dimen/texteGeneral" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_mode_auto"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:paddingTop="@dimen/layout_space"
+                        android:paddingBottom="@dimen/layout_space"
+                        android:paddingLeft="@dimen/layout_space"
+                        android:paddingRight="@dimen/layout_space"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:background="@drawable/rounded_view_auto"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/image_mode_auto"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:tint="@color/colorPrimaryDark"
+                            app:srcCompat="@android:drawable/stat_notify_sync" />
+
+                        <TextView
+                            android:id="@+id/texte_mode_auto"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="AUTO"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="@dimen/texteGeneral" />
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_consommations"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/layout_widget_space"
-                android:paddingBottom="@dimen/layout_widget_space"
-                android:background="@color/transparentBackground"
-                android:orientation="vertical">
-                <LinearLayout
+                android:orientation="vertical" >
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/layout_widget_space"
-                    android:orientation="horizontal" >
-                    <View
-                        android:layout_width="50dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:layout_gravity="center"
-                        android:background="@color/couleurSousTitre"
-                        android:layerType="software" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:maxLines="1"
-                        android:text="Consommations"
-                        android:textStyle="bold"
-                        android:gravity="center"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre" />
-
-                    <View
-                        android:layout_width="50dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:layout_gravity="center"
-                        android:background="@color/couleurSousTitre"
-                        android:layerType="software" />
-                </LinearLayout>
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:background="@color/colorPrimary" />
 
                 <TextView
-                    android:id="@+id/texte_donnees_conso"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space"
-                    android:text="Depuis : 26/05/2014\nHeures pleines : X kWh\nHeures creuses : X kWh"
-                    android:textColor="@color/couleurTexteGeneral"
-                    android:textSize="@dimen/texteGeneral"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_plages_fct"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/layout_widget_space"
-                android:paddingBottom="@dimen/layout_widget_space"
-                android:background="@color/transparentBackground"
-                android:orientation="vertical">
-                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/layout_widget_space"
-                    android:orientation="horizontal" >
-                    <View
-                        android:layout_width="50dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:layout_gravity="center"
-                        android:background="@color/couleurSousTitre"
-                        android:layerType="software" />
+                    android:text="CONSOMMATIONS"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/texte_consommations"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:text="Date : 22/12/2020\nHeures pleines : 45 kWh\nHeures creuses : 0 kWh"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_plages_horaires"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_widget_space"
+                android:orientation="vertical" >
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:background="@color/colorPrimary" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:text="PLAGES HORAIRES"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+
+                <LinearLayout
+                    android:id="@+id/layout_plage_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="vertical" >
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:maxLines="1"
-                        android:text="Plages de fonctionnement"
-                        android:textStyle="bold"
-                        android:gravity="center"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre" />
+                        android:orientation="horizontal" >
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:text="Plage 1"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/texteGeneral" />
 
-                    <View
-                        android:layout_width="50dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:layout_gravity="center"
-                        android:background="@color/couleurSousTitre"
-                        android:layerType="software" />
+                        <ImageButton
+                            android:id="@+id/bouton_supprimer_plage_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/layout_space"
+                            android:layout_weight="0"
+                            android:background="@android:color/transparent"
+                            android:tint="@color/colorAccent2"
+                            app:srcCompat="@android:drawable/ic_menu_delete" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/layout_space"
+                        android:background="@color/colorPrimary"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="@dimen/layout_container_space"
+                            android:paddingBottom="@dimen/layout_container_space"
+                            android:paddingLeft="@dimen/layout_container_space"
+                            android:paddingRight="@dimen/layout_container_space"
+                            android:background="@color/colorPrimary"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Heure de début"
+                                android:textColor="@color/colorAccent2"
+                                android:textSize="@dimen/texteGeneral" />
+
+                            <TextView
+                                android:id="@+id/texte_heure_debut_plage_1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/layout_space"
+                                android:layout_weight="0"
+                                android:text="09:00"
+                                android:textColor="@color/colorAccent2"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_gravity="center"
+                            android:background="@color/colorPrimaryDark" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="@dimen/layout_container_space"
+                            android:paddingBottom="@dimen/layout_container_space"
+                            android:paddingLeft="@dimen/layout_container_space"
+                            android:paddingRight="@dimen/layout_container_space"
+                            android:background="@color/colorPrimary"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Heure de fin"
+                                android:textColor="@color/colorAccent2"
+                                android:textSize="@dimen/texteGeneral" />
+
+                            <TextView
+                                android:id="@+id/texte_heure_fin_plage_1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/layout_space"
+                                android:layout_weight="0"
+                                android:text="09:00"
+                                android:textColor="@color/colorAccent2"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
 
-                <GridLayout
-                    android:id="@+id/widget_plage_1"
+                <LinearLayout
+                    android:id="@+id/layout_plage_2"
                     android:layout_width="match_parent"
-                    android:layout_height="61dp"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space">
-                    <ImageButton
-                        android:id="@+id/bouton_supprimer_plage_1"
-                        android:layout_width="61dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_marginEnd="@dimen/layout_space"
-                        android:layout_row="0"
-                        android:layout_column="0"
-                        android:layout_rowSpan="2"
-                        android:background="@drawable/back_button_delete_range"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/poubelle" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="vertical" >
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_row="0"
-                        android:layout_column="1"
-                        android:layout_gravity="center"
-                        android:text="Plage 1"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre"
-                        android:textStyle="bold" />
+                        android:orientation="horizontal" >
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:text="Plage 2"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/texteGeneral" />
 
-                    <TextView
-                        android:id="@+id/texte_plage_1"
-                        android:layout_width="wrap_content"
+                        <ImageButton
+                            android:id="@+id/bouton_supprimer_plage_2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/layout_space"
+                            android:layout_weight="0"
+                            android:background="@android:color/transparent"
+                            android:tint="@color/colorAccent2"
+                            app:srcCompat="@android:drawable/ic_menu_delete" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_row="1"
-                        android:layout_column="1"
-                        android:layout_gravity="center"
-                        android:text="05h10 - 11h05"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold" />
+                        android:layout_marginTop="@dimen/layout_space"
+                        android:background="@color/colorPrimary"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="@dimen/layout_container_space"
+                            android:paddingBottom="@dimen/layout_container_space"
+                            android:paddingLeft="@dimen/layout_container_space"
+                            android:paddingRight="@dimen/layout_container_space"
+                            android:background="@color/colorPrimary"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Heure de début"
+                                android:textColor="@color/colorAccent2"
+                                android:textSize="@dimen/texteGeneral" />
 
-                    <ImageButton
-                        android:id="@+id/bouton_modifier_plage_1"
-                        android:layout_width="61dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/layout_space"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_marginStart="@dimen/layout_space"
-                        android:layout_marginEnd="@dimen/layout_space"
-                        android:layout_row="0"
-                        android:layout_column="2"
-                        android:layout_rowSpan="2"
-                        android:background="@drawable/back_button_change_range"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/engrenages" />
-                </GridLayout>
+                            <TextView
+                                android:id="@+id/texte_heure_debut_plage_2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/layout_space"
+                                android:layout_weight="0"
+                                android:text="09:00"
+                                android:textColor="@color/colorAccent2"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
 
-                <GridLayout
-                    android:id="@+id/widget_plage_2"
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_gravity="center"
+                            android:background="@color/colorPrimaryDark" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="@dimen/layout_container_space"
+                            android:paddingBottom="@dimen/layout_container_space"
+                            android:paddingLeft="@dimen/layout_container_space"
+                            android:paddingRight="@dimen/layout_container_space"
+                            android:background="@color/colorPrimary"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Heure de fin"
+                                android:textColor="@color/colorAccent2"
+                                android:textSize="@dimen/texteGeneral" />
+
+                            <TextView
+                                android:id="@+id/texte_heure_fin_plage_2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/layout_space"
+                                android:layout_weight="0"
+                                android:text="09:00"
+                                android:textColor="@color/colorAccent2"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_plage_3"
                     android:layout_width="match_parent"
-                    android:layout_height="61dp"
-                    android:layout_marginTop="@dimen/layout_space"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space">
-                    <ImageButton
-                        android:id="@+id/bouton_supprimer_plage_2"
-                        android:layout_width="61dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_marginEnd="@dimen/layout_space"
-                        android:layout_row="0"
-                        android:layout_column="0"
-                        android:layout_rowSpan="2"
-                        android:background="@drawable/back_button_delete_range"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/poubelle" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="vertical" >
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_row="0"
-                        android:layout_column="1"
-                        android:layout_gravity="center"
-                        android:text="Plage 2"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre"
-                        android:textStyle="bold" />
+                        android:orientation="horizontal" >
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:text="Plage 3"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/texteGeneral" />
 
-                    <TextView
-                        android:id="@+id/texte_plage_2"
-                        android:layout_width="wrap_content"
+                        <ImageButton
+                            android:id="@+id/bouton_supprimer_plage_3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/layout_space"
+                            android:layout_weight="0"
+                            android:background="@android:color/transparent"
+                            android:tint="@color/colorAccent2"
+                            app:srcCompat="@android:drawable/ic_menu_delete" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_row="1"
-                        android:layout_column="1"
-                        android:layout_gravity="center"
-                        android:text="05h10 - 11h05"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold" />
+                        android:layout_marginTop="@dimen/layout_space"
+                        android:background="@color/colorPrimary"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="@dimen/layout_container_space"
+                            android:paddingBottom="@dimen/layout_container_space"
+                            android:paddingLeft="@dimen/layout_container_space"
+                            android:paddingRight="@dimen/layout_container_space"
+                            android:background="@color/colorPrimary"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Heure de début"
+                                android:textColor="@color/colorAccent2"
+                                android:textSize="@dimen/texteGeneral" />
 
-                    <ImageButton
-                        android:id="@+id/bouton_modifier_plage_2"
-                        android:layout_width="61dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/layout_space"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_marginStart="@dimen/layout_space"
-                        android:layout_marginEnd="@dimen/layout_space"
-                        android:layout_row="0"
-                        android:layout_column="2"
-                        android:layout_rowSpan="2"
-                        android:background="@drawable/back_button_change_range"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/engrenages" />
-                </GridLayout>
+                            <TextView
+                                android:id="@+id/texte_heure_debut_plage_3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/layout_space"
+                                android:layout_weight="0"
+                                android:text="09:00"
+                                android:textColor="@color/colorAccent2"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
 
-                <GridLayout
-                    android:id="@+id/widget_plage_3"
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_gravity="center"
+                            android:background="@color/colorPrimaryDark" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="@dimen/layout_container_space"
+                            android:paddingBottom="@dimen/layout_container_space"
+                            android:paddingLeft="@dimen/layout_container_space"
+                            android:paddingRight="@dimen/layout_container_space"
+                            android:background="@color/colorPrimary"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Heure de fin"
+                                android:textColor="@color/colorAccent2"
+                                android:textSize="@dimen/texteGeneral" />
+
+                            <TextView
+                                android:id="@+id/texte_heure_fin_plage_3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/layout_space"
+                                android:layout_weight="0"
+                                android:text="09:00"
+                                android:textColor="@color/colorAccent2"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_plage_4"
                     android:layout_width="match_parent"
-                    android:layout_height="61dp"
-                    android:layout_marginTop="@dimen/layout_space"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space">
-                    <ImageButton
-                        android:id="@+id/bouton_supprimer_plage_3"
-                        android:layout_width="61dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_marginEnd="@dimen/layout_space"
-                        android:layout_row="0"
-                        android:layout_column="0"
-                        android:layout_rowSpan="2"
-                        android:background="@drawable/back_button_delete_range"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/poubelle" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="vertical" >
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_row="0"
-                        android:layout_column="1"
-                        android:layout_gravity="center"
-                        android:text="Plage 3"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre"
-                        android:textStyle="bold" />
+                        android:orientation="horizontal" >
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:text="Plage 4"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/texteGeneral" />
 
-                    <TextView
-                        android:id="@+id/texte_plage_3"
-                        android:layout_width="wrap_content"
+                        <ImageButton
+                            android:id="@+id/bouton_supprimer_plage_4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/layout_space"
+                            android:layout_weight="0"
+                            android:background="@android:color/transparent"
+                            android:tint="@color/colorAccent2"
+                            app:srcCompat="@android:drawable/ic_menu_delete" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_row="1"
-                        android:layout_column="1"
-                        android:layout_gravity="center"
-                        android:text="05h10 - 11h05"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold" />
+                        android:layout_marginTop="@dimen/layout_space"
+                        android:background="@color/colorPrimary"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="@dimen/layout_container_space"
+                            android:paddingBottom="@dimen/layout_container_space"
+                            android:paddingLeft="@dimen/layout_container_space"
+                            android:paddingRight="@dimen/layout_container_space"
+                            android:background="@color/colorPrimary"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Heure de début"
+                                android:textColor="@color/colorAccent2"
+                                android:textSize="@dimen/texteGeneral" />
 
-                    <ImageButton
-                        android:id="@+id/bouton_modifier_plage_3"
-                        android:layout_width="61dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/layout_space"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_marginStart="@dimen/layout_space"
-                        android:layout_marginEnd="@dimen/layout_space"
-                        android:layout_row="0"
-                        android:layout_column="2"
-                        android:layout_rowSpan="2"
-                        android:background="@drawable/back_button_change_range"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/engrenages" />
-                </GridLayout>
+                            <TextView
+                                android:id="@+id/texte_heure_debut_plage_4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/layout_space"
+                                android:layout_weight="0"
+                                android:text="09:00"
+                                android:textColor="@color/colorAccent2"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
 
-                <GridLayout
-                    android:id="@+id/widget_plage_4"
-                    android:layout_width="match_parent"
-                    android:layout_height="61dp"
-                    android:layout_marginTop="@dimen/layout_space"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space">
-                    <ImageButton
-                        android:id="@+id/bouton_supprimer_plage_4"
-                        android:layout_width="61dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_marginEnd="@dimen/layout_space"
-                        android:layout_row="0"
-                        android:layout_column="0"
-                        android:layout_rowSpan="2"
-                        android:background="@drawable/back_button_delete_range"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/poubelle" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_gravity="center"
+                            android:background="@color/colorPrimaryDark" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_row="0"
-                        android:layout_column="1"
-                        android:layout_gravity="center"
-                        android:text="Plage 4"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre"
-                        android:textStyle="bold" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="@dimen/layout_container_space"
+                            android:paddingBottom="@dimen/layout_container_space"
+                            android:paddingLeft="@dimen/layout_container_space"
+                            android:paddingRight="@dimen/layout_container_space"
+                            android:background="@color/colorPrimary"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Heure de fin"
+                                android:textColor="@color/colorAccent2"
+                                android:textSize="@dimen/texteGeneral" />
 
-                    <TextView
-                        android:id="@+id/texte_plage_4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_row="1"
-                        android:layout_column="1"
-                        android:layout_gravity="center"
-                        android:text="05h10 - 11h05"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold" />
-
-                    <ImageButton
-                        android:id="@+id/bouton_modifier_plage_4"
-                        android:layout_width="61dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/layout_space"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_marginStart="@dimen/layout_space"
-                        android:layout_marginEnd="@dimen/layout_space"
-                        android:layout_row="0"
-                        android:layout_column="2"
-                        android:layout_rowSpan="2"
-                        android:background="@drawable/back_button_change_range"
-                        android:scaleType="fitCenter"
-                        app:srcCompat="@drawable/engrenages" />
-                </GridLayout>
+                            <TextView
+                                android:id="@+id/texte_heure_fin_plage_4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/layout_space"
+                                android:layout_weight="0"
+                                android:text="09:00"
+                                android:textColor="@color/colorAccent2"
+                                android:textSize="@dimen/texteGeneral"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
 
                 <Button
-                    android:id="@+id/bouton_ajouter_plage"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/bouton_ajouter_plage_horaire"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/layout_space"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space"
-                    android:text="Ajouter plage"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/texteGeneral" />
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:gravity="left|center_vertical"
+                    android:background="@android:color/transparent"
+                    android:textColor="@color/colorAccent2"
+                    android:drawableTint="@color/colorAccent2"
+                    android:text="Ajouter une plage horaire"
+                    android:drawableLeft="@android:drawable/ic_menu_add" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/layout_question"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/layout_widget_space"
+        android:paddingBottom="@dimen/layout_widget_space"
+        android:paddingLeft="@dimen/layout_widget_space"
+        android:paddingRight="@dimen/layout_widget_space"
+        android:visibility="gone"
+        android:orientation="vertical" >
+        <TextView
+            android:id="@+id/texte_question"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Question"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/texteGeneral" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_widget_space"
+            android:orientation="horizontal" >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Heure début"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+
+                <TimePicker
+                    android:id="@+id/time_picker_debut_plage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/TimePickerStyle"
+                    android:timePickerMode="spinner"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Heure fin"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+
+                <TimePicker
+                    android:id="@+id/time_picker_fin_plage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/TimePickerStyle"
+                    android:timePickerMode="spinner"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_widget_space"
+            android:orientation="horizontal" >
+            <ImageButton
+                android:id="@+id/bouton_annuler_question"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:tint="#FF0000"
+                app:srcCompat="@drawable/close_icon" />
+
+            <ImageButton
+                android:id="@+id/bouton_valider_question"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginLeft="@dimen/layout_space"
+                android:layout_weight="1"
+                android:scaleType="centerInside"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:tint="#00FF00"
+                app:srcCompat="@drawable/checkmark_icon" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

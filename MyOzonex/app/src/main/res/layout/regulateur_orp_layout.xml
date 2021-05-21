@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/global_layout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fond_portrait_2">
+    android:background="@color/colorPrimaryDark">
     <ScrollView
+        android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="false">
@@ -14,385 +15,865 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/layout_widget_space"
             android:paddingBottom="@dimen/layout_widget_space"
+            android:paddingLeft="@dimen/layout_widget_space"
+            android:paddingRight="@dimen/layout_widget_space"
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/layout_widget_space"
-                android:background="@color/transparentBackground"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="MODE DE FONCTIONNEMENT"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/layout_widget_space"
-                    android:orientation="horizontal" >
-                    <View
-                        android:layout_width="50dp"
-                        android:layout_height="2dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:id="@+id/layout_mode_marche"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:paddingTop="@dimen/layout_space"
+                        android:paddingBottom="@dimen/layout_space"
+                        android:paddingLeft="@dimen/layout_space"
+                        android:paddingRight="@dimen/layout_space"
                         android:layout_weight="1"
-                        android:layout_gravity="center"
-                        android:background="@color/couleurSousTitre"
-                        android:layerType="software" />
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:background="@drawable/rounded_view_marche"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/image_mode_marche"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:tint="@color/colorPrimaryDark"
+                            app:srcCompat="@android:drawable/ic_lock_power_off" />
+
+                        <TextView
+                            android:id="@+id/texte_mode_marche"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="MARCHE"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="@dimen/texteGeneral" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_mode_arret"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:paddingTop="@dimen/layout_space"
+                        android:paddingBottom="@dimen/layout_space"
+                        android:paddingLeft="@dimen/layout_space"
+                        android:paddingRight="@dimen/layout_space"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:background="@color/colorAccent1"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/image_mode_arret"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:tint="@color/colorPrimaryDark"
+                            app:srcCompat="@android:drawable/ic_lock_power_off" />
+
+                        <TextView
+                            android:id="@+id/texte_mode_arret"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ARRÊT"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="@dimen/texteGeneral" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_mode_auto"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:paddingTop="@dimen/layout_space"
+                        android:paddingBottom="@dimen/layout_space"
+                        android:paddingLeft="@dimen/layout_space"
+                        android:paddingRight="@dimen/layout_space"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:background="@drawable/rounded_view_auto"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/image_mode_auto"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:tint="@color/colorPrimaryDark"
+                            app:srcCompat="@android:drawable/stat_notify_sync" />
+
+                        <TextView
+                            android:id="@+id/texte_mode_auto"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="AUTO"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="@dimen/texteGeneral" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_widget_space"
+                android:orientation="vertical" >
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:background="@color/colorPrimary" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:text="INSTALLATION"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+
+                <TextView
+                    android:id="@+id/texte_debit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:text="Débit : 4.5 L"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+
+                <TextView
+                    android:id="@+id/texte_point_consigne_redox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:text="Point de consigne (Redox) : 600 mV"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+
+                <TextView
+                    android:id="@+id/texte_hysteresis_redox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Hystérésis (Redox) : 20 mV"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+
+                <TextView
+                    android:id="@+id/texte_point_consigne_ampero"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:text="Point de consigne (Ampéro) : 1.20 ppm"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+
+                <TextView
+                    android:id="@+id/texte_hysteresis_ampero"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Hystérésis (Ampéro) : 0.10 ppm"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_widget_space"
+                android:orientation="vertical" >
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:background="@color/colorPrimary" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:text="CONSOMMATIONS"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+
+                <TextView
+                    android:id="@+id/texte_consommations"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:text="Date : 22/12/2020\nVolume : 45 L\nVolume restant : 0 L"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+
+                <TextView
+                    android:id="@+id/texte_conso_produit_injecte"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:text="Produit injecté sur 1 / 7 / 28 jours : 0 L / 0 L / 0 L"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_widget_space"
+                android:orientation="vertical" >
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:background="@color/colorPrimary" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:text="ASSERVISSEMENT"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+
+                <TextView
+                    android:id="@+id/texte_duree_cycle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:text="Durée cycle : 7 secondes"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+
+                <TextView
+                    android:id="@+id/texte_duree_injection_min"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Durée injection minimum : 7"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+
+                <TextView
+                    android:id="@+id/texte_mult_diff"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Multiplicateur de différence : 7"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+
+                <TextView
+                    android:id="@+id/texte_duree_injection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Durée injection : 2 minutes"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+
+                <TextView
+                    android:id="@+id/texte_temps_reponse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Temps de réponse après injection : 7 minutes"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+
+                <TextView
+                    android:id="@+id/texte_temps_jour_max"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Temps d'injection journalier maximum : 60 minutes"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_widget_space"
+                android:orientation="vertical" >
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:background="@color/colorPrimary" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="SURCHLORATION"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/texteGeneral" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/layout_space"
                         android:layout_weight="0"
-                        android:maxLines="1"
-                        android:text="Mode de fonctionnement"
-                        android:textStyle="bold"
-                        android:gravity="center"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre" />
+                        android:text="OFF"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/texteGeneral" />
 
-                    <View
-                        android:layout_width="50dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:layout_gravity="center"
-                        android:background="@color/couleurSousTitre"
-                        android:layerType="software" />
+                    <Switch
+                        android:id="@+id/switch_surchloration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:layout_weight="0" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:layout_weight="0"
+                        android:text="ON"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/texteGeneral" />
                 </LinearLayout>
 
-                <RadioGroup
-                    android:id="@+id/groupe_boutons_mode"
+                <LinearLayout
+                    android:id="@+id/layout_jour_surchloration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:gravity="center"
+                    android:orientation="horizontal" >
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:padding="5dp"
+                        android:scaleType="centerInside"
+                        android:adjustViewBounds="true"
+                        android:tint="@color/colorPrimary"
+                        app:srcCompat="@drawable/calendar" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical" >
+                        <SeekBar
+                            android:id="@+id/seekbar_jour_surchloration"
+                            style="@style/SeekBarStyle2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:min="1"
+                            android:max="7"
+                            android:progress="2" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="@dimen/layout_space"
+                            android:paddingRight="@dimen/layout_space"
+                            android:orientation="horizontal"
+                            android:weightSum="6" >
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="L"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="@dimen/texteGeneral" />
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="M"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="@dimen/texteGeneral" />
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="M"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="@dimen/texteGeneral" />
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="J"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="@dimen/texteGeneral" />
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="V"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="@dimen/texteGeneral" />
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="S"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="@dimen/texteGeneral" />
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="D"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="@dimen/texteGeneral" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_freq_surchloration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:gravity="center"
+                    android:orientation="horizontal" >
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:padding="8dp"
+                        android:scaleType="centerInside"
+                        android:adjustViewBounds="true"
+                        android:tint="@color/colorPrimary"
+                        app:srcCompat="@drawable/clock_icon" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:gravity="center"
+                        android:orientation="vertical" >
+                        <TextView
+                            android:id="@+id/texte_freq_surchloration"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Fréquence : 2 semaine(s)"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/texteGeneral" />
+
+                        <SeekBar
+                            android:id="@+id/seekbar_freq_surchloration"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/layout_space"
+                            android:min="1"
+                            android:max="8"
+                            android:progress="2" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_mv_ajoute_surchloration"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:gravity="center"
+                    android:orientation="horizontal" >
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerInside"
+                        android:adjustViewBounds="true"
+                        android:tint="@color/colorPrimary"
+                        app:srcCompat="@drawable/recycling_icon" />
+
+                    <SeekBar
+                        android:id="@+id/seekbar_mv_ajoute_surchloration"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:layout_weight="1"
+                        android:min="1"
+                        android:max="10"
+                        android:progress="1" />
+
+                    <TextView
+                        android:id="@+id/texte_mv_ajoute_surchloration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:layout_weight="0"
+                        android:text="10 mV"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/texteGeneral" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_prochaine_surchloration"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:gravity="center"
+                    android:orientation="horizontal" >
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:padding="2dp"
+                        android:scaleType="centerInside"
+                        android:adjustViewBounds="true"
+                        android:tint="@color/colorPrimary"
+                        app:srcCompat="@android:drawable/ic_dialog_info" />
+
+                    <TextView
+                        android:id="@+id/texte_prochaine_surchloration"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:layout_weight="1"
+                        android:text="Prochaine dans 30 jours"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/texteGeneral" />
+
+                    <Button
+                        android:id="@+id/bouton_raz_surchloration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:layout_weight="0"
+                        android:text="RAZ"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:textColor="@color/colorAccent1"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_widget_space"
+                android:orientation="vertical" >
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:background="@color/colorPrimary" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:text="ALARMES"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+
+                <LinearLayout
+                    android:id="@+id/layout_alarmes_orp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space"
-                    android:orientation="horizontal">
-                    <RadioButton
-                        android:id="@+id/radio_bouton_auto"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Auto"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold"
-                        android:buttonTint="#00FFFF" />
-
-                    <RadioButton
-                        android:id="@+id/radio_bouton_arret"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Arrêt"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold"
-                        android:buttonTint="#00FFFF" />
-
-                    <RadioButton
-                        android:id="@+id/radio_bouton_marche"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Marche"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold"
-                        android:buttonTint="#00FFFF" />
-                </RadioGroup>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/layout_widget_space"
-                android:paddingBottom="@dimen/layout_widget_space"
-                android:background="@color/transparentBackground"
-                android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/layout_widget_space"
+                    android:gravity="center"
                     android:orientation="horizontal" >
-                    <View
-                        android:layout_width="50dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:layout_gravity="center"
-                        android:background="@color/couleurSousTitre"
-                        android:layerType="software" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="0"
-                        android:maxLines="1"
-                        android:text="Consommations"
-                        android:textStyle="bold"
-                        android:gravity="center"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre" />
+                        android:padding="4dp"
+                        android:scaleType="centerInside"
+                        android:adjustViewBounds="true"
+                        android:tint="@color/colorPrimary"
+                        app:srcCompat="@drawable/alert_icon" />
 
-                    <View
-                        android:layout_width="50dp"
-                        android:layout_height="2dp"
+                    <GridLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/layout_space"
                         android:layout_weight="1"
-                        android:layout_gravity="center"
-                        android:background="@color/couleurSousTitre"
-                        android:layerType="software" />
+                        android:gravity="center"
+                        android:orientation="vertical" >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="0"
+                            android:layout_row="0"
+                            android:layout_column="0"
+                            android:layout_gravity="center_vertical"
+                            android:text="Min"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/texteGeneral" />
+
+                        <SeekBar
+                            android:id="@+id/seekbar_min_alarme_orp"
+                            style="@style/SeekBarStyle2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_row="0"
+                            android:layout_column="1"
+                            android:layout_columnWeight="1"
+                            android:layout_gravity="center_vertical"
+                            android:min="400"
+                            android:max="1000"
+                            android:progress="500" />
+
+                        <TextView
+                            android:id="@+id/texte_min_alarme_orp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="0"
+                            android:layout_row="0"
+                            android:layout_column="2"
+                            android:layout_gravity="center"
+                            android:text="500 mV"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/texteGeneral" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="0"
+                            android:layout_row="1"
+                            android:layout_column="0"
+                            android:layout_gravity="center_vertical"
+                            android:text="Max"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/texteGeneral" />
+
+                        <SeekBar
+                            android:id="@+id/seekbar_max_alarme_orp"
+                            style="@style/SeekBarStyle2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_row="1"
+                            android:layout_column="1"
+                            android:layout_columnWeight="1"
+                            android:layout_gravity="center_vertical"
+                            android:min="400"
+                            android:max="1000"
+                            android:progress="850" />
+
+                        <TextView
+                            android:id="@+id/texte_max_alarme_orp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="0"
+                            android:layout_row="1"
+                            android:layout_column="2"
+                            android:layout_gravity="center"
+                            android:text="850 mV"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/texteGeneral" />
+                    </GridLayout>
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/texte_donnees_conso"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space"
-                    android:text="Depuis : 26/05/2014\nVolume : X L\nVolume restant : X L"
-                    android:textColor="@color/couleurTexteGeneral"
-                    android:textSize="@dimen/texteGeneral" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space"
-                    android:layerType="software"
-                    android:src="@drawable/dotted_line" />
-
-                <TextView
-                    android:id="@+id/texte_conso_injections"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space"
-                    android:text="Produit injecté sur 1 /7 / 28 jours : %1 / %2 / %3"
-                    android:textColor="@color/couleurTexteGeneral"
-                    android:textSize="@dimen/texteGeneral" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/layout_widget_space"
-                android:paddingBottom="@dimen/layout_widget_space"
-                android:background="@color/transparentBackground"
-                android:orientation="vertical">
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/layout_widget_space"
-                    android:orientation="horizontal" >
-                    <View
-                        android:layout_width="50dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:layout_gravity="center"
-                        android:background="@color/couleurSousTitre"
-                        android:layerType="software" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:maxLines="1"
-                        android:text="Asservissement"
-                        android:textStyle="bold"
-                        android:gravity="center"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre" />
-
-                    <View
-                        android:layout_width="50dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:layout_gravity="center"
-                        android:background="@color/couleurSousTitre"
-                        android:layerType="software" />
-                </LinearLayout>
-
-                <RadioGroup
-                    android:id="@+id/groupe_boutons_type_asservissement"
+                    android:id="@+id/layout_alarmes_ampero"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/texte_type_asservissement"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Type :"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold" />
-
-                    <RadioButton
-                        android:id="@+id/radio_bouton_tor"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:clickable="false"
-                        android:text="TOR"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold"
-                        android:buttonTint="#00FFFF" />
-
-                    <RadioButton
-                        android:id="@+id/radio_bouton_lineaire"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:clickable="false"
-                        android:text="LIN"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold"
-                        android:buttonTint="#00FFFF" />
-                </RadioGroup>
-
-                <TextView
-                    android:id="@+id/texte_donnees_asservissement"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space"
-                    android:text="Durée cycle : X minutes\nMultiplicateur de différence : X\nDurée injection : X minutes\nTemps de réponse après injection : X minutes\nTemps d'injection journalier maximum : X minutes"
-                    android:textColor="@color/couleurTexteGeneral"
-                    android:textSize="@dimen/texteGeneral" />
-
-                <ImageView
-                    android:id="@+id/ligne"
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space"
-                    android:layerType="software"
-                    android:src="@drawable/dotted_line" />
-
-                <CheckBox
-                    android:id="@+id/checkbox_surchloration"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space"
-                    android:clickable="false"
-                    android:text="Surchloration : désactivée"
-                    android:textColor="@color/couleurTexteGeneral"
-                    android:textSize="@dimen/texteGeneral"
-                    android:textStyle="bold"
-                    android:buttonTint="#00FFFF" />
-
-                <TextView
-                    android:id="@+id/texte_donnees_surchloration"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space"
-                    android:text="Fréquence : X semaines\nX mV ajouté (X mV)\nProchaine dans X jours"
-                    android:textColor="@color/couleurTexteGeneral"
-                    android:textSize="@dimen/texteGeneral" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/layout_widget_space"
-                android:paddingBottom="@dimen/layout_widget_space"
-                android:background="@color/transparentBackground"
-                android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/layout_widget_space"
+                    android:gravity="center"
                     android:orientation="horizontal" >
-                    <View
-                        android:layout_width="50dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:layout_gravity="center"
-                        android:background="@color/couleurSousTitre"
-                        android:layerType="software" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="0"
-                        android:maxLines="1"
-                        android:text="Installation"
-                        android:textStyle="bold"
-                        android:gravity="center"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre" />
+                        android:padding="4dp"
+                        android:scaleType="centerInside"
+                        android:adjustViewBounds="true"
+                        android:tint="@color/colorPrimary"
+                        app:srcCompat="@drawable/alert_icon" />
 
-                    <View
-                        android:layout_width="50dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:layout_gravity="center"
-                        android:background="@color/couleurSousTitre"
-                        android:layerType="software" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/texte_installation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space"
-                    android:text="Point de consigne : X ppm / X mV\nHystérésis : X ppm / X mV"
-                    android:textColor="@color/couleurTexteGeneral"
-                    android:textSize="@dimen/texteGeneral"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/layout_widget_space"
-                android:paddingBottom="@dimen/layout_widget_space"
-                android:background="@color/transparentBackground"
-                android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/layout_widget_space"
-                    android:orientation="horizontal" >
-                    <View
-                        android:layout_width="50dp"
-                        android:layout_height="2dp"
-                        android:layout_weight="1"
-                        android:layout_gravity="center"
-                        android:background="@color/couleurSousTitre"
-                        android:layerType="software" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <GridLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:maxLines="1"
-                        android:text="Alarmes"
-                        android:textStyle="bold"
-                        android:gravity="center"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre" />
-
-                    <View
-                        android:layout_width="50dp"
-                        android:layout_height="2dp"
+                        android:layout_marginLeft="@dimen/layout_space"
                         android:layout_weight="1"
-                        android:layout_gravity="center"
-                        android:background="@color/couleurSousTitre"
-                        android:layerType="software" />
-                </LinearLayout>
+                        android:gravity="center"
+                        android:orientation="vertical" >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="0"
+                            android:layout_row="0"
+                            android:layout_column="0"
+                            android:layout_gravity="center_vertical"
+                            android:text="Min"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/texteGeneral" />
 
-                <TextView
-                    android:id="@+id/texte_alarmes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/layout_widget_space"
-                    android:layout_marginRight="@dimen/layout_widget_space"
-                    android:text="Seuil alerte bas : X ppm / X mV\nSeuil alerte haut : X ppm / X mV"
-                    android:textColor="@color/couleurTexteGeneral"
-                    android:textSize="@dimen/texteGeneral"
-                    android:textStyle="bold" />
+                        <SeekBar
+                            android:id="@+id/seekbar_min_alarme_ampero"
+                            style="@style/SeekBarStyle2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_row="0"
+                            android:layout_column="1"
+                            android:layout_columnWeight="1"
+                            android:layout_gravity="center_vertical"
+                            android:min="0"
+                            android:max="30"
+                            android:progress="6" />
+
+                        <TextView
+                            android:id="@+id/texte_min_alarme_ampero"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="0"
+                            android:layout_row="0"
+                            android:layout_column="2"
+                            android:layout_gravity="center"
+                            android:text="0.6 ppm"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/texteGeneral" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="0"
+                            android:layout_row="1"
+                            android:layout_column="0"
+                            android:layout_gravity="center_vertical"
+                            android:text="Max"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/texteGeneral" />
+
+                        <SeekBar
+                            android:id="@+id/seekbar_max_alarme_ampero"
+                            style="@style/SeekBarStyle2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_row="1"
+                            android:layout_column="1"
+                            android:layout_columnWeight="1"
+                            android:layout_gravity="center_vertical"
+                            android:min="0"
+                            android:max="30"
+                            android:progress="15" />
+
+                        <TextView
+                            android:id="@+id/texte_max_alarme_ampero"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="0"
+                            android:layout_row="1"
+                            android:layout_column="2"
+                            android:layout_gravity="center"
+                            android:text="1.5 ppm"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/texteGeneral" />
+                    </GridLayout>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/layout_question"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/layout_widget_space"
+        android:paddingBottom="@dimen/layout_widget_space"
+        android:paddingLeft="@dimen/layout_widget_space"
+        android:paddingRight="@dimen/layout_widget_space"
+        android:visibility="gone"
+        android:orientation="vertical" >
+        <TextView
+            android:id="@+id/texte_question"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Question"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/texteGeneral" />
+
+        <EditText
+            android:id="@+id/edit_question"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_widget_space"
+            android:padding="10dp"
+            android:background="@drawable/rounded_edittext"
+            android:textAlignment="center"
+            android:inputType="numberDecimal"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/texteGeneral" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_widget_space"
+            android:orientation="horizontal" >
+            <ImageButton
+                android:id="@+id/bouton_annuler_question"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:tint="#FF0000"
+                app:srcCompat="@drawable/close_icon" />
+
+            <ImageButton
+                android:id="@+id/bouton_valider_question"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginLeft="@dimen/layout_space"
+                android:layout_weight="1"
+                android:scaleType="centerInside"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:tint="#00FF00"
+                app:srcCompat="@drawable/checkmark_icon" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

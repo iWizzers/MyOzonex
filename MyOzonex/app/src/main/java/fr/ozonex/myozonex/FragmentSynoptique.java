@@ -1,28 +1,22 @@
 package fr.ozonex.myozonex;
 
 import android.app.Fragment;
-import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
-import android.widget.Button;
 import android.widget.GridLayout;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
-
-import static android.support.v4.view.MotionEventCompat.getPointerCount;
 
 public class FragmentSynoptique extends Fragment implements View.OnClickListener {
     View view = null;
@@ -34,12 +28,11 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
     AnimationInjection animationInjectionAlgicide;
     AnimationRefoulement animationRefoulement;
 
-    // Tout orientations
     ProgressBar contenuBidonAlgicide;
     ProgressBar contenuBidonOrp;
     ProgressBar contenuBidonPhMoins;
     ProgressBar contenuBidonPhPlus;
-    View ligneCapteurPt1;
+    View ligneCapteurPt;
     TextView texteCapteurPt;
     View ligneCapteurPh;
     View ligneCapteurPhMoins1;
@@ -104,8 +97,8 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
     ImageView tuyauSortieFiltreChauffage3;
     ImageView tuyauSortieFiltreChauffage4;
     ImageView tuyauSortieTFiltreChauffage;
+    ImageView tuyauEntreeSurpresseur1;
     ImageView tuyauEntreeSurpresseur2;
-    ImageView tuyauEntreeSurpresseur3;
     ImageView tuyauEntreeChauffage1;
     ImageView tuyauEntreeChauffage2;
     ImageView tuyauEntreeChauffage3;
@@ -190,21 +183,18 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
     TextView texteModeRegulateurPhPlus;
     TextView texteRegulateurPhPlus;
     TextView texteConsoPhPlus;
-    Button boutonAccueil;
-    Button boutonMenu;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.synoptique_layout, container, false);
 
-
-        contenuBidonAlgicide = (ProgressBar) view.findViewById(R.id.contenu_bidon_algicide);
-        contenuBidonOrp = (ProgressBar) view.findViewById(R.id.contenu_bidon_orp);
-        contenuBidonPhMoins = (ProgressBar) view.findViewById(R.id.contenu_bidon_ph_moins);
-        contenuBidonPhPlus = (ProgressBar) view.findViewById(R.id.contenu_bidon_ph_plus);
-        ligneCapteurPt1 = view.findViewById(R.id.ligne_capteur_pt_1);
-        texteCapteurPt = (TextView) view.findViewById(R.id.texte_capteur_pt);
+        contenuBidonAlgicide = view.findViewById(R.id.contenu_bidon_algicide);
+        contenuBidonOrp = view.findViewById(R.id.contenu_bidon_orp);
+        contenuBidonPhMoins = view.findViewById(R.id.contenu_bidon_ph_moins);
+        contenuBidonPhPlus = view.findViewById(R.id.contenu_bidon_ph_plus);
+        ligneCapteurPt = view.findViewById(R.id.ligne_capteur_pt);
+        texteCapteurPt = view.findViewById(R.id.texte_capteur_pt);
         ligneCapteurPh = view.findViewById(R.id.ligne_capteur_ph);
         ligneCapteurPhMoins1 = view.findViewById(R.id.ligne_capteur_ph_moins_1);
         ligneCapteurPhMoins2 = view.findViewById(R.id.ligne_capteur_ph_moins_2);
@@ -215,11 +205,11 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
         ligneCapteurOrp3 = view.findViewById(R.id.ligne_capteur_orp_3);
         ligneCapteurOrp4 = view.findViewById(R.id.ligne_capteur_orp_4);
         ligneCapteurAmpero = view.findViewById(R.id.ligne_capteur_ampero);
-        conteneurDonneesCapteurs = (LinearLayout) view.findViewById(R.id.conteneur_donnees_capteurs);
-        texteTypeRegulation = (TextView) view.findViewById(R.id.texte_type_regulation);
-        texteCapteurPh = (TextView) view.findViewById(R.id.texte_capteur_ph);
-        texteCapteurOrp = (TextView) view.findViewById(R.id.texte_capteur_orp);
-        texteCapteurAmpero = (TextView) view.findViewById(R.id.texte_capteur_ampero);
+        conteneurDonneesCapteurs = view.findViewById(R.id.conteneur_donnees_capteurs);
+        texteTypeRegulation = view.findViewById(R.id.texte_type_regulation);
+        texteCapteurPh = view.findViewById(R.id.texte_capteur_ph);
+        texteCapteurOrp = view.findViewById(R.id.texte_capteur_orp);
+        texteCapteurAmpero = view.findViewById(R.id.texte_capteur_ampero);
         ligneSortieOzone = view.findViewById(R.id.ligne_sortie_ozone);
         ligneInjectionAlgicide = view.findViewById(R.id.ligne_injection_algicide);
         ligneInjectionOrp = view.findViewById(R.id.ligne_injection_orp);
@@ -234,131 +224,126 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
         ligneSortieTor1 = view.findViewById(R.id.ligne_sortie_tor_1);
         ligneSortieTor2 = view.findViewById(R.id.ligne_sortie_tor_2);
         ligneSortieTor3 = view.findViewById(R.id.ligne_sortie_tor_3);
-        tuyauSkimmer1 = (ImageView) view.findViewById(R.id.tuyau_skimmer_1);
-        tuyauSkimmer2 = (ImageView) view.findViewById(R.id.tuyau_skimmer_2);
-        tuyauSkimmer3 = (ImageView) view.findViewById(R.id.tuyau_skimmer_3);
-        tuyauSkimmer4 = (ImageView) view.findViewById(R.id.tuyau_skimmer_4);
-        tuyauSkimmer5 = (ImageView) view.findViewById(R.id.tuyau_skimmer_5);
-        tuyauBondeFond1 = (ImageView) view.findViewById(R.id.tuyau_bonde_fond_1);
-        tuyauBondeFond2 = (ImageView) view.findViewById(R.id.tuyau_bonde_fond_2);
-        tuyauBondeFond3 = (ImageView) view.findViewById(R.id.tuyau_bonde_fond_3);
-        tuyauBondeFond4 = (ImageView) view.findViewById(R.id.tuyau_bonde_fond_4);
-        tuyauBondeFond5 = (ImageView) view.findViewById(R.id.tuyau_bonde_fond_5);
-        tuyauPriseBalais1 = (ImageView) view.findViewById(R.id.tuyau_prise_balais_1);
-        tuyauPriseBalais2 = (ImageView) view.findViewById(R.id.tuyau_prise_balais_2);
-        tuyauPriseBalais3 = (ImageView) view.findViewById(R.id.tuyau_prise_balais_3);
-        tuyauPriseBalais4 = (ImageView) view.findViewById(R.id.tuyau_prise_balais_4);
-        tuyauPriseBalais5 = (ImageView) view.findViewById(R.id.tuyau_prise_balais_5);
-        tuyauPriseBalais6 = (ImageView) view.findViewById(R.id.tuyau_prise_balais_6);
-        tuyauSortieSurpresseur = (ImageView) view.findViewById(R.id.tuyau_sortie_surpresseur);
-        tuyauTPriseBalais = (ImageView) view.findViewById(R.id.tuyau_T_prise_balais);
-        tuyauEntreePompeFiltration1 = (ImageView) view.findViewById(R.id.tuyau_entree_pompe_filtration_1);
-        tuyauEntreePompeFiltration2 = (ImageView) view.findViewById(R.id.tuyau_entree_pompe_filtration_2);
-        tuyauEntreeCroixPompeFiltration = (ImageView) view.findViewById(R.id.tuyau_entree_croix_pompe_filtration);
-        tuyauEntreePompeFiltration3 = (ImageView) view.findViewById(R.id.tuyau_entree_pompe_filtration_3);
-        tuyauSortiePompeFiltration1 = (ImageView) view.findViewById(R.id.tuyau_sortie_pompe_filtration_1);
-        tuyauSortiePompeFiltration2 = (ImageView) view.findViewById(R.id.tuyau_sortie_pompe_filtration_2);
-        tuyauSortiePompeFiltration3 = (ImageView) view.findViewById(R.id.tuyau_sortie_pompe_filtration_3);
-        tuyauSortieFiltre1 = (ImageView) view.findViewById(R.id.tuyau_sortie_filtre_1);
-        tuyauSortieFiltre2 = (ImageView) view.findViewById(R.id.tuyau_sortie_filtre_2);
-        tuyauSortieTFiltre = (ImageView) view.findViewById(R.id.tuyau_sortie_t_filtre);
-        tuyauSortieFiltreSurpresseur1 = (ImageView) view.findViewById(R.id.tuyau_sortie_filtre_surpresseur_1);
-        tuyauSortieFiltreChauffage1 = (ImageView) view.findViewById(R.id.tuyau_sortie_filtre_chauffage_1);
-        tuyauSortieFiltreChauffage2 = (ImageView) view.findViewById(R.id.tuyau_sortie_filtre_chauffage_2);
-        tuyauSortieFiltreChauffage3 = (ImageView) view.findViewById(R.id.tuyau_sortie_filtre_chauffage_3);
-        tuyauSortieFiltreChauffage4 = (ImageView) view.findViewById(R.id.tuyau_sortie_filtre_chauffage_4);
-        tuyauSortieTFiltreChauffage = (ImageView) view.findViewById(R.id.tuyau_sortie_t_filtre_chauffage);
-        tuyauEntreeSurpresseur2 = (ImageView) view.findViewById(R.id.tuyau_entree_surpresseur_2);
-        tuyauEntreeSurpresseur3 = (ImageView) view.findViewById(R.id.tuyau_entree_surpresseur_3);
-        tuyauEntreeChauffage1 = (ImageView) view.findViewById(R.id.tuyau_entree_chauffage_1);
-        tuyauEntreeChauffage2 = (ImageView) view.findViewById(R.id.tuyau_entree_chauffage_2);
-        tuyauEntreeChauffage3 = (ImageView) view.findViewById(R.id.tuyau_entree_chauffage_3);
-        tuyauEntreePanneauSolaire1 = (ImageView) view.findViewById(R.id.tuyau_entree_panneau_solaire);
-        tuyauEntreePanneauSolaire2 = (ImageView) view.findViewById(R.id.tuyau_entree_panneau_solaire_2);
-        tuyauEntreePanneauSolaire3 = (ImageView) view.findViewById(R.id.tuyau_entree_panneau_solaire_3);
-        tuyauEntreePanneauSolaire4 = (ImageView) view.findViewById(R.id.tuyau_entree_panneau_solaire_4);
-        tuyauSortiePanneauSolaire1 = (ImageView) view.findViewById(R.id.tuyau_sortie_panneau_solaire);
-        tuyauSortiePanneauSolaire2 = (ImageView) view.findViewById(R.id.tuyau_sortie_panneau_solaire_2);
-        tuyauSortiePanneauSolaire3 = (ImageView) view.findViewById(R.id.tuyau_sortie_panneau_solaire_3);
-        tuyauSortieChauffage1 = (ImageView) view.findViewById(R.id.tuyau_sortie_chauffage_1);
-        tuyauSortieChauffage2 = (ImageView) view.findViewById(R.id.tuyau_sortie_chauffage_2);
-        tuyauSortieChauffage3 = (ImageView) view.findViewById(R.id.tuyau_sortie_chauffage_3);
-        tuyauPassageUv = (ImageView) view.findViewById(R.id.tuyau_passage_uv);
-        tuyauEntreeUv1 = (ImageView) view.findViewById(R.id.tuyau_entree_uv_1);
-        tuyauEntreeUv2 = (ImageView) view.findViewById(R.id.tuyau_entree_uv_2);
-        tuyauSortieUv1 = (ImageView) view.findViewById(R.id.tuyau_sortie_uv_1);
-        tuyauSortieUv2 = (ImageView) view.findViewById(R.id.tuyau_sortie_uv_2);
-        tuyauEntreeElectrolyseur = (ImageView) view.findViewById(R.id.tuyau_entree_electrolyseur);
-        tuyauSortieElectrolyseur = (ImageView) view.findViewById(R.id.tuyau_sortie_electrolyseur);
-        tuyauInjections = (ImageView) view.findViewById(R.id.tuyau_injections);
-        tuyauRefoulements1 = (ImageView) view.findViewById(R.id.tuyau_refoulements_1);
-        tuyauRefoulements2 = (ImageView) view.findViewById(R.id.tuyau_refoulements_2);
-        tuyauRefoulements3 = (ImageView) view.findViewById(R.id.tuyau_refoulements_3);
-        vannePriseBalais = (ImageView) view.findViewById(R.id.vanne_prise_balais);
-        vanneSortieBondeFond = (ImageView) view.findViewById(R.id.vanne_sortie_bonde_fond);
-        vanneSortieSkimmer = (ImageView) view.findViewById(R.id.vanne_sortie_skimmer);
-        vanneEntreeSurpresseur = (ImageView) view.findViewById(R.id.vanne_entree_surpresseur);
-        vanneSortieSurpresseur = (ImageView) view.findViewById(R.id.vanne_sortie_surpresseur);
-        vanneSortieFiltre = (ImageView) view.findViewById(R.id.vanne_sortie_filtre);
-        vanneEntreeChauffage = (ImageView) view.findViewById(R.id.vanne_entree_chauffage);
-        vanneSortieChauffage = (ImageView) view.findViewById(R.id.vanne_sortie_chauffage);
-        sondeOzone = (ImageView) view.findViewById(R.id.sonde_ozone);
-        sondePt = (ImageView) view.findViewById(R.id.sonde_pt);
-        sondePh = (ImageView) view.findViewById(R.id.sonde_ph);
-        sondeOrp = (ImageView) view.findViewById(R.id.sonde_orp);
-        sondeAmpero = (ImageView) view.findViewById(R.id.sonde_ampero);
+        tuyauSkimmer1 = view.findViewById(R.id.tuyau_skimmer_1);
+        tuyauSkimmer2 = view.findViewById(R.id.tuyau_skimmer_2);
+        tuyauSkimmer3 = view.findViewById(R.id.tuyau_skimmer_3);
+        tuyauSkimmer4 = view.findViewById(R.id.tuyau_skimmer_4);
+        tuyauSkimmer5 = view.findViewById(R.id.tuyau_skimmer_5);
+        tuyauBondeFond1 = view.findViewById(R.id.tuyau_bonde_fond_1);
+        tuyauBondeFond2 = view.findViewById(R.id.tuyau_bonde_fond_2);
+        tuyauBondeFond3 = view.findViewById(R.id.tuyau_bonde_fond_3);
+        tuyauBondeFond4 = view.findViewById(R.id.tuyau_bonde_fond_4);
+        tuyauBondeFond5 = view.findViewById(R.id.tuyau_bonde_fond_5);
+        tuyauPriseBalais1 = view.findViewById(R.id.tuyau_prise_balais_1);
+        tuyauPriseBalais2 = view.findViewById(R.id.tuyau_prise_balais_2);
+        tuyauPriseBalais3 = view.findViewById(R.id.tuyau_prise_balais_3);
+        tuyauPriseBalais4 = view.findViewById(R.id.tuyau_prise_balais_4);
+        tuyauPriseBalais5 = view.findViewById(R.id.tuyau_prise_balais_5);
+        tuyauPriseBalais6 = view.findViewById(R.id.tuyau_prise_balais_6);
+        tuyauSortieSurpresseur = view.findViewById(R.id.tuyau_sortie_surpresseur);
+        tuyauTPriseBalais = view.findViewById(R.id.tuyau_T_prise_balais);
+        tuyauEntreePompeFiltration1 = view.findViewById(R.id.tuyau_entree_pompe_filtration_1);
+        tuyauEntreePompeFiltration2 = view.findViewById(R.id.tuyau_entree_pompe_filtration_2);
+        tuyauEntreeCroixPompeFiltration = view.findViewById(R.id.tuyau_entree_croix_pompe_filtration);
+        tuyauEntreePompeFiltration3 = view.findViewById(R.id.tuyau_entree_pompe_filtration_3);
+        tuyauSortiePompeFiltration1 = view.findViewById(R.id.tuyau_sortie_pompe_filtration_1);
+        tuyauSortiePompeFiltration2 = view.findViewById(R.id.tuyau_sortie_pompe_filtration_2);
+        tuyauSortiePompeFiltration3 = view.findViewById(R.id.tuyau_sortie_pompe_filtration_3);
+        tuyauSortieFiltre1 = view.findViewById(R.id.tuyau_sortie_filtre_1);
+        tuyauSortieFiltre2 = view.findViewById(R.id.tuyau_sortie_filtre_2);
+        tuyauSortieTFiltre = view.findViewById(R.id.tuyau_sortie_t_filtre);
+        tuyauSortieFiltreSurpresseur1 = view.findViewById(R.id.tuyau_sortie_filtre_surpresseur_1);
+        tuyauSortieFiltreChauffage1 = view.findViewById(R.id.tuyau_sortie_filtre_chauffage_1);
+        tuyauSortieFiltreChauffage2 = view.findViewById(R.id.tuyau_sortie_filtre_chauffage_2);
+        tuyauSortieFiltreChauffage3 = view.findViewById(R.id.tuyau_sortie_filtre_chauffage_3);
+        tuyauSortieFiltreChauffage4 = view.findViewById(R.id.tuyau_sortie_filtre_chauffage_4);
+        tuyauSortieTFiltreChauffage = view.findViewById(R.id.tuyau_sortie_t_filtre_chauffage);
+        tuyauEntreeSurpresseur1 = view.findViewById(R.id.tuyau_entree_surpresseur_1);
+        tuyauEntreeSurpresseur2 = view.findViewById(R.id.tuyau_entree_surpresseur_2);
+        tuyauEntreeChauffage1 = view.findViewById(R.id.tuyau_entree_chauffage_1);
+        tuyauEntreeChauffage2 = view.findViewById(R.id.tuyau_entree_chauffage_2);
+        tuyauEntreeChauffage3 = view.findViewById(R.id.tuyau_entree_chauffage_3);
+        tuyauEntreePanneauSolaire1 = view.findViewById(R.id.tuyau_entree_panneau_solaire);
+        tuyauEntreePanneauSolaire2 = view.findViewById(R.id.tuyau_entree_panneau_solaire_2);
+        tuyauEntreePanneauSolaire3 = view.findViewById(R.id.tuyau_entree_panneau_solaire_3);
+        tuyauEntreePanneauSolaire4 = view.findViewById(R.id.tuyau_entree_panneau_solaire_4);
+        tuyauSortiePanneauSolaire1 = view.findViewById(R.id.tuyau_sortie_panneau_solaire);
+        tuyauSortiePanneauSolaire2 = view.findViewById(R.id.tuyau_sortie_panneau_solaire_2);
+        tuyauSortiePanneauSolaire3 = view.findViewById(R.id.tuyau_sortie_panneau_solaire_3);
+        tuyauSortieChauffage1 = view.findViewById(R.id.tuyau_sortie_chauffage_1);
+        tuyauSortieChauffage2 = view.findViewById(R.id.tuyau_sortie_chauffage_2);
+        tuyauSortieChauffage3 = view.findViewById(R.id.tuyau_sortie_chauffage_3);
+        tuyauPassageUv = view.findViewById(R.id.tuyau_passage_uv);
+        tuyauEntreeUv1 = view.findViewById(R.id.tuyau_entree_uv_1);
+        tuyauEntreeUv2 = view.findViewById(R.id.tuyau_entree_uv_2);
+        tuyauSortieUv1 = view.findViewById(R.id.tuyau_sortie_uv_1);
+        tuyauSortieUv2 = view.findViewById(R.id.tuyau_sortie_uv_2);
+        tuyauEntreeElectrolyseur = view.findViewById(R.id.tuyau_entree_electrolyseur);
+        tuyauSortieElectrolyseur = view.findViewById(R.id.tuyau_sortie_electrolyseur);
+        tuyauInjections = view.findViewById(R.id.tuyau_injections);
+        tuyauRefoulements1 = view.findViewById(R.id.tuyau_refoulements_1);
+        tuyauRefoulements2 = view.findViewById(R.id.tuyau_refoulements_2);
+        tuyauRefoulements3 = view.findViewById(R.id.tuyau_refoulements_3);
+        vannePriseBalais = view.findViewById(R.id.vanne_prise_balais);
+        vanneSortieBondeFond = view.findViewById(R.id.vanne_sortie_bonde_fond);
+        vanneSortieSkimmer = view.findViewById(R.id.vanne_sortie_skimmer);
+        vanneEntreeSurpresseur = view.findViewById(R.id.vanne_entree_surpresseur);
+        vanneSortieSurpresseur = view.findViewById(R.id.vanne_sortie_surpresseur);
+        vanneSortieFiltre = view.findViewById(R.id.vanne_sortie_filtre);
+        vanneEntreeChauffage = view.findViewById(R.id.vanne_entree_chauffage);
+        vanneSortieChauffage = view.findViewById(R.id.vanne_sortie_chauffage);
+        sondeOzone = view.findViewById(R.id.sonde_ozone);
+        sondePt = view.findViewById(R.id.sonde_pt);
+        sondePh = view.findViewById(R.id.sonde_ph);
+        sondeOrp = view.findViewById(R.id.sonde_orp);
+        sondeAmpero = view.findViewById(R.id.sonde_ampero);
         layoutCapteurInterne = view.findViewById(R.id.layout_capteur_interne);
-        texteValeurTempInterne = (TextView) view.findViewById(R.id.texte_valeur_temperature_interne);
-        texteValeurHumiditeInterne = (TextView) view.findViewById(R.id.texte_valeur_humidite_interne);
-        texteValeurPressionAtmInterne = (TextView) view.findViewById(R.id.texte_valeur_pression_atm_interne);
+        texteValeurTempInterne = view.findViewById(R.id.texte_valeur_temperature_interne);
+        texteValeurHumiditeInterne = view.findViewById(R.id.texte_valeur_humidite_interne);
+        texteValeurPressionAtmInterne = view.findViewById(R.id.texte_valeur_pression_atm_interne);
         layoutCapteurExterne = view.findViewById(R.id.layout_capteur_externe);
-        texteValeurTempExterne = (TextView) view.findViewById(R.id.texte_valeur_temperature_externe);
-        texteValeurHumiditeExterne = (TextView) view.findViewById(R.id.texte_valeur_humidite_externe);
-        texteValeurPressionAtmExterne = (TextView) view.findViewById(R.id.texte_valeur_pression_atm_externe);
-        boutonEclairage1 = (ImageButton) view.findViewById(R.id.eclairage_1);
-        boutonEclairage2 = (ImageButton) view.findViewById(R.id.eclairage_2);
-        texteModeEclairage = (TextView) view.findViewById(R.id.texte_mode_eclairage);
-        boutonPompeFiltration = (ImageButton) view.findViewById(R.id.pompe_filtration);
-        texteModePompeFiltration = (TextView) view.findViewById(R.id.texte_mode_pompe_filtration);
-        boutonOzonateur = (ImageButton) view.findViewById(R.id.ozonateur);
-        texteModeOzonateur = (TextView) view.findViewById(R.id.texte_mode_ozonateur);
-        boutonSurpresseur = (ImageButton) view.findViewById(R.id.surpresseur);
-        texteModeSurpresseur = (TextView) view.findViewById(R.id.texte_mode_surpresseur);
-        boutonFiltre = (ImageButton) view.findViewById(R.id.filtre);
-        texteCapteurPression = (TextView) view.findViewById(R.id.texte_capteur_pression);
-        texteRincageFiltre = (TextView) view.findViewById(R.id.texte_rincage_filtre);
-        helicePac = (ImageView) view.findViewById(R.id.helice_pac);
+        texteValeurTempExterne = view.findViewById(R.id.texte_valeur_temperature_externe);
+        texteValeurHumiditeExterne = view.findViewById(R.id.texte_valeur_humidite_externe);
+        texteValeurPressionAtmExterne = view.findViewById(R.id.texte_valeur_pression_atm_externe);
+        boutonEclairage1 = view.findViewById(R.id.eclairage_1);
+        boutonEclairage2 = view.findViewById(R.id.eclairage_2);
+        texteModeEclairage = view.findViewById(R.id.texte_mode_eclairage);
+        boutonPompeFiltration = view.findViewById(R.id.pompe_filtration);
+        texteModePompeFiltration = view.findViewById(R.id.texte_mode_pompe_filtration);
+        boutonOzonateur = view.findViewById(R.id.ozonateur);
+        texteModeOzonateur = view.findViewById(R.id.texte_mode_ozonateur);
+        boutonSurpresseur = view.findViewById(R.id.surpresseur);
+        texteModeSurpresseur = view.findViewById(R.id.texte_mode_surpresseur);
+        boutonFiltre = view.findViewById(R.id.filtre);
+        texteCapteurPression = view.findViewById(R.id.texte_capteur_pression);
+        texteRincageFiltre = view.findViewById(R.id.texte_rincage_filtre);
+        helicePac = view.findViewById(R.id.helice_pac);
         backgroundHelicePac = view.findViewById(R.id.background_helice_pac);
         rotateHelicePac = new Rotate(helicePac, 120);
-        boutonChauffage = (ImageButton) view.findViewById(R.id.pac);
-        texteModeChauffage = (TextView) view.findViewById(R.id.texte_mode_pac);
-        boutonLampesUv = (ImageButton) view.findViewById(R.id.lampes_uv);
-        texteModeLampesUV = (TextView) view.findViewById(R.id.texte_mode_lampes_uv);
-        boutonAlgicide = (ImageButton) view.findViewById(R.id.algicide);
-        bidonAlgicide = (ImageView) view.findViewById(R.id.bidon_algicide);
-        texteModeAlgicide = (TextView) view.findViewById(R.id.texte_mode_algicide);
-        texteAlgicide = (TextView) view.findViewById(R.id.texte_algicide);
-        texteConsoAlgicide = (TextView) view.findViewById(R.id.texte_conso_algicide);
-        boutonRegulateurOrp = (ImageButton) view.findViewById(R.id.regulateur_orp);
-        bidonOrp = (ImageView) view.findViewById(R.id.bidon_orp);
-        texteModeRegulateurOrp = (TextView) view.findViewById(R.id.texte_mode_regulateur_orp);
-        texteRegulateurOrp = (TextView) view.findViewById(R.id.texte_regulateur_orp);
-        texteConsoOrp = (TextView) view.findViewById(R.id.texte_conso_orp);
-        boutonRegulateurPhMoins = (ImageButton) view.findViewById(R.id.regulateur_ph_moins);
-        bidonPhMoins = (ImageView) view.findViewById(R.id.bidon_ph_moins);
-        texteModeRegulateurPhMoins = (TextView) view.findViewById(R.id.texte_mode_regulateur_ph_moins);
-        texteRegulateurPhMoins = (TextView) view.findViewById(R.id.texte_regulateur_ph_moins);
-        texteConsoPhMoins = (TextView) view.findViewById(R.id.texte_conso_ph_moins);
-        boutonRegulateurPhPlus = (ImageButton) view.findViewById(R.id.regulateur_ph_plus);
-        bidonPhPlus = (ImageView) view.findViewById(R.id.bidon_ph_plus);
-        texteModeRegulateurPhPlus = (TextView) view.findViewById(R.id.texte_mode_regulateur_ph_plus);
-        texteRegulateurPhPlus = (TextView) view.findViewById(R.id.texte_regulateur_ph_plus);
-        texteConsoPhPlus = (TextView) view.findViewById(R.id.texte_conso_ph_plus);
-        boutonAccueil = (Button) view.findViewById(R.id.bouton_accueil);
-        boutonMenu = (Button) view.findViewById(R.id.bouton_menu);
-
-        boutonAccueil.setVisibility(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? View.VISIBLE : View.GONE);
-        boutonMenu.setVisibility(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? View.VISIBLE : View.GONE);
+        boutonChauffage = view.findViewById(R.id.pac);
+        texteModeChauffage = view.findViewById(R.id.texte_mode_pac);
+        boutonLampesUv = view.findViewById(R.id.lampes_uv);
+        texteModeLampesUV = view.findViewById(R.id.texte_mode_lampes_uv);
+        boutonAlgicide = view.findViewById(R.id.algicide);
+        bidonAlgicide = view.findViewById(R.id.bidon_algicide);
+        texteModeAlgicide = view.findViewById(R.id.texte_mode_algicide);
+        texteAlgicide = view.findViewById(R.id.texte_algicide);
+        texteConsoAlgicide = view.findViewById(R.id.texte_conso_algicide);
+        boutonRegulateurOrp = view.findViewById(R.id.regulateur_orp);
+        bidonOrp = view.findViewById(R.id.bidon_orp);
+        texteModeRegulateurOrp = view.findViewById(R.id.texte_mode_regulateur_orp);
+        texteRegulateurOrp = view.findViewById(R.id.texte_regulateur_orp);
+        texteConsoOrp = view.findViewById(R.id.texte_conso_orp);
+        boutonRegulateurPhMoins = view.findViewById(R.id.regulateur_ph_moins);
+        bidonPhMoins = view.findViewById(R.id.bidon_ph_moins);
+        texteModeRegulateurPhMoins = view.findViewById(R.id.texte_mode_regulateur_ph_moins);
+        texteRegulateurPhMoins = view.findViewById(R.id.texte_regulateur_ph_moins);
+        texteConsoPhMoins = view.findViewById(R.id.texte_conso_ph_moins);
+        boutonRegulateurPhPlus = view.findViewById(R.id.regulateur_ph_plus);
+        bidonPhPlus = view.findViewById(R.id.bidon_ph_plus);
+        texteModeRegulateurPhPlus = view.findViewById(R.id.texte_mode_regulateur_ph_plus);
+        texteRegulateurPhPlus = view.findViewById(R.id.texte_regulateur_ph_plus);
+        texteConsoPhPlus = view.findViewById(R.id.texte_conso_ph_plus);
 
         boutonEclairage1.setOnClickListener(this);
         boutonEclairage2.setOnClickListener(this);
@@ -372,8 +357,6 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
         boutonRegulateurOrp.setOnClickListener(this);
         boutonRegulateurPhMoins.setOnClickListener(this);
         boutonRegulateurPhPlus.setOnClickListener(this);
-        boutonAccueil.setOnClickListener(this);
-        boutonMenu.setOnClickListener(this);
 
         animationInjectionOzone = new AnimationInjection((RelativeLayout) view.findViewById(R.id.layout_sortie_ozone), ligneSortieOzone, true, Donnees.Equipement.Ozone, R.color.ozone);
         animationInjectionRegPhPlus = new AnimationInjection((RelativeLayout) view.findViewById(R.id.layout_sortie_reg_ph_plus), ligneInjectionPhPlus, false, Donnees.Equipement.PhPlus, R.color.phPlus);
@@ -382,164 +365,149 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
         animationInjectionAlgicide = new AnimationInjection((RelativeLayout) view.findViewById(R.id.layout_sortie_algicide), ligneInjectionAlgicide, false, Donnees.Equipement.Algicide, R.color.algicide);
         animationRefoulement = new AnimationRefoulement((RelativeLayout) view.findViewById(R.id.layout_contenu_refoulement));
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            new ScaleListener((HorizontalScrollView) view.findViewById(R.id.horizontal_scroll),
-                    (ScrollView) view.findViewById(R.id.vertical_scroll),
-                    (AbsoluteLayout) view.findViewById(R.id.layout));
-        }
-
+        Display display = MainActivity.instance().getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        scale((AbsoluteLayout) view.findViewById(R.id.layout), Convertisseur.convertPixelsToDp(size.x), Convertisseur.convertPixelsToDp(size.y), Convertisseur.convertPixelsToDp(MainActivity.instance().toolbar.getHeight()));
 
         update();
-
 
         return view;
     }
 
     public void update() {
         if ((view != null) && isAdded()) {
-            boolean pompeFiltrationActive = (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PompeFiltration) == Donnees.AUTO_MARCHE) || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PompeFiltration) == Donnees.MARCHE);
-            boolean surpresseurActive = (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Surpresseur) == Donnees.AUTO_MARCHE) || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Surpresseur) == Donnees.MARCHE);
-            boolean chauffageActive = (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Chauffage) == Donnees.AUTO_MARCHE) || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Chauffage) == Donnees.MARCHE);
-            boolean ozoneActive = (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Ozone) == Donnees.AUTO_MARCHE) || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Ozone) == Donnees.MARCHE);
-            int couleurLigneInjection = pompeFiltrationActive ? ((Donnees.instance().obtenirTypeAsservissement().equals(Donnees.ASSERVISSEMENT_TOR) && chauffageActive) ? getResources().getColor(R.color.ligneInjectionActiveChaud) : getResources().getColor(R.color.ligneInjectionActive)) : getResources().getColor(R.color.ligneInjectionInactive);
+            boolean pompeFiltrationActive = (Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.PompeFiltration) == Donnees.AUTO_MARCHE) || (Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.PompeFiltration) == Donnees.MARCHE);
+            boolean surpresseurActive = (Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.Surpresseur) == Donnees.AUTO_MARCHE) || (Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.Surpresseur) == Donnees.MARCHE);
+            boolean chauffageActive = (Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.Chauffage) == Donnees.AUTO_MARCHE) || (Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.Chauffage) == Donnees.MARCHE);
+            boolean ozoneActive = (Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.Ozone) == Donnees.AUTO_MARCHE) || (Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.Ozone) == Donnees.MARCHE);
+            int couleurLigneInjection = pompeFiltrationActive ? (((Donnees.instance().obtenirTypeRegulation() == Donnees.ASSERVISSEMENT_TOR) && chauffageActive) ? getResources().getColor(R.color.ligneInjectionActiveChaud) : getResources().getColor(R.color.ligneInjectionActive)) : getResources().getColor(R.color.ligneInjectionInactive);
 
-            layoutCapteurInterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.CapteurInterne) ? View.VISIBLE : View.GONE);
-            texteValeurTempInterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureInterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureInterne) + " °C" : "Err");
-            texteValeurHumiditeInterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.HumiditeInterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.HumiditeInterne) + " %" : "Err");
-            texteValeurPressionAtmInterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.PressionAtmospheriqueInterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.PressionAtmospheriqueInterne) + " hPa" : "Err");
+            layoutCapteurInterne.setVisibility(!Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.CapteurInterne) ? View.GONE : View.VISIBLE);
+            texteValeurTempInterne.setText(Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.TemperatureInterne) ? String.format("%.1f", Donnees.instance().obtenirValeurCapteur(Donnees.Capteur.TemperatureInterne)) + " °C" : "Err");
+            texteValeurHumiditeInterne.setText(Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.HumiditeInterne) ? String.format("%.1f", Donnees.instance().obtenirValeurCapteur(Donnees.Capteur.HumiditeInterne)) + " %" : "Err");
+            texteValeurPressionAtmInterne.setText(Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.PressionAtmospheriqueInterne) ? Donnees.instance().obtenirValeurCapteur(Donnees.Capteur.PressionAtmospheriqueInterne) + " hPa" : "Err");
 
-            layoutCapteurExterne.setVisibility(Donnees.instance().presence(Donnees.Capteur.CapteurExterne) ? View.VISIBLE : View.GONE);
-            texteValeurTempExterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureExterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureExterne) + " °C" : "Err");
-            texteValeurHumiditeExterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.HumiditeExterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.HumiditeExterne) + " %" : "Err");
-            texteValeurPressionAtmExterne.setText(Donnees.instance().obtenirEtat(Donnees.Capteur.PressionAtmospheriqueExterne) ? Donnees.instance().obtenirValeur(Donnees.Capteur.PressionAtmospheriqueExterne) + " hPa" : "Err");
+            layoutCapteurExterne.setVisibility(!Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.CapteurExterne) ? View.GONE : View.VISIBLE);
+            texteValeurTempExterne.setText(Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.TemperatureExterne) ? String.format("%.1f", Donnees.instance().obtenirValeurCapteur(Donnees.Capteur.TemperatureExterne)) + " °C" : "Err");
+            texteValeurHumiditeExterne.setText(Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.HumiditeExterne) ? String.format("%.1f", Donnees.instance().obtenirValeurCapteur(Donnees.Capteur.HumiditeExterne)) + " %" : "Err");
+            texteValeurPressionAtmExterne.setText(Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.PressionAtmospheriqueExterne) ? Donnees.instance().obtenirValeurCapteur(Donnees.Capteur.PressionAtmospheriqueExterne) + " hPa" : "Err");
 
-            boutonEclairage1.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Eclairage));
-            boutonEclairage2.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Eclairage));
             definirImageBouton(boutonEclairage1, Donnees.Equipement.Eclairage);
             definirImageBouton(boutonEclairage2, Donnees.Equipement.Eclairage);
             definirTexteMode(texteModeEclairage, Donnees.Equipement.Eclairage);
 
-            boutonPompeFiltration.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PompeFiltration));
             definirImageBouton(boutonPompeFiltration, Donnees.Equipement.PompeFiltration);
             definirTexteMode(texteModePompeFiltration, Donnees.Equipement.PompeFiltration);
 
-            boutonFiltre.setEnabled(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Filtre));
-            texteCapteurPression.setVisibility(Donnees.instance().presence(Donnees.Capteur.Pression) ? View.VISIBLE : View.GONE);
-            texteCapteurPression.setText("Pression : " + (Donnees.instance().obtenirEtat(Donnees.Capteur.Pression) ? Donnees.instance().obtenirValeur(Donnees.Capteur.Pression) + " bar" : "Err"));
-            texteRincageFiltre.setVisibility(Donnees.instance().presence(Donnees.Capteur.Pression) && Donnees.instance().obtenirEtat(Donnees.Capteur.Pression) && (Donnees.instance().obtenirValeur(Donnees.Capteur.Pression) >= Donnees.instance().obtenirPressionProchainLavage()) ? View.VISIBLE : View.GONE);
+            texteCapteurPression.setVisibility(!Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Pression) ? View.GONE : View.VISIBLE);
+            texteCapteurPression.setText("Pression : " + (Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.Pression) ? String.format("%.2f", Donnees.instance().obtenirValeurCapteur(Donnees.Capteur.Pression)) + " bar" : "Err"));
+            texteRincageFiltre.setVisibility(!(Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Pression) && Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.Pression) && (Donnees.instance().obtenirValeurCapteur(Donnees.Capteur.Pression) >= Donnees.instance().obtenirPressionProchainLavage())) ? View.GONE : View.VISIBLE);
 
-            afficherElementsEquipement(Donnees.Equipement.Surpresseur,
-                    texteModeSurpresseur,
-                    boutonSurpresseur,
-                    tuyauSortieFiltreSurpresseur1,
-                    vanneEntreeSurpresseur,
-                    tuyauEntreeSurpresseur2,
-                    tuyauEntreeSurpresseur3,
-                    tuyauSortieSurpresseur,
-                    vanneSortieSurpresseur,
-                    tuyauTPriseBalais);
+            texteModeSurpresseur.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Surpresseur) ? View.GONE : View.VISIBLE);
+            boutonSurpresseur.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Surpresseur) ? View.GONE : View.VISIBLE);
+            tuyauSortieFiltreSurpresseur1.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Surpresseur) ? View.GONE : View.VISIBLE);
+            vanneEntreeSurpresseur.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Surpresseur) ? View.GONE : View.VISIBLE);
+            tuyauEntreeSurpresseur1.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Surpresseur) ? View.GONE : View.VISIBLE);
+            tuyauEntreeSurpresseur2.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Surpresseur) ? View.GONE : View.VISIBLE);
+            tuyauSortieSurpresseur.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Surpresseur) ? View.GONE : View.VISIBLE);
+            vanneSortieSurpresseur.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Surpresseur) ? View.GONE : View.VISIBLE);
+            tuyauTPriseBalais.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Surpresseur) ? View.GONE : View.VISIBLE);
             tuyauPriseBalais2.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Surpresseur) ? View.GONE : View.VISIBLE);
             vannePriseBalais.setImageResource(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Surpresseur) ? R.drawable.vanne_horizontal_inactif : R.drawable.vanne_horizontal_actif);
             definirImageBouton(boutonSurpresseur, Donnees.Equipement.Surpresseur);
             definirTexteMode(texteModeSurpresseur, Donnees.Equipement.Surpresseur);
 
-            afficherElementsEquipement(Donnees.Equipement.Chauffage,
-                    texteModeChauffage,
-                    boutonChauffage,
-                    tuyauSortieTFiltre,
-                    tuyauSortieFiltre2,
-                    vanneEntreeChauffage,
-                    tuyauEntreeChauffage1,
-                    tuyauEntreeChauffage2,
-                    tuyauEntreeChauffage3,
-                    tuyauSortieChauffage1,
-                    tuyauSortieChauffage2,
-                    tuyauSortieChauffage3,
-                    vanneSortieChauffage,
-                    tuyauSortieFiltreChauffage4,
-                    tuyauSortieTFiltreChauffage);
-            helicePac.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() == Donnees.PAC) ? View.VISIBLE : View.GONE);
-            backgroundHelicePac.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() == Donnees.PAC) ? View.VISIBLE : View.GONE);
-            tuyauEntreePanneauSolaire1.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() >= Donnees.PANNEAU_SOLAIRE) ? View.VISIBLE : View.GONE);
-            tuyauEntreePanneauSolaire2.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() >= Donnees.PANNEAU_SOLAIRE) ? View.VISIBLE : View.GONE);
-            tuyauEntreePanneauSolaire3.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() >= Donnees.PANNEAU_SOLAIRE) ? View.VISIBLE : View.GONE);
-            tuyauEntreePanneauSolaire4.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() >= Donnees.PANNEAU_SOLAIRE) ? View.VISIBLE : View.GONE);
-            tuyauSortiePanneauSolaire1.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() == Donnees.PANNEAU_SOLAIRE) ? View.VISIBLE : View.GONE);
-            tuyauSortiePanneauSolaire2.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() == Donnees.PANNEAU_SOLAIRE) ? View.VISIBLE : View.GONE);
-            tuyauSortiePanneauSolaire3.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() == Donnees.PANNEAU_SOLAIRE) ? View.VISIBLE : View.GONE);
+            texteModeChauffage.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) ? View.GONE : View.VISIBLE);
+            helicePac.setVisibility(!(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() == Donnees.PAC)) ? View.GONE : View.VISIBLE);
+            backgroundHelicePac.setVisibility(!(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() == Donnees.PAC)) ? View.GONE : View.VISIBLE);
+            boutonChauffage.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) ? View.GONE : View.VISIBLE);
+            tuyauSortieTFiltre.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) ? View.GONE : View.VISIBLE);
+            tuyauSortieFiltre2.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) ? View.GONE : View.VISIBLE);
+            vanneEntreeChauffage.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) ? View.GONE : View.VISIBLE);
+            tuyauEntreeChauffage1.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) ? View.GONE : View.VISIBLE);
+            tuyauEntreeChauffage2.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) ? View.GONE : View.VISIBLE);
+            tuyauEntreeChauffage3.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) ? View.GONE : View.VISIBLE);
+            tuyauEntreePanneauSolaire1.setVisibility(!(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() >= Donnees.PANNEAU_SOLAIRE)) ? View.GONE : View.VISIBLE);
+            tuyauEntreePanneauSolaire2.setVisibility(!(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() >= Donnees.PANNEAU_SOLAIRE)) ? View.GONE : View.VISIBLE);
+            tuyauEntreePanneauSolaire3.setVisibility(!(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() >= Donnees.PANNEAU_SOLAIRE)) ? View.GONE : View.VISIBLE);
+            tuyauEntreePanneauSolaire4.setVisibility(!(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() >= Donnees.PANNEAU_SOLAIRE)) ? View.GONE : View.VISIBLE);
+            tuyauSortiePanneauSolaire1.setVisibility(!(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() == Donnees.PANNEAU_SOLAIRE)) ? View.GONE : View.VISIBLE);
+            tuyauSortiePanneauSolaire2.setVisibility(!(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() == Donnees.PANNEAU_SOLAIRE)) ? View.GONE : View.VISIBLE);
+            tuyauSortiePanneauSolaire3.setVisibility(!(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirTypeChauffage() == Donnees.PANNEAU_SOLAIRE)) ? View.GONE : View.VISIBLE);
+            tuyauSortieChauffage1.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) ? View.GONE : View.VISIBLE);
+            tuyauSortieChauffage2.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) ? View.GONE : View.VISIBLE);
+            tuyauSortieChauffage3.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) ? View.GONE : View.VISIBLE);
+            vanneSortieChauffage.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) ? View.GONE : View.VISIBLE);
+            tuyauSortieFiltreChauffage4.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) ? View.GONE : View.VISIBLE);
+            tuyauSortieTFiltreChauffage.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) ? View.GONE : View.VISIBLE);
             tuyauSortieFiltreChauffage2.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) ? View.GONE : View.VISIBLE);
             definirImageBouton(boutonChauffage, Donnees.Equipement.Chauffage);
             definirTexteMode(texteModeChauffage, Donnees.Equipement.Chauffage);
 
-            afficherElementsEquipement(Donnees.Equipement.Ozone,
-                    texteModeOzonateur,
-                    boutonOzonateur,
-                    ligneSortieOzone,
-                    sondeOzone);
+            texteModeOzonateur.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Ozone) ? View.GONE : View.VISIBLE);
+            boutonOzonateur.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Ozone) ? View.GONE : View.VISIBLE);
+            ligneSortieOzone.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Ozone) ? View.GONE : View.VISIBLE);
+            sondeOzone.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Ozone) ? View.GONE : View.VISIBLE);
             definirImageBouton(boutonOzonateur, Donnees.Equipement.Ozone);
             definirTexteMode(texteModeOzonateur, Donnees.Equipement.Ozone);
             definirInjection(Donnees.Equipement.Ozone);
 
-            afficherElementsEquipement(Donnees.Equipement.LampesUV,
-                    texteModeLampesUV,
-                    boutonLampesUv,
-                    tuyauEntreeUv1,
-                    tuyauEntreeUv2,
-                    tuyauSortieUv1,
-                    tuyauSortieUv2);
+            texteModeLampesUV.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.LampesUV) ? View.GONE : View.VISIBLE);
+            boutonLampesUv.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.LampesUV) ? View.GONE : View.VISIBLE);
+            tuyauEntreeUv1.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.LampesUV) ? View.GONE : View.VISIBLE);
+            tuyauEntreeUv2.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.LampesUV) ? View.GONE : View.VISIBLE);
+            tuyauSortieUv1.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.LampesUV) ? View.GONE : View.VISIBLE);
+            tuyauSortieUv2.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.LampesUV) ? View.GONE : View.VISIBLE);
             tuyauPassageUv.setVisibility(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.LampesUV) ? View.GONE : View.VISIBLE);
             definirImageBouton(boutonLampesUv, Donnees.Equipement.LampesUV);
             definirTexteMode(texteModeLampesUV, Donnees.Equipement.LampesUV);
 
             // ELECTROLYSEUR
 
-            afficherElementsEquipement(Donnees.Equipement.Algicide,
-                    texteModeAlgicide,
-                    texteAlgicide,
-                    boutonAlgicide,
-                    bidonAlgicide,
-                    texteConsoAlgicide,
-                    contenuBidonAlgicide,
-                    ligneInjectionAlgicide);
+            texteModeAlgicide.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Algicide) ? View.GONE : View.VISIBLE);
+            texteAlgicide.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Algicide) ? View.GONE : View.VISIBLE);
+            boutonAlgicide.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Algicide) ? View.GONE : View.VISIBLE);
+            bidonAlgicide.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Algicide) ? View.GONE : View.VISIBLE);
+            texteConsoAlgicide.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Algicide) ? View.GONE : View.VISIBLE);
+            contenuBidonAlgicide.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Algicide) ? View.GONE : View.VISIBLE);
+            ligneInjectionAlgicide.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Algicide) ? View.GONE : View.VISIBLE);
             definirImageBouton(boutonAlgicide, Donnees.Equipement.Algicide);
             definirTexteMode(texteModeAlgicide, Donnees.Equipement.Algicide);
             definirConsoRegulation(texteConsoAlgicide, contenuBidonAlgicide, Donnees.Equipement.Algicide);
             definirInjection(Donnees.Equipement.Algicide);
 
-            afficherElementsEquipement(Donnees.Equipement.Orp,
-                    texteModeRegulateurOrp,
-                    texteRegulateurOrp,
-                    boutonRegulateurOrp,
-                    bidonOrp,
-                    texteConsoOrp,
-                    contenuBidonOrp,
-                    ligneInjectionOrp);
+            texteModeRegulateurOrp.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) ? View.GONE : View.VISIBLE);
+            texteRegulateurOrp.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) ? View.GONE : View.VISIBLE);
+            boutonRegulateurOrp.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) ? View.GONE : View.VISIBLE);
+            bidonOrp.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) ? View.GONE : View.VISIBLE);
+            texteConsoOrp.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) ? View.GONE : View.VISIBLE);
+            contenuBidonOrp.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) ? View.GONE : View.VISIBLE);
+            ligneInjectionOrp.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) ? View.GONE : View.VISIBLE);
             definirImageBouton(boutonRegulateurOrp, Donnees.Equipement.Orp);
             definirTexteMode(texteModeRegulateurOrp, Donnees.Equipement.Orp);
             definirConsoRegulation(texteConsoOrp, contenuBidonOrp, Donnees.Equipement.Orp);
             definirInjection(Donnees.Equipement.Orp);
 
-            afficherElementsEquipement(Donnees.Equipement.PhMoins,
-                    texteModeRegulateurPhMoins,
-                    texteRegulateurPhMoins,
-                    boutonRegulateurPhMoins,
-                    bidonPhMoins,
-                    texteConsoPhMoins,
-                    contenuBidonPhMoins,
-                    ligneInjectionPhMoins);
+            texteModeRegulateurPhMoins.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins) ? View.GONE : View.VISIBLE);
+            texteRegulateurPhMoins.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins) ? View.GONE : View.VISIBLE);
+            boutonRegulateurPhMoins.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins) ? View.GONE : View.VISIBLE);
+            bidonPhMoins.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins) ? View.GONE : View.VISIBLE);
+            texteConsoPhMoins.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins) ? View.GONE : View.VISIBLE);
+            contenuBidonPhMoins.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins) ? View.GONE : View.VISIBLE);
+            ligneInjectionPhMoins.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins) ? View.GONE : View.VISIBLE);
             definirImageBouton(boutonRegulateurPhMoins, Donnees.Equipement.PhMoins);
             definirTexteMode(texteModeRegulateurPhMoins, Donnees.Equipement.PhMoins);
             definirConsoRegulation(texteConsoPhMoins, contenuBidonPhMoins, Donnees.Equipement.PhMoins);
             definirInjection(Donnees.Equipement.PhMoins);
 
-            afficherElementsEquipement(Donnees.Equipement.PhPlus,
-                    texteModeRegulateurPhPlus,
-                    texteRegulateurPhPlus,
-                    boutonRegulateurPhPlus,
-                    bidonPhPlus,
-                    texteConsoPhPlus,
-                    contenuBidonPhPlus,
-                    ligneInjectionPhPlus);
+            texteModeRegulateurPhPlus.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus) ? View.GONE : View.VISIBLE);
+            texteRegulateurPhPlus.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus) ? View.GONE : View.VISIBLE);
+            boutonRegulateurPhPlus.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus) ? View.GONE : View.VISIBLE);
+            bidonPhPlus.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus) ? View.GONE : View.VISIBLE);
+            texteConsoPhPlus.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus) ? View.GONE : View.VISIBLE);
+            contenuBidonPhPlus.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus) ? View.GONE : View.VISIBLE);
+            ligneInjectionPhPlus.setVisibility(!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus) ? View.GONE : View.VISIBLE);
             definirImageBouton(boutonRegulateurPhPlus, Donnees.Equipement.PhPlus);
             definirTexteMode(texteModeRegulateurPhPlus, Donnees.Equipement.PhPlus);
             definirConsoRegulation(texteConsoPhPlus, contenuBidonPhPlus, Donnees.Equipement.PhPlus);
@@ -547,53 +515,52 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
 
             definirRefoulement();
 
-            sondePt.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
-            ligneCapteurPt1.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
-            texteCapteurPt.setVisibility(Donnees.instance().presence(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
-            texteCapteurPt.setText("Température bassin : " + (Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureBassin) ? Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin) + " °C" : "Err"));
+            sondePt.setVisibility(!Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.TemperatureBassin) ? View.GONE : View.VISIBLE);
+            ligneCapteurPt.setVisibility(!Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.TemperatureBassin) ? View.GONE : View.VISIBLE);
+            texteCapteurPt.setVisibility(!Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.TemperatureBassin) ? View.GONE : View.VISIBLE);
+            texteCapteurPt.setText("Température bassin : " + (Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.TemperatureBassin) ? String.format("%.1f", Donnees.instance().obtenirValeurCapteur(Donnees.Capteur.TemperatureBassin)) + " °C" : "Err"));
 
-            sondePh.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ph) ? View.VISIBLE : View.GONE);
-            ligneCapteurPh.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ph) && (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins) || Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus)) ? View.VISIBLE : View.GONE);
-            ligneCapteurPhMoins1.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ph) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins) ? View.VISIBLE : View.GONE);
-            ligneCapteurPhMoins2.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ph) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins) ? View.VISIBLE : View.GONE);
-            ligneCapteurPhPlus1.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ph) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus) ? View.VISIBLE : View.GONE);
-            ligneCapteurPhPlus2.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ph) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus) ? View.VISIBLE : View.GONE);
+            sondePh.setVisibility(!Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Ph) ? View.GONE : View.VISIBLE);
+            ligneCapteurPh.setVisibility(!(Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Ph) && (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins) || Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus))) ? View.GONE : View.VISIBLE);
+            ligneCapteurPhMoins1.setVisibility(!(Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Ph) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins)) ? View.GONE : View.VISIBLE);
+            ligneCapteurPhMoins2.setVisibility(!(Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Ph) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins)) ? View.GONE : View.VISIBLE);
+            ligneCapteurPhPlus1.setVisibility(!(Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Ph) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus)) ? View.GONE : View.VISIBLE);
+            ligneCapteurPhPlus2.setVisibility(!(Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Ph) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus)) ? View.GONE : View.VISIBLE);
 
-            sondeOrp.setVisibility(Donnees.instance().presence(Donnees.Capteur.Redox) ? View.VISIBLE : View.GONE);
-            ligneCapteurOrp1.setVisibility(Donnees.instance().presence(Donnees.Capteur.Redox) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) ? View.VISIBLE : View.GONE);
-            ligneCapteurOrp2.setVisibility(Donnees.instance().presence(Donnees.Capteur.Redox) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) ? View.VISIBLE : View.GONE);
-            ligneCapteurOrp3.setVisibility(Donnees.instance().presence(Donnees.Capteur.Redox) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) ? View.VISIBLE : View.GONE);
-            ligneCapteurOrp4.setVisibility(Donnees.instance().presence(Donnees.Capteur.Redox) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) ? View.VISIBLE : View.GONE);
+            sondeOrp.setVisibility(!Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Redox) ? View.GONE : View.VISIBLE);
+            ligneCapteurOrp1.setVisibility(!(Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Redox) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp)) ? View.GONE : View.VISIBLE);
+            ligneCapteurOrp2.setVisibility(!(Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Redox) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp)) ? View.GONE : View.VISIBLE);
+            ligneCapteurOrp3.setVisibility(!(Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Redox) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp)) ? View.GONE : View.VISIBLE);
+            ligneCapteurOrp4.setVisibility(!(Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Redox) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp)) ? View.GONE : View.VISIBLE);
 
-            sondeAmpero.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ampero) ? View.VISIBLE : View.GONE);
-            ligneCapteurAmpero.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ampero) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) ? View.VISIBLE : View.GONE);
+            sondeAmpero.setVisibility(!Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Ampero) ? View.GONE : View.VISIBLE);
+            ligneCapteurAmpero.setVisibility(!(Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Ampero) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp)) ? View.GONE : View.VISIBLE);
 
-            if (Donnees.instance().presence(Donnees.Capteur.Ph)
-                    || Donnees.instance().presence(Donnees.Capteur.Redox)
-                    || Donnees.instance().presence(Donnees.Capteur.Ampero)) {
-                ligneEntreeTor.setVisibility(Donnees.instance().obtenirTypeAsservissement().equals(Donnees.ASSERVISSEMENT_TOR) ? View.VISIBLE : View.GONE);
-                ligneEntreeLineaire1.setVisibility(Donnees.instance().obtenirTypeAsservissement().equals(Donnees.ASSERVISSEMENT_LIN) ? View.VISIBLE : View.GONE);
-                ligneEntreeLineaire2.setVisibility(Donnees.instance().obtenirTypeAsservissement().equals(Donnees.ASSERVISSEMENT_LIN) ? View.VISIBLE : View.GONE);
+            if (Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Ph) || Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Redox) || Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Ampero)) {
+                ligneEntreeTor.setVisibility(!(Donnees.instance().obtenirTypeRegulation() == Donnees.ASSERVISSEMENT_TOR) ? View.GONE : View.VISIBLE);
+                ligneEntreeLineaire1.setVisibility(!(Donnees.instance().obtenirTypeRegulation() == Donnees.ASSERVISSEMENT_LIN) ? View.GONE : View.VISIBLE);
+                ligneEntreeLineaire2.setVisibility(!(Donnees.instance().obtenirTypeRegulation() == Donnees.ASSERVISSEMENT_LIN) ? View.GONE : View.VISIBLE);
                 ligneEntreePorteSonde.setVisibility(View.VISIBLE);
                 ligneSortiePorteSonde1.setVisibility(View.VISIBLE);
                 ligneSortiePorteSonde2.setVisibility(View.VISIBLE);
-                ligneSortieTor1.setVisibility(Donnees.instance().obtenirTypeAsservissement().equals(Donnees.ASSERVISSEMENT_TOR) ? View.VISIBLE : View.GONE);
-                ligneSortieTor2.setVisibility(Donnees.instance().obtenirTypeAsservissement().equals(Donnees.ASSERVISSEMENT_TOR) ? View.VISIBLE : View.GONE);
-                ligneSortieTor3.setVisibility(Donnees.instance().obtenirTypeAsservissement().equals(Donnees.ASSERVISSEMENT_TOR) ? View.VISIBLE : View.GONE);
+                ligneSortieTor1.setVisibility(!(Donnees.instance().obtenirTypeRegulation() == Donnees.ASSERVISSEMENT_TOR) ? View.GONE : View.VISIBLE);
+                ligneSortieTor2.setVisibility(!(Donnees.instance().obtenirTypeRegulation() == Donnees.ASSERVISSEMENT_TOR) ? View.GONE : View.VISIBLE);
+                ligneSortieTor3.setVisibility(!(Donnees.instance().obtenirTypeRegulation() == Donnees.ASSERVISSEMENT_TOR) ? View.GONE : View.VISIBLE);
 
                 conteneurDonneesCapteurs.setVisibility(View.VISIBLE);
                 texteTypeRegulation.setVisibility(View.VISIBLE);
-                texteTypeRegulation.setText("Type de régulation : " + Donnees.instance().obtenirTypeAsservissement());
-                texteCapteurPh.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ph) ? View.VISIBLE : View.GONE);
-                texteCapteurPh.setText("pH : " + (Donnees.instance().obtenirEtat(Donnees.Capteur.Ph) ? Double.toString(Donnees.instance().obtenirValeur(Donnees.Capteur.Ph)) : "Err"));
-                texteCapteurOrp.setVisibility(Donnees.instance().presence(Donnees.Capteur.Redox) ? View.VISIBLE : View.GONE);
-                texteCapteurOrp.setText("ORP : " + (Donnees.instance().obtenirEtat(Donnees.Capteur.Redox) ? Donnees.instance().obtenirValeur(Donnees.Capteur.Redox) + " mV" : "Err"));
-                texteCapteurAmpero.setVisibility(Donnees.instance().presence(Donnees.Capteur.Ampero) ? View.VISIBLE : View.GONE);
-                texteCapteurAmpero.setText("Ampéro : " + (Donnees.instance().obtenirEtat(Donnees.Capteur.Ampero) ? Donnees.instance().obtenirValeur(Donnees.Capteur.Ampero) + " ppm" : "Err"));
+                texteTypeRegulation.setText("Type de régulation : " + Donnees.instance().obtenirTypeRegulation());
+                texteCapteurPh.setVisibility(!Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Ph) ? View.GONE : View.VISIBLE);
+                texteCapteurPh.setText("pH : " + (Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.Ph) ? String.format("%.2f", Donnees.instance().obtenirValeurCapteur(Donnees.Capteur.Ph)) : "Err"));
+                texteCapteurOrp.setVisibility(!Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Redox) ? View.GONE : View.VISIBLE);
+                texteCapteurOrp.setText("ORP : " + (Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.Redox) ? String.format("%.0f", Donnees.instance().obtenirValeurCapteur(Donnees.Capteur.Redox)) + " mV" : "Err"));
+                texteCapteurAmpero.setVisibility(!Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Ampero) ? View.GONE : View.VISIBLE);
+                texteCapteurAmpero.setText("Ampéro : " + (Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.Ampero) ? String.format("%.2f", Donnees.instance().obtenirValeurCapteur(Donnees.Capteur.Ampero)) + " ppm" : "Err"));
 
-                if (Donnees.instance().presence(Donnees.Capteur.Ph)) {
+                conteneurDonneesCapteurs.setY(sondePh.getY() + sondePh.getHeight() / 2 - conteneurDonneesCapteurs.getHeight() / 2);
+                if (Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Ph)) {
                     conteneurDonneesCapteurs.setX(sondePh.getX() + sondePh.getWidth() / 2);
-                } else if (Donnees.instance().presence(Donnees.Capteur.Redox)) {
+                } else if (Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Redox)) {
                     conteneurDonneesCapteurs.setX(sondeOrp.getX() + sondeOrp.getWidth() / 2);
                 } else {
                     conteneurDonneesCapteurs.setX(sondeAmpero.getX() + sondeAmpero.getWidth() / 2);
@@ -613,140 +580,23 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             }
 
             // Couleur capteurs
-            texteValeurTempInterne.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureInterne) ? Color.BLACK : Color.RED);
-            texteValeurHumiditeInterne.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur.HumiditeInterne) ? Color.BLACK : Color.RED);
-            texteValeurPressionAtmInterne.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur.PressionAtmospheriqueInterne) ? Color.BLACK : Color.RED);
+            texteValeurTempInterne.setTextColor(!Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.TemperatureInterne) ? Color.RED : Color.BLACK);
+            texteValeurHumiditeInterne.setTextColor(!Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.HumiditeInterne) ? Color.RED : Color.BLACK);
+            texteValeurPressionAtmInterne.setTextColor(!Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.PressionAtmospheriqueInterne) ? Color.RED : Color.BLACK);
 
-            texteValeurTempExterne.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureExterne) ? Color.BLACK : Color.RED);
-            texteValeurHumiditeExterne.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur.HumiditeExterne) ? Color.BLACK : Color.RED);
-            texteValeurPressionAtmExterne.setTextColor(Donnees.instance().obtenirEtat(Donnees.Capteur.PressionAtmospheriqueExterne) ? Color.BLACK : Color.RED);
+            texteValeurTempExterne.setTextColor(!Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.TemperatureExterne) ? Color.RED : Color.BLACK);
+            texteValeurHumiditeExterne.setTextColor(!Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.HumiditeExterne) ? Color.RED : Color.BLACK);
+            texteValeurPressionAtmExterne.setTextColor(!Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.PressionAtmospheriqueExterne) ? Color.RED : Color.BLACK);
 
-            if (Donnees.instance().obtenirEtatLectureCapteurs()) {
-                if (Donnees.instance().obtenirEtat(Donnees.Capteur.Pression)) {
-                    if ((Donnees.instance().obtenirSeuilBasPression() <= Donnees.instance().obtenirValeur(Donnees.Capteur.Pression))
-                            && (Donnees.instance().obtenirValeur(Donnees.Capteur.Pression) <= Donnees.instance().obtenirSeuilHautPression())) {
-                        texteCapteurPression.setTextColor(Color.parseColor("#00AA00"));
-                    } else {
-                        texteCapteurPression.setTextColor(Color.RED);
-                    }
-                } else {
-                    texteCapteurPression.setTextColor(Color.RED);
-                }
+            texteCapteurPression.setTextColor(Donnees.instance().obtenirEtatLectureCapteurs() ? !Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.Pression) || (Donnees.instance().obtenirValeurCapteur(Donnees.Capteur.Pression) < Donnees.instance().obtenirSeuilBasPression()) || (Donnees.instance().obtenirValeurCapteur(Donnees.Capteur.Pression) > Donnees.instance().obtenirSeuilHautPression()) ? Color.RED : Color.GREEN : Color.BLACK);
 
-                if (Donnees.instance().obtenirEtat(Donnees.Capteur.Ph)) {
-                    if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus) && Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins)) {
-                        if (Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.PhPlus)
-                                || Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.PhMoins)) {
-                            texteCapteurPh.setTextColor(Color.parseColor("#FFAA00"));
-                        } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Ph) < (Donnees.instance().obtenirConsignePh() - Donnees.instance().obtenirHysteresisPhPlus())) {
-                            texteCapteurPh.setTextColor(Color.RED);
-                        } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Ph) > (Donnees.instance().obtenirConsignePh() + Donnees.instance().obtenirHysteresisPhMoins())) {
-                            texteCapteurPh.setTextColor(Color.RED);
-                        } else {
-                            texteCapteurPh.setTextColor(Color.parseColor("#00AA00"));
-                        }
-                    } else if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus)) {
-                        if (Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.PhPlus)) {
-                            texteCapteurPh.setTextColor(Color.parseColor("#FFAA00"));
-                        } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Ph) < (Donnees.instance().obtenirConsignePh() - Donnees.instance().obtenirHysteresisPhPlus())) {
-                            texteCapteurPh.setTextColor(Color.RED);
-                        } else {
-                            texteCapteurPh.setTextColor(Color.parseColor("#00AA00"));
-                        }
-                    } else if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins)) {
-                        if (Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.PhMoins)) {
-                            texteCapteurPh.setTextColor(Color.parseColor("#FFAA00"));
-                        } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Ph) > (Donnees.instance().obtenirConsignePh() + Donnees.instance().obtenirHysteresisPhMoins())) {
-                            texteCapteurPh.setTextColor(Color.RED);
-                        } else {
-                            texteCapteurPh.setTextColor(Color.parseColor("#00AA00"));
-                        }
-                    } else {
-                        texteCapteurPh.setTextColor(Color.BLACK);
-                    }
-                } else {
-                    texteCapteurPh.setTextColor(Color.RED);
-                }
+            texteCapteurPh.setTextColor(Donnees.instance().obtenirEtatLectureCapteurs() ? Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.PhPlus) || Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.PhMoins) ? Color.rgb(255, 127, 0) : !Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.Ph) || (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhPlus) && (Donnees.instance().obtenirValeurCapteur(Donnees.Capteur.Ph) < (Donnees.instance().obtenirPointConsignePh() - Donnees.instance().obtenirHysteresisPhPlus()))) || (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins) && (Donnees.instance().obtenirValeurCapteur(Donnees.Capteur.Ph) > (Donnees.instance().obtenirPointConsignePh() + Donnees.instance().obtenirHysteresisPhMoins()))) ? Color.RED : Color.GREEN : Color.BLACK);
 
-                if (Donnees.instance().presence(Donnees.Capteur.Ampero)) {
-                    if (Donnees.instance().obtenirEtat(Donnees.Capteur.Ampero)) {
-                        if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp)) {
-                            if (Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.Orp)) {
-                                texteCapteurAmpero.setTextColor(Color.parseColor("#FFAA00"));
-                            } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Ampero) < (Donnees.instance().obtenirConsigneAmpero() - Donnees.instance().obtenirHysteresisAmpero())) {
-                                texteCapteurAmpero.setTextColor(Color.RED);
-                            } else {
-                                texteCapteurAmpero.setTextColor(Color.parseColor("#00AA00"));
-                            }
-                        } else {
-                            texteCapteurAmpero.setTextColor(Color.BLACK);
-                        }
-                    } else {
-                        texteCapteurAmpero.setTextColor(Color.RED);
-                    }
+            texteCapteurAmpero.setTextColor(Donnees.instance().obtenirEtatLectureCapteurs() ? Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.Orp) ? Color.rgb(255, 127, 0) : !Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.Ampero) || (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) && (Donnees.instance().obtenirValeurCapteur(Donnees.Capteur.Ampero) < (Donnees.instance().obtenirPointConsigneAmpero() - Donnees.instance().obtenirHysteresisAmpero()))) ? Color.RED : Color.GREEN : Color.BLACK);
 
-                    if (Donnees.instance().obtenirEtat(Donnees.Capteur.Redox)) {
-                        if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp)) {
-                            if (Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.Orp)
-                                    && !Donnees.instance().obtenirEtat(Donnees.Capteur.Ampero)) {
-                                texteCapteurOrp.setTextColor(Color.parseColor("#FFAA00"));
-                            } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Redox) < (Donnees.instance().obtenirConsigneOrp() - Donnees.instance().obtenirHysteresisOrp())) {
-                                texteCapteurOrp.setTextColor(Color.RED);
-                            } else {
-                                texteCapteurOrp.setTextColor(Color.parseColor("#00AA00"));
-                            }
-                        } else {
-                            texteCapteurOrp.setTextColor(Color.BLACK);
-                        }
-                    } else {
-                        texteCapteurOrp.setTextColor(Color.RED);
-                    }
-                } else {
-                    if (Donnees.instance().obtenirEtat(Donnees.Capteur.Redox)) {
-                        if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp)) {
-                            if (Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.Orp)) {
-                                texteCapteurOrp.setTextColor(Color.parseColor("#FFAA00"));
-                            } else if (Donnees.instance().obtenirValeur(Donnees.Capteur.Redox) < (Donnees.instance().obtenirConsigneOrp() - Donnees.instance().obtenirHysteresisOrp())) {
-                                texteCapteurOrp.setTextColor(Color.RED);
-                            } else {
-                                texteCapteurOrp.setTextColor(Color.parseColor("#00AA00"));
-                            }
-                        } else {
-                            texteCapteurOrp.setTextColor(Color.BLACK);
-                        }
-                    } else {
-                        texteCapteurOrp.setTextColor(Color.RED);
-                    }
-                }
+            texteCapteurOrp.setTextColor(Donnees.instance().obtenirEtatLectureCapteurs() ? Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.Orp) ? Color.rgb(255, 127, 0) : !Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.Redox) || (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) && (Donnees.instance().obtenirValeurCapteur(Donnees.Capteur.Redox) < (Donnees.instance().obtenirPointConsigneOrp() - Donnees.instance().obtenirHysteresisOrp()))) ? Color.RED : Color.GREEN : Color.BLACK);
 
-                if (Donnees.instance().obtenirEtat(Donnees.Capteur.TemperatureBassin)) {
-                    if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage)) {
-                        if ((Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Chauffage) == Donnees.MARCHE)
-                                || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Chauffage) == Donnees.AUTO_MARCHE)) {
-                            texteCapteurPt.setTextColor(Color.parseColor("#FFAA00"));
-                        } else if (Donnees.instance().obtenirControlePompeFiltration() == Donnees.CONTROLE_PAR_POMPE_FILTRATION) {
-                            if ((Donnees.instance().obtenirTemperatureEnclenchement() <= Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin))
-                                    && (Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin) <= Donnees.instance().obtenirTemperatureArret())) {
-                                texteCapteurPt.setTextColor(Color.parseColor("#00AA00"));
-                            } else {
-                                texteCapteurPt.setTextColor(Color.RED);
-                            }
-                        } else {
-                            if (Donnees.instance().obtenirTemperatureConsigne() <= Donnees.instance().obtenirValeur(Donnees.Capteur.TemperatureBassin)) {
-                                texteCapteurPt.setTextColor(Color.parseColor("#00AA00"));
-                            } else {
-                                texteCapteurPt.setTextColor(Color.RED);
-                            }
-                        }
-                    } else {
-                        texteCapteurPt.setTextColor(Color.BLACK);
-                    }
-                } else {
-                    texteCapteurPt.setTextColor(Color.RED);
-                }
-            } else {
-                texteCapteurPression.setTextColor(Color.BLACK);
-            }
+            texteCapteurPt.setTextColor(Donnees.instance().obtenirEtatLectureCapteurs() ? (Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.Chauffage) == Donnees.MARCHE) || (Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.Chauffage) == Donnees.AUTO_MARCHE) ? Color.rgb(255, 127, 0) : !Donnees.instance().obtenirEtatCapteur(Donnees.Capteur.TemperatureBassin) || (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) && (Donnees.instance().obtenirValeurCapteur(Donnees.Capteur.TemperatureBassin) < Donnees.instance().obtenirTemperatureConsigne())) ? Color.RED : Color.GREEN : Color.BLACK);
 
             // Tuyauterie
             tuyauSkimmer1.setImageResource(pompeFiltrationActive ? R.drawable.tuyau_horizontal_sale : R.drawable.tuyau_horizontal_inactif);
@@ -770,8 +620,8 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             tuyauSortieFiltre2.setImageResource(pompeFiltrationActive ? R.drawable.tuyau_vertical_actif : R.drawable.tuyau_vertical_inactif);
             tuyauSortieTFiltre.setImageResource(pompeFiltrationActive ? R.drawable.tuyau_3_6_9_actif : R.drawable.tuyau_3_6_9_inactif);
             tuyauSortieFiltreSurpresseur1.setImageResource(pompeFiltrationActive ? R.drawable.tuyau_3_9_12_actif : R.drawable.tuyau_3_9_12_inactif);
-            tuyauEntreeSurpresseur2.setImageResource(pompeFiltrationActive ? R.drawable.tuyau_6_9_actif : R.drawable.tuyau_6_9_inactif);
-            tuyauEntreeSurpresseur3.setImageResource(pompeFiltrationActive ? R.drawable.tuyau_horizontal_actif : R.drawable.tuyau_horizontal_inactif);
+            tuyauEntreeSurpresseur1.setImageResource(pompeFiltrationActive ? R.drawable.tuyau_6_9_actif : R.drawable.tuyau_6_9_inactif);
+            tuyauEntreeSurpresseur2.setImageResource(pompeFiltrationActive ? R.drawable.tuyau_horizontal_actif : R.drawable.tuyau_horizontal_inactif);
             tuyauSortieSurpresseur.setImageResource((pompeFiltrationActive && surpresseurActive) ? R.drawable.tuyau_vertical_actif : R.drawable.tuyau_vertical_inactif);
             if (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Surpresseur)) {
                 tuyauPriseBalais1.setImageResource((pompeFiltrationActive && surpresseurActive) ? R.drawable.tuyau_vertical_actif : R.drawable.tuyau_vertical_inactif);
@@ -828,9 +678,9 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             ligneSortieTor3.setBackgroundColor(couleurLigneInjection);
             sondeOzone.setImageResource(pompeFiltrationActive ? (ozoneActive ? R.drawable.sonde_ozone : R.drawable.sonde_sale) : R.drawable.sonde_inactif);
             sondePt.setImageResource(pompeFiltrationActive ? R.drawable.sonde_sale : R.drawable.sonde_inactif);
-            sondePh.setImageResource(pompeFiltrationActive ? ((Donnees.instance().obtenirTypeAsservissement().equals(Donnees.ASSERVISSEMENT_TOR) && chauffageActive) ? R.drawable.sonde_actif_chaud : R.drawable.sonde_actif) : R.drawable.sonde_inactif);
-            sondeOrp.setImageResource(pompeFiltrationActive ? ((Donnees.instance().obtenirTypeAsservissement().equals(Donnees.ASSERVISSEMENT_TOR) && chauffageActive) ? R.drawable.sonde_actif_chaud : R.drawable.sonde_actif) : R.drawable.sonde_inactif);
-            sondeAmpero.setImageResource(pompeFiltrationActive ? ((Donnees.instance().obtenirTypeAsservissement().equals(Donnees.ASSERVISSEMENT_TOR) && chauffageActive) ? R.drawable.sonde_actif_chaud : R.drawable.sonde_actif) : R.drawable.sonde_inactif);
+            sondePh.setImageResource(pompeFiltrationActive ? (((Donnees.instance().obtenirTypeRegulation() == Donnees.ASSERVISSEMENT_TOR) && chauffageActive) ? R.drawable.sonde_actif_chaud : R.drawable.sonde_actif) : R.drawable.sonde_inactif);
+            sondeOrp.setImageResource(pompeFiltrationActive ? (((Donnees.instance().obtenirTypeRegulation() == Donnees.ASSERVISSEMENT_TOR) && chauffageActive) ? R.drawable.sonde_actif_chaud : R.drawable.sonde_actif) : R.drawable.sonde_inactif);
+            sondeAmpero.setImageResource(pompeFiltrationActive ? (((Donnees.instance().obtenirTypeRegulation() == Donnees.ASSERVISSEMENT_TOR) && chauffageActive) ? R.drawable.sonde_actif_chaud : R.drawable.sonde_actif) : R.drawable.sonde_inactif);
         }
     }
 
@@ -870,19 +720,13 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
             case R.id.regulateur_ph_plus:
                 MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_regulateur_ph_plus_layout));
                 break;
-            case R.id.bouton_accueil:
-                MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_donnees_layout));
-                break;
-            case R.id.bouton_menu:
-                MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_menu_layout));
-                break;
             default:
                 break;
         }
     }
 
     private void definirImageBouton(ImageButton imageButton, Donnees.Equipement equipement) {
-        int mode = Donnees.instance().obtenirModeFonctionnement(equipement);
+        int mode = Donnees.instance().obtenirEtatEquipement(equipement);
         int imageActif;
         int imageInactif;
 
@@ -963,7 +807,7 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
     }
 
     private void definirTexteMode(TextView textView, Donnees.Equipement equipement) {
-        int mode = Donnees.instance().obtenirModeFonctionnement(equipement);
+        int mode = Donnees.instance().obtenirEtatEquipement(equipement);
         int couleurTexte;
         int couleurContour;
 
@@ -1004,8 +848,8 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
         }
 
         if ((animationInjection != null)
-                && ((Donnees.instance().obtenirModeFonctionnement(equipement) == Donnees.AUTO_MARCHE)
-                || (Donnees.instance().obtenirModeFonctionnement(equipement) == Donnees.MARCHE))) {
+                && ((Donnees.instance().obtenirEtatEquipement(equipement) == Donnees.AUTO_MARCHE)
+                || (Donnees.instance().obtenirEtatEquipement(equipement) == Donnees.MARCHE))) {
             animationInjection.ajouterInjection();
         } else {
             animationInjection.arreterTimer();
@@ -1013,25 +857,17 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
     }
 
     private void definirRefoulement() {
-        if ((Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PompeFiltration) == Donnees.AUTO_MARCHE)
-                || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PompeFiltration) == Donnees.MARCHE)) {
+        if ((Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.PompeFiltration) == Donnees.AUTO_MARCHE)
+                || (Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.PompeFiltration) == Donnees.MARCHE)) {
             animationRefoulement.ajouterInjection();
         } else {
             animationRefoulement.arreterTimer();
         }
     }
 
-    private void afficherElementsEquipement(Donnees.Equipement equipement, View... views) {
-        boolean equipementInstalle = Donnees.instance().obtenirEquipementInstalle(equipement);
-
-        for (int i = 0; i < views.length; i++) {
-            views[i].setVisibility(equipementInstalle ? View.VISIBLE : View.GONE);
-        }
-    }
-
     private void definirConsoRegulation(TextView textView, ProgressBar progressBar, Donnees.Equipement equipement) {
-        double conso = Donnees.instance().obtenirConsoVolumeRestant(equipement);
-        double consoMax = Donnees.instance().obtenirConsoVolume(equipement);
+        double conso = Donnees.instance().obtenirVolumeRestant(equipement);
+        double consoMax = Donnees.instance().obtenirVolume(equipement);
         int couleurTexte;
 
         if (conso < (consoMax * Global.HYSTERESIS_BIDON_VIDE / 100.0)) {
@@ -1065,4 +901,14 @@ public class FragmentSynoptique extends Fragment implements View.OnClickListener
         }
     }
 
+    private void scale(AbsoluteLayout view, float width, float height, float offset) {
+        float wScaleFactor = (float) (width / 800.0);
+        float hScaleFactor = (float) ((height - offset) / 1280.0);
+
+        view.setRotation(90);
+        view.setScaleX(hScaleFactor);
+        view.setScaleY(wScaleFactor);
+        view.setTranslationX(Convertisseur.convertDpToPixel(-(1280 - 800 * wScaleFactor) / 2));
+        view.setTranslationY(Convertisseur.convertDpToPixel(-(800 - 1280 * hScaleFactor) / 2));
+    }
 }
