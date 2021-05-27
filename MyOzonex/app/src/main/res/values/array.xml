@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="valeurs_type_refoulement">
+        <item>UNIQUE</item>
+        <item>MULTIPLE</item>
+    </string-array>
+
+    <string-array name="valeurs_type_regulation">
+        <item>TOR</item>
+        <item>LINEAIRE</item>
+    </string-array>
+
+    <string-array name="valeurs_type_ozone">
+        <item>AIR</item>
+        <item>OXYGÈNE</item>
+    </string-array>
+
+    <string-array name="valeurs_nombre_ventilateurs_ozone">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+</resources>

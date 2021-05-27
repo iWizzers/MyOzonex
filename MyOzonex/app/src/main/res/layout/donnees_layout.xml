@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/global_layout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fond_portrait_2">
+    android:background="@color/colorPrimaryDark">
     <ScrollView
+        android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="false">
@@ -14,220 +15,62 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/layout_widget_space"
             android:paddingBottom="@dimen/layout_widget_space"
+            android:paddingLeft="@dimen/layout_widget_space"
+            android:paddingRight="@dimen/layout_widget_space"
             android:orientation="vertical" >
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingTop="@dimen/layout_widget_space"
-                android:paddingBottom="@dimen/layout_widget_space"
-                android:paddingLeft="@dimen/layout_widget_space"
-                android:paddingRight="@dimen/layout_widget_space"
-                android:background="@color/transparentBackground"
+                android:layout_height="wrap_content"
                 android:orientation="vertical" >
                 <TextView
-                    android:id="@+id/texte_aucun_capteurs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="INFORMATIONS GÉNÉRALES"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
                     android:gravity="center"
-                    android:text="Pas de capteurs installés"
-                    android:textColor="@color/couleurSousTitre"
-                    android:textSize="@dimen/texteSousTitre"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:id="@+id/layout_temperature_bassin"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:orientation="horizontal" >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_weight="1"
-                        android:layout_gravity="center_vertical|left"
-                        android:text="Température bassin"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre"
-                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/image_derniere_connexion"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        app:srcCompat="@android:drawable/presence_online" />
 
                     <TextView
-                        android:id="@+id/texte_valeur_temperature_bassin"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/texte_derniere_connexion"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|right"
-                        android:text="24.0 °C"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold" />
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:text="Dernière connexion le 31/12/2020 à 09:42"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/texteGeneral" />
                 </LinearLayout>
+            </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/layout_temperature_interne"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/layout_widget_space"
+                android:orientation="vertical" >
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:background="@color/colorPrimary" />
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/layout_widget_space"
-                    android:orientation="horizontal" >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_weight="1"
-                        android:layout_gravity="center_vertical|left"
-                        android:text="Température interne"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/texte_valeur_temperature_interne"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|right"
-                        android:text="21.0 °C"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/layout_humidite_interne"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/layout_widget_space"
-                    android:orientation="horizontal" >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_weight="1"
-                        android:layout_gravity="center_vertical|left"
-                        android:text="Humidité interne"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/texte_valeur_humidite_interne"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|right"
-                        android:text="21.3 %"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/layout_pression_atm_interne"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/layout_widget_space"
-                    android:orientation="horizontal" >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_weight="1"
-                        android:layout_gravity="center_vertical|left"
-                        android:text="Pression atmosphérique interne"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/texte_valeur_pression_atm_interne"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|right"
-                        android:text="1016 hPa"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/layout_temperature_externe"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/layout_widget_space"
-                    android:orientation="horizontal" >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_weight="1"
-                        android:layout_gravity="center_vertical|left"
-                        android:text="Température externe"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/texte_valeur_temperature_externe"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|right"
-                        android:text="21.0 °C"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/layout_humidite_externe"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/layout_widget_space"
-                    android:orientation="horizontal" >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_weight="1"
-                        android:layout_gravity="center_vertical|left"
-                        android:text="Humidité externe"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/texte_valeur_humidite_externe"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|right"
-                        android:text="21.3 %"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/layout_pression_atm_externe"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/layout_widget_space"
-                    android:orientation="horizontal" >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_weight="1"
-                        android:layout_gravity="center_vertical|left"
-                        android:text="Pression atmosphérique externe"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/texte_valeur_pression_atm_externe"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|right"
-                        android:text="1016 hPa"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                    android:text="INFORMATIONS CAPTEURS"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/texteGeneral" />
 
                 <LinearLayout
                     android:id="@+id/layout_ph"
@@ -236,79 +79,49 @@
                     android:layout_marginTop="@dimen/layout_widget_space"
                     android:orientation="horizontal" >
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/layout_space"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:layout_gravity="center_vertical|left"
+                        android:gravity="center_vertical"
                         android:text="pH"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre"
-                        android:textStyle="bold" />
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/texteGeneral" />
 
                     <TextView
                         android:id="@+id/texte_valeur_ph"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|right"
-                        android:text="7.00"
-                        android:textColor="@color/couleurTexteGeneral"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:gravity="center_vertical"
+                        android:text="7.20"
+                        android:textColor="@color/green"
                         android:textSize="@dimen/texteGeneral"
                         android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/layout_orp"
+                    android:id="@+id/layout_redox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/layout_widget_space"
                     android:orientation="horizontal" >
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/layout_space"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:layout_gravity="center_vertical|left"
-                        android:text="ORP"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre"
-                        android:textStyle="bold" />
+                        android:gravity="center_vertical"
+                        android:text="Redox"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/texteGeneral" />
 
                     <TextView
-                        android:id="@+id/texte_valeur_orp"
+                        android:id="@+id/texte_valeur_redox"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|right"
-                        android:text="600 mV"
-                        android:textColor="@color/couleurTexteGeneral"
-                        android:textSize="@dimen/texteGeneral"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/layout_pression"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/layout_widget_space"
-                    android:orientation="horizontal" >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/layout_space"
-                        android:layout_weight="1"
-                        android:layout_gravity="center_vertical|left"
-                        android:text="Pression"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/texte_valeur_pression"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|right"
-                        android:text="0.70 bar"
-                        android:textColor="@color/couleurTexteGeneral"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:gravity="center_vertical"
+                        android:text="625 mV"
+                        android:textColor="@color/green"
                         android:textSize="@dimen/texteGeneral"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -320,55 +133,308 @@
                     android:layout_marginTop="@dimen/layout_widget_space"
                     android:orientation="horizontal" >
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/layout_space"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:layout_gravity="center_vertical|left"
+                        android:gravity="center_vertical"
                         android:text="Ampéro"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre"
-                        android:textStyle="bold" />
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/texteGeneral" />
 
                     <TextView
                         android:id="@+id/texte_valeur_ampero"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|right"
-                        android:text="1.00 ppm"
-                        android:textColor="@color/couleurTexteGeneral"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:gravity="center_vertical"
+                        android:text="0.75 ppm"
+                        android:textColor="@color/green"
                         android:textSize="@dimen/texteGeneral"
                         android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/layout_4_20_libre"
+                    android:id="@+id/layout_temperature_bassin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/layout_widget_space"
                     android:orientation="horizontal" >
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/layout_space"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:layout_gravity="center_vertical|left"
-                        android:text="4-20 Libre"
-                        android:textColor="@color/couleurSousTitre"
-                        android:textSize="@dimen/texteSousTitre"
-                        android:textStyle="bold" />
+                        android:gravity="center_vertical"
+                        android:text="Température du bassin"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/texteGeneral" />
 
                     <TextView
-                        android:id="@+id/texte_valeur_4_20_libre"
+                        android:id="@+id/texte_valeur_temperature_bassin"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|right"
-                        android:text="1.00"
-                        android:textColor="@color/couleurTexteGeneral"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:gravity="center_vertical"
+                        android:text="24.0 °C"
+                        android:textColor="@color/green"
+                        android:textSize="@dimen/texteGeneral"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_pression"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Pression"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/texteGeneral" />
+
+                    <TextView
+                        android:id="@+id/texte_valeur_pression"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:gravity="center_vertical"
+                        android:text="0.75 bar"
+                        android:textColor="@color/green"
+                        android:textSize="@dimen/texteGeneral"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_temperature_externe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Température externe"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/texteGeneral" />
+
+                    <TextView
+                        android:id="@+id/texte_valeur_temperature_externe"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:gravity="center_vertical"
+                        android:text="25.1 °C"
+                        android:textColor="@color/green"
+                        android:textSize="@dimen/texteGeneral"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_humidite_externe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Humidité externe"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/texteGeneral" />
+
+                    <TextView
+                        android:id="@+id/texte_valeur_humidite_externe"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:gravity="center_vertical"
+                        android:text="25.1 %"
+                        android:textColor="@color/green"
+                        android:textSize="@dimen/texteGeneral"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_pression_atm_externe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Pression atmosphérique externe"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/texteGeneral" />
+
+                    <TextView
+                        android:id="@+id/texte_valeur_pression_atm_externe"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:gravity="center_vertical"
+                        android:text="1013 hPa"
+                        android:textColor="@color/green"
+                        android:textSize="@dimen/texteGeneral"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_temperature_interne"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Température interne"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/texteGeneral" />
+
+                    <TextView
+                        android:id="@+id/texte_valeur_temperature_interne"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:gravity="center_vertical"
+                        android:text="25.1 °C"
+                        android:textColor="@color/green"
+                        android:textSize="@dimen/texteGeneral"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_humidite_interne"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Humidité interne"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/texteGeneral" />
+
+                    <TextView
+                        android:id="@+id/texte_valeur_humidite_interne"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:gravity="center_vertical"
+                        android:text="25.1 %"
+                        android:textColor="@color/green"
+                        android:textSize="@dimen/texteGeneral"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_pression_atm_interne"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/layout_widget_space"
+                    android:orientation="horizontal" >
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="Pression atmosphérique interne"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/texteGeneral" />
+
+                    <TextView
+                        android:id="@+id/texte_valeur_pression_atm_interne"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/layout_space"
+                        android:gravity="center_vertical"
+                        android:text="1013 hPa"
+                        android:textColor="@color/green"
                         android:textSize="@dimen/texteGeneral"
                         android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/layout_question"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/layout_widget_space"
+        android:paddingBottom="@dimen/layout_widget_space"
+        android:paddingLeft="@dimen/layout_widget_space"
+        android:paddingRight="@dimen/layout_widget_space"
+        android:visibility="gone"
+        android:orientation="vertical" >
+        <TextView
+            android:id="@+id/texte_question"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Question"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/texteGeneral" />
+
+        <EditText
+            android:id="@+id/edit_question"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_widget_space"
+            android:padding="10dp"
+            android:background="@drawable/rounded_edittext"
+            android:textAlignment="center"
+            android:inputType="numberDecimal"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/texteGeneral" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/layout_widget_space"
+            android:orientation="horizontal" >
+            <ImageButton
+                android:id="@+id/bouton_annuler_question"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:tint="#FF0000"
+                app:srcCompat="@drawable/close_icon" />
+
+            <ImageButton
+                android:id="@+id/bouton_valider_question"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginLeft="@dimen/layout_space"
+                android:layout_weight="1"
+                android:scaleType="centerInside"
+                android:adjustViewBounds="true"
+                android:background="@android:color/transparent"
+                android:tint="#00FF00"
+                app:srcCompat="@drawable/checkmark_icon" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         android:gravity="center_horizontal|bottom"
         android:text="@string/app_name"
-        android:textColor="@color/couleurTexteGeneral"
+        android:textColor="?attr/colorPrimary"
         android:textSize="@dimen/texteTitre"
         android:textStyle="bold|italic"
         android:shadowColor="@android:color/black"

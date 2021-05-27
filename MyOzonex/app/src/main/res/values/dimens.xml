@@ -12,7 +12,7 @@
     <dimen name="texteIndication">14sp</dimen>
     <dimen name="texteValeurPageDonnee">64sp</dimen>
 
-    <dimen name="layout_widget_space">25dp</dimen>
-    <dimen name="layout_container_space">15dp</dimen>
+    <dimen name="layout_widget_space">24dp</dimen>
+    <dimen name="layout_container_space">12dp</dimen>
     <dimen name="layout_space">6dp</dimen>
 </resources>

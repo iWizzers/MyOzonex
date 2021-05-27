@@ -4,9 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
-import android.os.Build;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -27,8 +25,8 @@ public class AnimationRefoulement {
         @Override
         public void run() {
             isRunning = false;
-            if ((Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PompeFiltration) == Donnees.AUTO_MARCHE)
-                    || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PompeFiltration) == Donnees.MARCHE)) {
+            if ((Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.PompeFiltration) == Donnees.AUTO_MARCHE)
+                    || (Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.PompeFiltration) == Donnees.MARCHE)) {
                 ajouterInjection();
             }
         }
@@ -36,8 +34,8 @@ public class AnimationRefoulement {
 
     public void demarrerTimer() {
         isRunning = true;
-        if ((Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Ozone) == Donnees.AUTO_MARCHE)
-                || (Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Ozone) == Donnees.MARCHE)) {
+        if ((Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.Ozone) == Donnees.AUTO_MARCHE)
+                || (Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.Ozone) == Donnees.MARCHE)) {
             attenteRefoulement.postDelayed(timer, Generator.nombreAleatoire(100, 200));
         } else {
             attenteRefoulement.postDelayed(timer, Generator.nombreAleatoire(300, 500));

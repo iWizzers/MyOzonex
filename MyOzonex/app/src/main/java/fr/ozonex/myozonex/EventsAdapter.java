@@ -10,13 +10,13 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class EventsAdapter extends ArrayAdapter<Event> {
+public class EventsAdapter extends ArrayAdapter<StructureEvenement> {
     private static final int BLANC = 0;
     private static final int JAUNE = 1;
     private static final int ORANGE = 2;
     private static final int ROUGE = 3;
 
-    public EventsAdapter(Context context, List<Event> tweets) {
+    public EventsAdapter(Context context, List<StructureEvenement> tweets) {
         super(context, 0, tweets);
     }
 
@@ -36,7 +36,7 @@ public class EventsAdapter extends ArrayAdapter<Event> {
         }
 
         //getItem(position) va récupérer l'item [position] de la List<Tweet> tweets
-        Event event = getItem(position);
+        StructureEvenement event = getItem(position);
         viewHolder.texteEvent.setText(event.getTexte());
         if (event.getCouleur() == BLANC) {
             viewHolder.backgroundEvent.setBackgroundColor(MainActivity.instance().getResources().getColor(R.color.couleurBlanc));

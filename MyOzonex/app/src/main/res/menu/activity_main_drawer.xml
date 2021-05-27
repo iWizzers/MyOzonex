@@ -4,105 +4,114 @@
     tools:showIn="navigation_view">
 
     <item
-        android:id="@+id/nav_donnees_layout"
+        android:id="@+id/nav_accueil_layout"
         android:icon="@drawable/ic_menu_show"
-        android:title="@string/donnees" />
+        android:title="Accueil" />
     <item
         android:id="@+id/nav_synoptique_layout"
         android:icon="@drawable/ic_menu_show"
-        android:title="@string/synoptique" />
-    <item
-        android:id="@+id/nav_menu_layout"
-        android:icon="@drawable/ic_menu_show"
-        android:title="@string/menu" />
+        android:title="Synoptique" />
     <item
         android:id="@+id/nav_bassin_layout"
         android:icon="@drawable/ic_menu_show"
-        android:title="@string/bassin" />
+        android:title="Bassin" />
 
-    <item android:title="Equipements principaux">
+    <item android:title="ÉQUIPEMENTS PRINCIPAUX">
         <menu>
             <item
                 android:id="@+id/nav_eclairage_layout"
                 android:icon="@drawable/ic_menu_show"
-                android:title="@string/eclairage" />
+                android:title="Éclairage" />
             <item
                 android:id="@+id/nav_pompe_filtration_layout"
                 android:icon="@drawable/ic_menu_show"
-                android:title="@string/pompe_filtration" />
+                android:title="Pompe filtration" />
             <item
                 android:id="@+id/nav_filtre_layout"
                 android:icon="@drawable/ic_menu_show"
-                android:title="@string/filtre" />
+                android:title="Filtre" />
         </menu>
     </item>
 
-    <item android:title="Equipements optionnels">
+    <item android:title="ÉQUIPEMENTS OPTIONNELS">
         <menu>
+            <item
+                android:id="@+id/nav_aucun_equipement_option_layout"
+                android:icon="@drawable/ic_menu_show"
+                android:title="Aucun" />
             <item
                 android:id="@+id/nav_surpresseur_layout"
                 android:icon="@drawable/ic_menu_show"
-                android:title="@string/surpresseur" />
+                android:title="Surpresseur" />
             <item
                 android:id="@+id/nav_chauffage_layout"
                 android:icon="@drawable/ic_menu_show"
-                android:title="@string/chauffage" />
+                android:title="Chauffage" />
             <item
                 android:id="@+id/nav_ozone_layout"
                 android:icon="@drawable/ic_menu_show"
-                android:title="@string/ozonateur" />
+                android:title="Ozonateur" />
             <item
                 android:id="@+id/nav_lampes_uv_layout"
                 android:icon="@drawable/ic_menu_show"
-                android:title="@string/lampes_uv" />
+                android:title="Lampes UV" />
             <item
                 android:id="@+id/nav_electrolyseur_layout"
                 android:icon="@drawable/ic_menu_show"
-                android:title="@string/electrolyseur" />
+                android:title="Électrolyseur" />
         </menu>
     </item>
 
-    <item android:title="Régulations">
+    <item android:title="RÉGULATIONS">
         <menu>
+            <item
+                android:id="@+id/nav_aucune_regulations_layout"
+                android:icon="@drawable/ic_menu_show"
+                android:title="Aucun" />
             <item
                 android:id="@+id/nav_regulateur_ph_plus_layout"
                 android:icon="@drawable/ic_menu_show"
-                android:title="@string/regulateur_ph_plus" />
+                android:title="Régulateur pH+" />
             <item
                 android:id="@+id/nav_regulateur_ph_moins_layout"
                 android:icon="@drawable/ic_menu_show"
-                android:title="@string/regulateur_ph_moins" />
+                android:title="Régulateur pH-" />
             <item
                 android:id="@+id/nav_regulateur_orp_layout"
                 android:icon="@drawable/ic_menu_show"
-                android:title="@string/regulateur_orp" />
+                android:title="Régulateur ORP" />
             <item
                 android:id="@+id/nav_algicide_layout"
                 android:icon="@drawable/ic_menu_show"
-                android:title="@string/algicide" />
+                android:title="Algicide" />
         </menu>
     </item>
 
-    <item android:title="Autres">
+    <item android:title="AUTRES">
         <menu>
             <item
                 android:id="@+id/nav_events_layout"
                 android:icon="@drawable/ic_menu_show"
-                android:title="@string/events" />
+                android:title="Évènements" />
 
             <item
                 android:id="@+id/nav_automatisation_layout"
                 android:icon="@drawable/ic_menu_show"
-                android:title="@string/automatisation" />
+                android:title="Automatisation" />
         </menu>
     </item>
 
-    <item android:title="Application">
+    <item android:title="APPLICATION">
         <menu>
+            <item
+                android:id="@+id/nav_parametres_layout"
+                android:icon="@drawable/ic_menu_show"
+                android:title="Paramètres" />
+
             <item
                 android:id="@+id/nav_deconnexion_layout"
                 android:icon="@drawable/ic_menu_power_off"
-                android:title="@string/deconnexion" />
+                android:title="Déconnexion" />
         </menu>
     </item>
 

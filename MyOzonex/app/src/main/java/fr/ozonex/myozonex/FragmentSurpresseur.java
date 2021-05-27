@@ -1,207 +1,165 @@
 package fr.ozonex.myozonex;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.content.Intent;
-import android.content.res.Configuration;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsoluteLayout;
 import android.widget.Button;
-import android.widget.GridLayout;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
-import java.sql.Time;
 import java.text.DecimalFormat;
 
 public class FragmentSurpresseur extends Fragment implements View.OnClickListener {
     View view = null;
 
-    ImageButton boutonModifierPlage;
     int indexPlage;
-    String heureMinimumPlage;
-    String heureMaximumPlage;
-    String heureDebutPlage;
-    String heureFinPlage;
 
-    // Tout orientations
-    TextView texteConso;
-    LinearLayout layoutPlagesFct;
-    GridLayout widgetPlage1;
-    ImageButton boutonSupprimerPlage1;
-    ImageButton boutonModifierPlage1;
-    TextView textePlage1;
-    GridLayout widgetPlage2;
-    ImageButton boutonSupprimerPlage2;
-    ImageButton boutonModifierPlage2;
-    TextView textePlage2;
-    GridLayout widgetPlage3;
-    ImageButton boutonSupprimerPlage3;
-    ImageButton boutonModifierPlage3;
-    TextView textePlage3;
-    GridLayout widgetPlage4;
-    ImageButton boutonSupprimerPlage4;
-    ImageButton boutonModifierPlage4;
-    TextView textePlage4;
-    Button boutonAjouterPlage;
+    ScrollView scrollView;
 
-    // Orientation portrait
-    LinearLayout globalLayoutPortrait;
-    RadioGroup rgBoutonsMode;
-    RadioButton rbAuto;
-    RadioButton rbArret;
-    RadioButton rbMarche;
+    LinearLayout viewBoutonMarche;
+    ImageView imageBoutonMarche;
+    TextView labelBoutonMarche;
+    LinearLayout viewBoutonArret;
+    ImageView imageBoutonArret;
+    TextView labelBoutonArret;
+    LinearLayout viewBoutonAuto;
+    ImageView imageBoutonAuto;
+    TextView labelBoutonAuto;
 
-    // Orientation paysage
-    HorizontalScrollView globalLayoutPaysage;
-    ImageButton boutonRetour;
-    ImageView bouton3Etats;
-    Button boutonAuto;
-    Button boutonArret;
-    Button boutonMarche;
-    RenduPlage renduPlage;
+    LinearLayout viewConsommations;
+    TextView labelConsommations;
+
+    LinearLayout viewPlagesHoraires;
+    LinearLayout viewPlage1;
+    ImageButton boutonSupprPlage1;
+    TextView labelHeureDebutPlage1;
+    TextView labelHeureFinPlage1;
+    LinearLayout viewPlage2;
+    ImageButton boutonSupprPlage2;
+    TextView labelHeureDebutPlage2;
+    TextView labelHeureFinPlage2;
+    LinearLayout viewPlage3;
+    ImageButton boutonSupprPlage3;
+    TextView labelHeureDebutPlage3;
+    TextView labelHeureFinPlage3;
+    LinearLayout viewPlage4;
+    ImageButton boutonSupprPlage4;
+    TextView labelHeureDebutPlage4;
+    TextView labelHeureFinPlage4;
+    Button boutonAjouterPlageHoraire;
+
+    LinearLayout viewQuestion;
+    TimePicker timePickerDebutPlage;
+    TimePicker timePickerFinPlage;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.surpresseur_layout, container, false);
 
+        scrollView = view.findViewById(R.id.scrollview);
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            globalLayoutPortrait = view.findViewById(R.id.global_layout);
-            rgBoutonsMode = (RadioGroup) view.findViewById(R.id.groupe_boutons_mode);
-            rbAuto = (RadioButton) view.findViewById(R.id.radio_bouton_auto);
-            rbArret = (RadioButton) view.findViewById(R.id.radio_bouton_arret);
-            rbMarche = (RadioButton) view.findViewById(R.id.radio_bouton_marche);
+        viewBoutonMarche = view.findViewById(R.id.layout_mode_marche);
+        imageBoutonMarche = view.findViewById(R.id.image_mode_marche);
+        labelBoutonMarche = view.findViewById(R.id.texte_mode_marche);
 
-            rbAuto.setOnClickListener(this);
-            rbArret.setOnClickListener(this);
-            rbMarche.setOnClickListener(this);
-        } else {
-            new ScaleListener((HorizontalScrollView) view.findViewById(R.id.horizontal_scroll),
-                    (ScrollView) view.findViewById(R.id.vertical_scroll),
-                    (AbsoluteLayout) view.findViewById(R.id.layout));
+        viewBoutonArret = view.findViewById(R.id.layout_mode_arret);
+        imageBoutonArret = view.findViewById(R.id.image_mode_arret);
+        labelBoutonArret = view.findViewById(R.id.texte_mode_arret);
 
-            globalLayoutPaysage = view.findViewById(R.id.horizontal_scroll);
-            boutonRetour = (ImageButton) view.findViewById(R.id.bouton_retour);
-            bouton3Etats = (ImageView) view.findViewById(R.id.bouton_3_etats);
-            boutonAuto = (Button) view.findViewById(R.id.bouton_auto);
-            boutonArret = (Button) view.findViewById(R.id.bouton_arret);
-            boutonMarche = (Button) view.findViewById(R.id.bouton_marche);
-            LinearLayout viewPlage = (LinearLayout) view.findViewById(R.id.view_plage);
-            renduPlage = new RenduPlage(MainActivity.instance(), Donnees.Equipement.Surpresseur);
-            viewPlage.addView(renduPlage);
+        viewBoutonAuto = view.findViewById(R.id.layout_mode_auto);
+        imageBoutonAuto = view.findViewById(R.id.image_mode_auto);
+        labelBoutonAuto = view.findViewById(R.id.texte_mode_auto);
 
-            boutonRetour.setOnClickListener(this);
-            boutonAuto.setOnClickListener(this);
-            boutonArret.setOnClickListener(this);
-            boutonMarche.setOnClickListener(this);
-        }
+        viewConsommations = view.findViewById(R.id.layout_consommations);
+        labelConsommations = view.findViewById(R.id.texte_consommations);
 
-        texteConso = (TextView) view.findViewById(R.id.texte_donnees_conso);
-        layoutPlagesFct = view.findViewById(R.id.layout_plages_fct);
-        widgetPlage1 = (GridLayout) view.findViewById(R.id.widget_plage_1);
-        boutonSupprimerPlage1 = (ImageButton) view.findViewById(R.id.bouton_supprimer_plage_1);
-        boutonModifierPlage1 = (ImageButton) view.findViewById(R.id.bouton_modifier_plage_1);
-        textePlage1 = (TextView) view.findViewById(R.id.texte_plage_1);
-        widgetPlage2 = (GridLayout) view.findViewById(R.id.widget_plage_2);
-        boutonSupprimerPlage2 = (ImageButton) view.findViewById(R.id.bouton_supprimer_plage_2);
-        boutonModifierPlage2 = (ImageButton) view.findViewById(R.id.bouton_modifier_plage_2);
-        textePlage2 = (TextView) view.findViewById(R.id.texte_plage_2);
-        widgetPlage3 = (GridLayout) view.findViewById(R.id.widget_plage_3);
-        boutonSupprimerPlage3 = (ImageButton) view.findViewById(R.id.bouton_supprimer_plage_3);
-        boutonModifierPlage3 = (ImageButton) view.findViewById(R.id.bouton_modifier_plage_3);
-        textePlage3 = (TextView) view.findViewById(R.id.texte_plage_3);
-        widgetPlage4 = (GridLayout) view.findViewById(R.id.widget_plage_4);
-        boutonSupprimerPlage4 = (ImageButton) view.findViewById(R.id.bouton_supprimer_plage_4);
-        boutonModifierPlage4 = (ImageButton) view.findViewById(R.id.bouton_modifier_plage_4);
-        textePlage4 = (TextView) view.findViewById(R.id.texte_plage_4);
-        boutonAjouterPlage = view.findViewById(R.id.bouton_ajouter_plage);
+        viewPlagesHoraires = view.findViewById(R.id.layout_plages_horaires);
+        viewPlage1 = view.findViewById(R.id.layout_plage_1);
+        boutonSupprPlage1 = view.findViewById(R.id.bouton_supprimer_plage_1);
+        labelHeureDebutPlage1 = view.findViewById(R.id.texte_heure_debut_plage_1);
+        labelHeureFinPlage1 = view.findViewById(R.id.texte_heure_fin_plage_1);
+        viewPlage2 = view.findViewById(R.id.layout_plage_2);
+        boutonSupprPlage2 = view.findViewById(R.id.bouton_supprimer_plage_2);
+        labelHeureDebutPlage2 = view.findViewById(R.id.texte_heure_debut_plage_2);
+        labelHeureFinPlage2 = view.findViewById(R.id.texte_heure_fin_plage_2);
+        viewPlage3 = view.findViewById(R.id.layout_plage_3);
+        boutonSupprPlage3 = view.findViewById(R.id.bouton_supprimer_plage_3);
+        labelHeureDebutPlage3 = view.findViewById(R.id.texte_heure_debut_plage_3);
+        labelHeureFinPlage3 = view.findViewById(R.id.texte_heure_fin_plage_3);
+        viewPlage4 = view.findViewById(R.id.layout_plage_4);
+        boutonSupprPlage4 = view.findViewById(R.id.bouton_supprimer_plage_4);
+        labelHeureDebutPlage4 = view.findViewById(R.id.texte_heure_debut_plage_4);
+        labelHeureFinPlage4 = view.findViewById(R.id.texte_heure_fin_plage_4);
+        boutonAjouterPlageHoraire = view.findViewById(R.id.bouton_ajouter_plage_horaire);
 
-        boutonSupprimerPlage1.setOnClickListener(this);
-        boutonModifierPlage1.setOnClickListener(this);
-        boutonSupprimerPlage2.setOnClickListener(this);
-        boutonModifierPlage2.setOnClickListener(this);
-        boutonSupprimerPlage3.setOnClickListener(this);
-        boutonModifierPlage3.setOnClickListener(this);
-        boutonSupprimerPlage4.setOnClickListener(this);
-        boutonModifierPlage4.setOnClickListener(this);
-        boutonAjouterPlage.setOnClickListener(this);
+        viewQuestion = view.findViewById(R.id.layout_question);
+        timePickerDebutPlage = view.findViewById(R.id.time_picker_debut_plage);
+        timePickerFinPlage = view.findViewById(R.id.time_picker_fin_plage);
+        ImageButton boutonAnnulerQuestion = view.findViewById(R.id.bouton_annuler_question);
+        ImageButton boutonValiderQuestion = view.findViewById(R.id.bouton_valider_question);
 
+        viewBoutonMarche.setOnClickListener(this);
+        viewBoutonArret.setOnClickListener(this);
+        viewBoutonAuto.setOnClickListener(this);
 
+        boutonSupprPlage1.setOnClickListener(this);
+        viewPlage1.setOnClickListener(this);
+        boutonSupprPlage2.setOnClickListener(this);
+        viewPlage2.setOnClickListener(this);
+        boutonSupprPlage3.setOnClickListener(this);
+        viewPlage3.setOnClickListener(this);
+        boutonSupprPlage4.setOnClickListener(this);
+        viewPlage4.setOnClickListener(this);
+        boutonAjouterPlageHoraire.setOnClickListener(this);
+
+        timePickerDebutPlage.setIs24HourView(true); // 24H Mode.
+        timePickerFinPlage.setIs24HourView(true); // 24H Mode.
+        boutonAnnulerQuestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                afficherTimePicker(false, "", "", "");
+            }
+        });
+        boutonValiderQuestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                validerAjoutPlage();
+            }
+        });
+        
         update();
-
 
         return view;
     }
 
     public void update() {
         if ((view != null) && isAdded()) {
-            if (!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Surpresseur)) {
-                MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_synoptique_layout));
-            }
+            modeAEteModifie();
 
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
-                rbAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
-                rbArret.setClickable(Donnees.instance().obtenirActiviteIHM());
-                rbMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
-            } else {
-                globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());
-                boutonAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
-                boutonArret.setClickable(Donnees.instance().obtenirActiviteIHM());
-                boutonMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
-            }
+            viewConsommations.setVisibility(Donnees.instance().obtenirTypeAppareil() == Donnees.MYOZONEX ? View.VISIBLE : View.GONE);
+            labelConsommations.setText("Date : " + Donnees.instance().obtenirDateConso(Donnees.Equipement.Surpresseur) + "\nHeures pleines : " + Donnees.instance().obtenirConsoHP(Donnees.Equipement.Surpresseur) + " kWh \nHeures creuses : " + Donnees.instance().obtenirConsoHC(Donnees.Equipement.Surpresseur) + " kWh");
 
-            boutonSupprimerPlage1.setClickable(Donnees.instance().obtenirActiviteIHM());
-            boutonModifierPlage1.setClickable(Donnees.instance().obtenirActiviteIHM());
-            boutonSupprimerPlage2.setClickable(Donnees.instance().obtenirActiviteIHM());
-            boutonModifierPlage2.setClickable(Donnees.instance().obtenirActiviteIHM());
-            boutonSupprimerPlage3.setClickable(Donnees.instance().obtenirActiviteIHM());
-            boutonModifierPlage3.setClickable(Donnees.instance().obtenirActiviteIHM());
-            boutonSupprimerPlage4.setClickable(Donnees.instance().obtenirActiviteIHM());
-            boutonModifierPlage4.setClickable(Donnees.instance().obtenirActiviteIHM());
-            boutonAjouterPlage.setClickable(Donnees.instance().obtenirActiviteIHM());
-
-            modeAEteModifie(Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Surpresseur));
-
-            consoAEteModifie(Donnees.instance().obtenirDateDebutConso(Donnees.Equipement.Surpresseur),
-                    Donnees.instance().obtenirConsoHP(Donnees.Equipement.Surpresseur),
-                    Donnees.instance().obtenirConsoHC(Donnees.Equipement.Surpresseur));
-
-            plageModifie();
+            plagesAEteModifie();
         }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.bouton_retour:
-                if (Donnees.instance().obtenirPageSource() == Donnees.PAGE_SYNOPTIQUE) {
-                    MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_synoptique_layout));
-                } else {
-                    MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_menu_layout));
-                }
-                break;
-            case R.id.radio_bouton_auto:
-            case R.id.radio_bouton_arret:
-            case R.id.radio_bouton_marche:
-                modifierMode((RadioButton) view.findViewById(rgBoutonsMode.getCheckedRadioButtonId()));
-                break;
-            case R.id.bouton_auto:
-            case R.id.bouton_arret:
-            case R.id.bouton_marche:
-                modifierMode((Button) v.findViewById(v.getId()));
+            case R.id.layout_mode_marche:
+            case R.id.layout_mode_arret:
+            case R.id.layout_mode_auto:
+                modifierMode((LinearLayout) v.findViewById(v.getId()));
                 break;
             case R.id.bouton_supprimer_plage_1:
             case R.id.bouton_supprimer_plage_2:
@@ -209,329 +167,137 @@ public class FragmentSurpresseur extends Fragment implements View.OnClickListene
             case R.id.bouton_supprimer_plage_4:
                 supprimerPlage((ImageButton) v.findViewById(v.getId()));
                 break;
-            case R.id.bouton_modifier_plage_1:
-            case R.id.bouton_modifier_plage_2:
-            case R.id.bouton_modifier_plage_3:
-            case R.id.bouton_modifier_plage_4:
-                modifierIndex((ImageButton) v.findViewById(v.getId()), true);
+            case R.id.layout_plage_1:
+            case R.id.layout_plage_2:
+            case R.id.layout_plage_3:
+            case R.id.layout_plage_4:
+                modifierPlage((LinearLayout) v.findViewById(v.getId()));
                 break;
-            case R.id.bouton_ajouter_plage:
-                ajouterIndex(true);
+            case R.id.bouton_ajouter_plage_horaire:
+                ajouterPlage();
                 break;
             default:
                 break;
         }
     }
 
-    private void modifierMode(RadioButton rb) {
-        int etat = Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Surpresseur);
-        String data = "etat=";
+    private void modifierMode(LinearLayout sender) {
+        if (Donnees.instance().obtenirActiviteIHM()) {
+            int etat = Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.Surpresseur);
 
-        if (rb == rbAuto) {
-            etat = (etat == Donnees.AUTO_MARCHE) ? Donnees.AUTO_MARCHE : Donnees.AUTO_ARRET;
-        } else if (rb == rbMarche) {
-            etat = Donnees.MARCHE;
-        } else {
-            etat = Donnees.ARRET;
-        }
-
-        Donnees.instance().definirModeFonctionnement(Donnees.Equipement.Surpresseur, etat);
-        modeAEteModifie(etat);
-
-        MainActivity.instance().sendData(false,
-                "",
-                "",
-                HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageSurpresseur),
-                data + String.valueOf(etat));
-    }
-
-    private void modifierMode(Button bouton) {
-        int etat = Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.Surpresseur);
-        String data = "etat=";
-
-        if (bouton == boutonAuto) {
-            etat = (etat == Donnees.AUTO_MARCHE) ? Donnees.AUTO_MARCHE : Donnees.AUTO_ARRET;
-        } else if (bouton == boutonMarche) {
-            etat = Donnees.MARCHE;
-        } else {
-            etat = Donnees.ARRET;
-        }
-
-        Donnees.instance().definirModeFonctionnement(Donnees.Equipement.Surpresseur, etat);
-        modeAEteModifie(etat);
-
-        MainActivity.instance().sendData(false,
-                "",
-                "",
-                HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageSurpresseur),
-                data + String.valueOf(etat));
-    }
-
-    private void modeAEteModifie(int mode) {
-        String autoText;
-        LinearLayout.LayoutParams paramEtatOk = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                0,
-                1.0f
-        );
-        LinearLayout.LayoutParams paramEtatNok = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                0,
-                2.0f
-        );
-
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            autoText = "Auto (" + ((mode == Donnees.AUTO_MARCHE) ? "marche" : "arrêt") + ")";
-
-            if (mode > Donnees.AUTO) {
-                rbAuto.setChecked(true);
-            } else if (mode == Donnees.MARCHE) {
-                rbMarche.setChecked(true);
+            if (sender == viewBoutonAuto) {
+                etat = (etat == Donnees.AUTO_MARCHE) ? Donnees.AUTO_MARCHE : Donnees.AUTO_ARRET;
+            } else if (sender == viewBoutonMarche) {
+                etat = Donnees.MARCHE;
             } else {
-                rbArret.setChecked(true);
+                etat = Donnees.ARRET;
             }
 
-            rbAuto.setText(autoText);
+            Donnees.instance().definirEtatEquipement(Donnees.Equipement.Surpresseur, etat);
+            modeAEteModifie();
+            Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageSurpresseur, "etat=" + etat, false);
+        }
+    }
+
+    private void modeAEteModifie() {
+        int mode = Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.Surpresseur);
+
+        viewBoutonMarche.setBackgroundTintList(ColorStateList.valueOf(mode == Donnees.MARCHE ? Color.rgb(255, 83, 13) : Color.rgb(245, 245, 220)));
+        labelBoutonMarche.setTextColor(mode == Donnees.MARCHE ? Color.rgb(40, 40, 40) : Color.rgb(128, 128, 128));
+        imageBoutonMarche.setColorFilter(mode == Donnees.MARCHE ? Color.rgb(40, 40, 40) : Color.rgb(128, 128, 128));
+
+        viewBoutonArret.setBackgroundColor(mode == Donnees.ARRET ? Color.rgb(255, 83, 13) : Color.rgb(245, 245, 220));
+        labelBoutonArret.setTextColor(mode == Donnees.ARRET ? Color.rgb(40, 40, 40) : Color.rgb(128, 128, 128));
+        imageBoutonArret.setColorFilter(mode == Donnees.ARRET ? Color.rgb(40, 40, 40) : Color.rgb(128, 128, 128));
+
+        viewBoutonAuto.setBackgroundTintList(ColorStateList.valueOf(mode > Donnees.AUTO ? Color.rgb(0, 174, 239) : Color.rgb(245, 245, 220)));
+        labelBoutonAuto.setTextColor(mode > Donnees.AUTO ? Color.rgb(40, 40, 40) : Color.rgb(128, 128, 128));
+        imageBoutonAuto.setColorFilter(mode > Donnees.AUTO ? Color.rgb(40, 40, 40) : Color.rgb(128, 128, 128));
+
+        viewPlagesHoraires.setVisibility(mode < Donnees.AUTO ? View.GONE : View.VISIBLE);
+    }
+
+    private void plagesAEteModifie() {
+        viewPlage1.setVisibility(Donnees.instance().obtenirPlagesAuto() || Donnees.instance().obtenirPlageFonctionnement(Donnees.Equipement.Surpresseur, 0).getEtat() ? View.VISIBLE : View.GONE);
+        labelHeureDebutPlage1.setText(Donnees.instance().obtenirPlageFonctionnement(Donnees.Equipement.Surpresseur, 0).getPlage().split(" - ")[0]);
+        labelHeureFinPlage1.setText(Donnees.instance().obtenirPlageFonctionnement(Donnees.Equipement.Surpresseur, 0).getPlage().split(" - ")[1]);
+
+        viewPlage2.setVisibility(Donnees.instance().obtenirPlageFonctionnement(Donnees.Equipement.Surpresseur, 1).getEtat() ? View.VISIBLE : View.GONE);
+        labelHeureDebutPlage2.setText(Donnees.instance().obtenirPlageFonctionnement(Donnees.Equipement.Surpresseur, 1).getPlage().split(" - ")[0]);
+        labelHeureFinPlage2.setText(Donnees.instance().obtenirPlageFonctionnement(Donnees.Equipement.Surpresseur, 1).getPlage().split(" - ")[1]);
+
+        viewPlage3.setVisibility(Donnees.instance().obtenirPlageFonctionnement(Donnees.Equipement.Surpresseur, 2).getEtat() ? View.VISIBLE : View.GONE);
+        labelHeureDebutPlage3.setText(Donnees.instance().obtenirPlageFonctionnement(Donnees.Equipement.Surpresseur, 2).getPlage().split(" - ")[0]);
+        labelHeureFinPlage3.setText(Donnees.instance().obtenirPlageFonctionnement(Donnees.Equipement.Surpresseur, 2).getPlage().split(" - ")[1]);
+
+        viewPlage4.setVisibility(Donnees.instance().obtenirPlageFonctionnement(Donnees.Equipement.Surpresseur, 3).getEtat() ? View.VISIBLE : View.GONE);
+        labelHeureDebutPlage4.setText(Donnees.instance().obtenirPlageFonctionnement(Donnees.Equipement.Surpresseur, 3).getPlage().split(" - ")[0]);
+        labelHeureFinPlage4.setText(Donnees.instance().obtenirPlageFonctionnement(Donnees.Equipement.Surpresseur, 3).getPlage().split(" - ")[1]);
+
+        boutonAjouterPlageHoraire.setVisibility(!Donnees.instance().obtenirPlageFonctionnement(Donnees.Equipement.Surpresseur, 3).getEtat() ? View.VISIBLE : View.GONE);
+    }
+
+    private void supprimerPlage(ImageButton sender) {
+        indexPlage = sender == boutonSupprPlage1 ? 0 : sender == boutonSupprPlage2 ? 1 : sender == boutonSupprPlage3 ? 2 : 3;
+
+        if (indexPlage < (Global.MAX_PLAGES_EQUIPEMENTS - 1)) {
+            for (int i = indexPlage; i < Global.MAX_PLAGES_EQUIPEMENTS-2; i++) {
+                Donnees.instance().definirPlageFonctionnement(Donnees.Equipement.Surpresseur, i, Donnees.instance().obtenirPlageFonctionnement(Donnees.Equipement.Surpresseur, i+1).getPlage());
+            }
+
+            Donnees.instance().definirPlageFonctionnement(Donnees.Equipement.Surpresseur, Global.MAX_PLAGES_EQUIPEMENTS-1, "00h00 - 00h00");
         } else {
-            if (mode > Donnees.AUTO) {
-                bouton3Etats.setImageResource(R.drawable.bouton_haut_vertical);
-                boutonAuto.setTextColor(getResources().getColor(R.color.bouton3EtatSelectionne));
-                boutonArret.setTextColor(getResources().getColor(R.color.bouton3EtatNonSelectionne));
-                boutonMarche.setTextColor(getResources().getColor(R.color.bouton3EtatNonSelectionne));
-                boutonAuto.setLayoutParams(paramEtatOk);
-                boutonArret.setLayoutParams(paramEtatNok);
-                boutonMarche.setLayoutParams(paramEtatNok);
-            } else if (mode == Donnees.MARCHE) {
-                bouton3Etats.setImageResource(R.drawable.bouton_bas_vertical);
-                boutonAuto.setTextColor(getResources().getColor(R.color.bouton3EtatNonSelectionne));
-                boutonArret.setTextColor(getResources().getColor(R.color.bouton3EtatNonSelectionne));
-                boutonMarche.setTextColor(getResources().getColor(R.color.bouton3EtatSelectionne));
-                boutonAuto.setLayoutParams(paramEtatNok);
-                boutonArret.setLayoutParams(paramEtatNok);
-                boutonMarche.setLayoutParams(paramEtatOk);
-            } else {
-                bouton3Etats.setImageResource(R.drawable.bouton_off_vertical);
-                boutonAuto.setTextColor(getResources().getColor(R.color.bouton3EtatNonSelectionne));
-                boutonArret.setTextColor(getResources().getColor(R.color.bouton3EtatSelectionne));
-                boutonMarche.setTextColor(getResources().getColor(R.color.bouton3EtatNonSelectionne));
-                boutonAuto.setLayoutParams(paramEtatNok);
-                boutonArret.setLayoutParams(paramEtatOk);
-                boutonMarche.setLayoutParams(paramEtatNok);
-            }
+            Donnees.instance().definirPlageFonctionnement(Donnees.Equipement.Surpresseur, indexPlage, "00h00 - 00h00");
         }
 
-        layoutPlagesFct.setVisibility(mode == Donnees.MARCHE ? View.GONE : View.VISIBLE);
-    }
+        plagesAEteModifie();
 
-    private void consoAEteModifie(String date, double consoHP, double consoHC) {
-        texteConso.setText("Depuis : " + date +
-                "\nHeures pleines : " + consoHP + " kWh" +
-                "\nHeures creuses : " + consoHC + " kWh");
-    }
-
-    private void ajouterIndex(boolean raz) {
-        Intent intent = new Intent(MainActivity.instance(), ClavierActivity.class);
-
-        if (raz) {
-            for (int i = 0; i < Global.MAX_PLAGES_EQUIPEMENTS; i++) {
-                if (!Donnees.instance().obtenirEtatPlage(Donnees.Equipement.Surpresseur, i)) {
-                    indexPlage = i;
-                    break;
-                }
-            }
-
-            heureDebutPlage = null;
-            heureFinPlage = null;
-        }
-
-        if (heureDebutPlage == null) {
-            intent.putExtra(ClavierActivity.EXTRA_QUESTION, "Donnez l'heure de début de la nouvelle plage séparée par une virgule");
-            heureMinimumPlage = indexPlage > 0 ? Donnees.instance().obtenirPlage(Donnees.Equipement.Surpresseur, indexPlage - 1).split(" - ")[1] : "00h00";
-        } else {
-            intent.putExtra(ClavierActivity.EXTRA_QUESTION, "Donnez l'heure de fin de la nouvelle plage séparée par une virgule");
-            heureMinimumPlage = heureDebutPlage;
-        }
-        heureMaximumPlage = "23h59";
-
-        intent.putExtra(ClavierActivity.EXTRA_INDICE, "Exemple : 9h15 → 09.15\nMinimum : " + heureMinimumPlage + "\nMaximum : " + heureMaximumPlage);
-        intent.putExtra(ClavierActivity.EXTRA_AUTRE, "ajouter");
-        startActivityForResult(intent, 1);
-    }
-
-    private void supprimerPlage(ImageButton imageButton) {
-        int index;
-        String data = "plage_";
-
-        if (imageButton == boutonSupprimerPlage1) {
-            index = 0;
-        } else if (imageButton == boutonSupprimerPlage2) {
-            index = 1;
-        } else if (imageButton == boutonSupprimerPlage3) {
-            index = 2;
-        } else {
-            index = 3;
-        }
-
-        if (index < (Global.MAX_PLAGES_EQUIPEMENTS - 1)) {
-            for (int i = index; i < (Global.MAX_PLAGES_EQUIPEMENTS - 1); i++) {
-                Donnees.instance().definirPlage(Donnees.Equipement.Surpresseur, i, Donnees.instance().obtenirPlage(Donnees.Equipement.Surpresseur, i + 1));
-            }
-            Donnees.instance().definirPlage(Donnees.Equipement.Surpresseur, Global.MAX_PLAGES_EQUIPEMENTS - 1, "00h00 - 00h00");
-        } else {
-            Donnees.instance().definirPlage(Donnees.Equipement.Surpresseur, index, "00h00 - 00h00");
-        }
-
-        plageModifie();
-
-        for (int i = index; i < Global.MAX_PLAGES_EQUIPEMENTS; i++) {
-            MainActivity.instance().sendData(false,
-                    "",
-                    "",
-                    HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                    HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageSurpresseur),
-                    data + String.valueOf(i + 1) + '=' + Donnees.instance().obtenirPlage(Donnees.Equipement.Surpresseur, i));
-        }
-    }
-
-    private void modifierIndex(ImageButton imageButton, boolean raz) {
-        Intent intent = new Intent(MainActivity.instance(), ClavierActivity.class);
-
-        if (raz) {
-            boutonModifierPlage = imageButton;
-            heureDebutPlage = null;
-            heureFinPlage = null;
-
-            if (imageButton == boutonModifierPlage1) {
-                indexPlage = 0;
-            } else if (imageButton == boutonModifierPlage2) {
-                indexPlage = 1;
-            } else if (imageButton == boutonModifierPlage3) {
-                indexPlage = 2;
-            } else {
-                indexPlage = 3;
-            }
-        }
-
-        if (heureDebutPlage == null) {
-            intent.putExtra(ClavierActivity.EXTRA_QUESTION, "Donnez l'heure de début de la plage séparée par une virgule");
-            heureMinimumPlage = indexPlage > 0 ? Donnees.instance().obtenirPlage(Donnees.Equipement.Surpresseur, indexPlage - 1).split(" - ")[1] : "00h00";
-        } else {
-            intent.putExtra(ClavierActivity.EXTRA_QUESTION, "Donnez l'heure de fin de la plage séparée par une virgule");
-            heureMinimumPlage = heureDebutPlage;
-        }
-        heureMaximumPlage = indexPlage == (Global.MAX_PLAGES_EQUIPEMENTS - 1) ? (Donnees.instance().obtenirEtatPlage(Donnees.Equipement.Surpresseur, indexPlage + 1) ? Donnees.instance().obtenirPlage(Donnees.Equipement.Surpresseur, indexPlage + 1).split(" - ")[1] : "23h59") : "23h59";
-
-        intent.putExtra(ClavierActivity.EXTRA_INDICE, "Exemple : 9h15 → 09.15\nMinimum : " + heureMinimumPlage + "\nMaximum : " + heureMaximumPlage);
-        intent.putExtra(ClavierActivity.EXTRA_AUTRE, "modifier");
-        startActivityForResult(intent, 1);
-    }
-
-    private boolean verifierHeure(String strHeure) {
-        boolean ret = false;
-
-        if (strHeure.contains("h")) {
-            Time heure = new Time(Integer.parseInt(strHeure.split("h")[0]), Integer.parseInt(strHeure.split("h")[1]), 0);
-            Time heureMinimum = new Time(Integer.parseInt(heureMinimumPlage.split("h")[0]), Integer.parseInt(heureMinimumPlage.split("h")[1]), 0);
-            Time heureMaximum = new Time(Integer.parseInt(heureMaximumPlage.split("h")[0]), Integer.parseInt(heureMaximumPlage.split("h")[1]), 0);
-
-            if (heure.after(heureMinimum) && heure.before(heureMaximum)) {
-                ret = true;
-            }
-        }
-
-        return ret;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1) {
-            if(resultCode == Activity.RESULT_OK){
-                String autre = data.getStringExtra(ClavierActivity.EXTRA_AUTRE);
-                String result = data.getStringExtra(ClavierActivity.EXTRA_RESULTAT);
-                result = result.replace(',', 'h');
-                if (result.split("h").length > 1) {
-                    DecimalFormat df = new DecimalFormat("00");
-                    result = df.format(Double.parseDouble(result.split("h")[0])) + 'h' + df.format(Double.parseDouble(result.split("h")[1]));
-                }
-
-                if (heureDebutPlage == null) {
-                    heureDebutPlage = result;
-                    if (verifierHeure(heureDebutPlage)) {
-                        if (autre.equals("ajouter")) {
-                            ajouterIndex(false);
-                        } else {
-                            modifierIndex(boutonModifierPlage, false);
-                        }
-                    } else {
-                        if (autre.equals("ajouter")) {
-                            ajouterIndex(true);
-                        } else {
-                            modifierIndex(boutonModifierPlage, true);
-                        }
-                    }
-                } else {
-                    heureFinPlage = result;
-                    if (verifierHeure(heureFinPlage)) {
-                        if (autre.equals("ajouter")) {
-                            ajouterPlage();
-                        } else {
-                            modifierPlage();
-                        }
-                    } else {
-                        if (autre.equals("ajouter")) {
-                            ajouterIndex(false);
-                        } else {
-                            modifierIndex(boutonModifierPlage, false);
-                        }
-                    }
-                }
-            }
+        for (int i = indexPlage; i < Global.MAX_PLAGES_EQUIPEMENTS-1; i++) {
+            Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageSurpresseur, "plage_" + (i + 1) + "=" + Donnees.instance().obtenirPlageFonctionnement(Donnees.Equipement.Surpresseur, i).getPlage(), false);
         }
     }
 
     private void ajouterPlage() {
-        String data = "plage_";
-
-        Donnees.instance().definirPlage(Donnees.Equipement.Surpresseur, indexPlage, heureDebutPlage + " - " + heureFinPlage);
-        plageModifie();
-
-        MainActivity.instance().sendData(false,
-                "",
-                "",
-                HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageSurpresseur),
-                data + String.valueOf(indexPlage + 1) + '=' + Donnees.instance().obtenirPlage(Donnees.Equipement.Surpresseur, indexPlage));
-    }
-
-    private void modifierPlage() {
-        String data = "plage_";
-
-        Donnees.instance().definirPlage(Donnees.Equipement.Surpresseur, indexPlage, heureDebutPlage + " - " + heureFinPlage);
-        plageModifie();
-
-        MainActivity.instance().sendData(false,
-                "",
-                "",
-                HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageSurpresseur),
-                data + String.valueOf(indexPlage + 1) + '=' + Donnees.instance().obtenirPlage(Donnees.Equipement.Surpresseur, indexPlage));
-    }
-
-    private void plageModifie() {
-        widgetPlage1.setVisibility(Donnees.instance().obtenirEtatPlage(Donnees.Equipement.Surpresseur, 0) ? View.VISIBLE : View.GONE);
-        textePlage1.setText(Donnees.instance().obtenirPlage(Donnees.Equipement.Surpresseur, 0));
-        widgetPlage2.setVisibility(Donnees.instance().obtenirEtatPlage(Donnees.Equipement.Surpresseur, 1) ? View.VISIBLE : View.GONE);
-        textePlage2.setText(Donnees.instance().obtenirPlage(Donnees.Equipement.Surpresseur, 1));
-        widgetPlage3.setVisibility(Donnees.instance().obtenirEtatPlage(Donnees.Equipement.Surpresseur, 2) ? View.VISIBLE : View.GONE);
-        textePlage3.setText(Donnees.instance().obtenirPlage(Donnees.Equipement.Surpresseur, 2));
-        widgetPlage4.setVisibility(Donnees.instance().obtenirEtatPlage(Donnees.Equipement.Surpresseur, 3) ? View.VISIBLE : View.GONE);
-        textePlage4.setText(Donnees.instance().obtenirPlage(Donnees.Equipement.Surpresseur, 3));
-        boutonAjouterPlage.setVisibility(Donnees.instance().obtenirEtatPlage(Donnees.Equipement.Surpresseur, 3) ? View.GONE : View.VISIBLE);
-
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            renduPlage.invalidate();
+        for (int i = 0; i < Global.MAX_PLAGES_EQUIPEMENTS-1; i++) {
+            if (!Donnees.instance().obtenirPlageFonctionnement(Donnees.Equipement.Surpresseur, i).getEtat()) {
+                indexPlage = i;
+                break;
+            }
         }
+
+        afficherTimePicker(true, "Veuillez entrer la plage de fonctionnement de l'équipement", "", "");
+    }
+
+    private void modifierPlage(LinearLayout sender) {
+        indexPlage = sender == viewPlage1 ? 0 : sender == viewPlage2 ? 1 : sender == viewPlage3 ? 2 : 3;
+
+        afficherTimePicker(true, "Veuillez entrer la plage de fonctionnement de l'équipement", Donnees.instance().obtenirPlageFonctionnement(Donnees.Equipement.Surpresseur, indexPlage).getPlage().split(" - ")[0].replaceAll("h",":"), Donnees.instance().obtenirPlageFonctionnement(Donnees.Equipement.Surpresseur, indexPlage).getPlage().split(" - ")[1].replaceAll("h", ":"));
+    }
+
+    private void afficherTimePicker(Boolean visible, String question, String heureDebutPlage, String heureFinPlage) {
+        scrollView.setVisibility(!visible ? View.VISIBLE : View.GONE);
+        viewQuestion.setVisibility(visible ? View.VISIBLE : View.GONE);
+
+        TextView textView = view.findViewById(R.id.texte_question);
+        textView.setText(question);
+
+        if (!heureDebutPlage.isEmpty() && !heureFinPlage.isEmpty()) {
+            timePickerDebutPlage.setHour(Integer.parseInt(heureDebutPlage.split(":")[0]));
+            timePickerDebutPlage.setMinute(Integer.parseInt(heureDebutPlage.split(":")[1]));
+            timePickerFinPlage.setHour(Integer.parseInt(heureFinPlage.split(":")[0]));
+            timePickerFinPlage.setMinute(Integer.parseInt(heureFinPlage.split(":")[1]));
+        }
+    }
+
+    private void validerAjoutPlage() {
+        DecimalFormat df = new DecimalFormat("00");
+        String heureDebutPlage = df.format(timePickerDebutPlage.getHour()) + 'h' + df.format(timePickerDebutPlage.getMinute());
+        String heureFinPlage = df.format(timePickerFinPlage.getHour()) + 'h' + df.format(timePickerFinPlage.getMinute());
+
+        Donnees.instance().definirPlageFonctionnement(Donnees.Equipement.Surpresseur, indexPlage, heureDebutPlage + " - " + heureFinPlage);
+        plagesAEteModifie();
+        Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageSurpresseur, "plage_" + (indexPlage + 1) + "=" + Donnees.instance().obtenirPlageFonctionnement(Donnees.Equipement.Surpresseur, indexPlage).getPlage(), false);
+
+        afficherTimePicker(false, "", "", "");
     }
 }

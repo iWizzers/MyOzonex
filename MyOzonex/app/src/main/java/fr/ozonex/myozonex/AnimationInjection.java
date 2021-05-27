@@ -32,8 +32,8 @@ public class AnimationInjection {
         @Override
         public void run() {
             isRunning = false;
-            if ((Donnees.instance().obtenirModeFonctionnement(equipement) == Donnees.AUTO_MARCHE)
-                    || (Donnees.instance().obtenirModeFonctionnement(equipement) == Donnees.MARCHE)) {
+            if ((Donnees.instance().obtenirEtatEquipement(equipement) == Donnees.AUTO_MARCHE)
+                    || (Donnees.instance().obtenirEtatEquipement(equipement) == Donnees.MARCHE)) {
                 ajouterInjection();
             }
         }

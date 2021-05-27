@@ -1,298 +1,497 @@
 package fr.ozonex.myozonex;
 
 import android.app.Fragment;
-import android.content.res.Configuration;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsoluteLayout;
-import android.widget.Button;
-import android.widget.HorizontalScrollView;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.ScrollView;
+import android.widget.SeekBar;
 import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class FragmentRegulateurPhMoins extends Fragment implements View.OnClickListener {
     View view = null;
 
-    // Tout orientations
-    TextView texteConso;
-    TextView texteConsoInjections;
-    RadioButton rbTOR;
-    RadioButton rbLineaire;
-    TextView texteDonneesAsservissement;
+    Boolean sliderIsTracking = false;
 
-    // Orientation portrait
-    LinearLayout globalLayoutPortrait;
-    RadioGroup rgBoutonsMode;
-    RadioButton rbAuto;
-    RadioButton rbArret;
-    RadioButton rbMarche;
+    ScrollView scrollView;
 
-    // Orientation paysage
-    HorizontalScrollView globalLayoutPaysage;
-    ImageButton boutonRetour;
-    ImageView bouton3Etats;
-    Button boutonAuto;
-    Button boutonArret;
-    Button boutonMarche;
+    LinearLayout viewBoutonMarche;
+    ImageView imageBoutonMarche;
+    TextView labelBoutonMarche;
+    LinearLayout viewBoutonArret;
+    ImageView imageBoutonArret;
+    TextView labelBoutonArret;
+    LinearLayout viewBoutonAuto;
+    ImageView imageBoutonAuto;
+    TextView labelBoutonAuto;
+
+    TextView labelConsommations;
+    TextView labelConsoProduitInjecte;
+
+    TextView labelDureeCycle;
+    TextView labelDureeInjectionMin;
+    TextView labelMultDiff;
+    TextView labelDureeInjection;
+    TextView labelTempsReponse;
+    TextView labelTempsJourMax;
+
+    TextView labelDebit;
+    TextView labelPointConsigne;
+    TextView labelHysteresis;
+
+    SeekBar sliderMinAlarme;
+    TextView labelMinAlarme;
+    SeekBar sliderMaxAlarme;
+    TextView labelMaxAlarme;
+
+    int typeModification = 0;
+    LinearLayout viewQuestion;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.regulateur_ph_moins_layout, container, false);
 
+        scrollView = view.findViewById(R.id.scrollview);
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            globalLayoutPortrait = view.findViewById(R.id.global_layout);
-            rgBoutonsMode = (RadioGroup) view.findViewById(R.id.groupe_boutons_mode);
-            rbAuto = (RadioButton) view.findViewById(R.id.radio_bouton_auto);
-            rbArret = (RadioButton) view.findViewById(R.id.radio_bouton_arret);
-            rbMarche = (RadioButton) view.findViewById(R.id.radio_bouton_marche);
+        viewBoutonMarche = view.findViewById(R.id.layout_mode_marche);
+        imageBoutonMarche = view.findViewById(R.id.image_mode_marche);
+        labelBoutonMarche = view.findViewById(R.id.texte_mode_marche);
 
-            rbAuto.setOnClickListener(this);
-            rbArret.setOnClickListener(this);
-            rbMarche.setOnClickListener(this);
-        } else {
-            new ScaleListener((HorizontalScrollView) view.findViewById(R.id.horizontal_scroll),
-                    (ScrollView) view.findViewById(R.id.vertical_scroll),
-                    (AbsoluteLayout) view.findViewById(R.id.layout));
+        viewBoutonArret = view.findViewById(R.id.layout_mode_arret);
+        imageBoutonArret = view.findViewById(R.id.image_mode_arret);
+        labelBoutonArret = view.findViewById(R.id.texte_mode_arret);
 
-            globalLayoutPaysage = view.findViewById(R.id.horizontal_scroll);
-            boutonRetour = (ImageButton) view.findViewById(R.id.bouton_retour);
-            bouton3Etats = (ImageView) view.findViewById(R.id.bouton_3_etats);
-            boutonAuto = (Button) view.findViewById(R.id.bouton_auto);
-            boutonArret = (Button) view.findViewById(R.id.bouton_arret);
-            boutonMarche = (Button) view.findViewById(R.id.bouton_marche);
+        viewBoutonAuto = view.findViewById(R.id.layout_mode_auto);
+        imageBoutonAuto = view.findViewById(R.id.image_mode_auto);
+        labelBoutonAuto = view.findViewById(R.id.texte_mode_auto);
 
-            boutonRetour.setOnClickListener(this);
-            boutonAuto.setOnClickListener(this);
-            boutonArret.setOnClickListener(this);
-            boutonMarche.setOnClickListener(this);
-        }
+        labelConsommations = view.findViewById(R.id.texte_consommations);
+        labelConsoProduitInjecte = view.findViewById(R.id.texte_conso_produit_injecte);
 
-        texteConso = (TextView) view.findViewById(R.id.texte_donnees_conso);
-        texteConsoInjections = view.findViewById(R.id.texte_conso_injections);
-        rbTOR = (RadioButton) view.findViewById(R.id.radio_bouton_tor);
-        rbLineaire = (RadioButton) view.findViewById(R.id.radio_bouton_lineaire);
-        texteDonneesAsservissement = (TextView) view.findViewById(R.id.texte_donnees_asservissement);
+        labelDureeCycle = view.findViewById(R.id.texte_duree_cycle);
+        labelDureeInjectionMin = view.findViewById(R.id.texte_duree_injection_min);
+        labelMultDiff = view.findViewById(R.id.texte_mult_diff);
+        labelDureeInjection = view.findViewById(R.id.texte_duree_injection);
+        labelTempsReponse = view.findViewById(R.id.texte_temps_reponse);
+        labelTempsJourMax = view.findViewById(R.id.texte_temps_jour_max);
 
+        labelDebit = view.findViewById(R.id.texte_debit);
+        labelPointConsigne = view.findViewById(R.id.texte_point_consigne);
+        labelHysteresis = view.findViewById(R.id.texte_hysteresis);
+
+        sliderMinAlarme = view.findViewById(R.id.seekbar_min_alarme);
+        labelMinAlarme = view.findViewById(R.id.texte_min_alarme);
+        sliderMaxAlarme = view.findViewById(R.id.seekbar_max_alarme);
+        labelMaxAlarme = view.findViewById(R.id.texte_max_alarme);
+
+        viewBoutonMarche.setOnClickListener(this);
+        viewBoutonArret.setOnClickListener(this);
+        viewBoutonAuto.setOnClickListener(this);
+
+        labelConsommations.setOnClickListener(this);
+
+        labelDureeCycle.setOnClickListener(this);
+        labelDureeInjectionMin.setOnClickListener(this);
+        labelMultDiff.setOnClickListener(this);
+        labelDureeInjection.setOnClickListener(this);
+        labelTempsReponse.setOnClickListener(this);
+        labelTempsJourMax.setOnClickListener(this);
+
+        labelDebit.setOnClickListener(this);
+        labelPointConsigne.setOnClickListener(this);
+        labelHysteresis.setOnClickListener(this);
+
+        sliderMinAlarme.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+                Boolean change = false;
+                int minVal = progress;
+                int maxVal = Integer.parseInt(String.valueOf(sliderMaxAlarme.getProgress()));
+
+                if (sliderIsTracking) {
+                    if (minVal > maxVal - 1) {
+                        change = true;
+                        minVal = maxVal - 1;
+                    }
+                }
+
+                if (change) {
+                    sliderMinAlarme.setProgress(minVal);
+                } else {
+                    labelMinAlarme.setText(String.valueOf(minVal / 10.0));
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                sliderIsTracking = true;
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                Donnees.instance().definirAlarmeSeuilBas(Donnees.Equipement.PhGlobal, seekBar.getProgress() / 10.0, null);
+                Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhGlobal, "alarme_seuil_bas=" + Donnees.instance().obtenirAlarmeSeuilBas(Donnees.Equipement.PhGlobal, null), false);
+                sliderIsTracking = false;
+            }
+        });
+        sliderMaxAlarme.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+                Boolean change = false;
+                int minVal = Integer.parseInt(String.valueOf(sliderMinAlarme.getProgress()));
+                int maxVal = progress;
+
+                if (sliderIsTracking) {
+                    if (maxVal < minVal + 1) {
+                        change = true;
+                        maxVal = minVal + 1;
+                    }
+                }
+
+                if (change) {
+                    sliderMaxAlarme.setProgress(maxVal);
+                } else {
+                    labelMaxAlarme.setText(String.valueOf(maxVal / 10.0));
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                sliderIsTracking = true;
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                Donnees.instance().definirAlarmeSeuilHaut(Donnees.Equipement.PhGlobal, seekBar.getProgress() / 10.0, null);
+                Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhGlobal, "alarme_seuil_haut=" + Donnees.instance().obtenirAlarmeSeuilHaut(Donnees.Equipement.PhGlobal, null), false);
+                sliderIsTracking = false;
+            }
+        });
+
+        viewQuestion = view.findViewById(R.id.layout_question);
+        ImageButton boutonAnnulerQuestion = view.findViewById(R.id.bouton_annuler_question);
+        ImageButton boutonValiderQuestion = view.findViewById(R.id.bouton_valider_question);
+        boutonAnnulerQuestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                afficherQuestion(false, "");
+            }
+        });
+        boutonValiderQuestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                validerQuestion();
+            }
+        });
 
         update();
-
 
         return view;
     }
 
     public void update() {
         if ((view != null) && isAdded()) {
-            if (!Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins)) {
-                MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_synoptique_layout));
-            }
+            modeAEteModifie();
 
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                globalLayoutPortrait.setBackgroundResource(Donnees.instance().obtenirBackground());
-                rbAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
-                rbArret.setClickable(Donnees.instance().obtenirActiviteIHM());
-                rbMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
-            } else {
-                globalLayoutPaysage.setBackgroundResource(Donnees.instance().obtenirBackground());
-                boutonAuto.setClickable(Donnees.instance().obtenirActiviteIHM());
-                boutonArret.setClickable(Donnees.instance().obtenirActiviteIHM());
-                boutonMarche.setClickable(Donnees.instance().obtenirActiviteIHM());
-            }
+            consoAEteModifie();
 
-            modeAEteModifie(Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhMoins));
+            asservissementAEteModifie();
 
-            asservissementAEteModifie(Donnees.instance().obtenirTypeAsservissement());
+            installationAEteModifie();
 
-            consoAEteModifie(Donnees.instance().obtenirDateDebutConso(Donnees.Equipement.PhMoins),
-                    Donnees.instance().obtenirConsoVolume(Donnees.Equipement.PhMoins),
-                    Donnees.instance().obtenirConsoVolumeRestant(Donnees.Equipement.PhMoins));
-            MainActivity.instance().setHtmlText(texteConsoInjections, "Produit injecté sur 1 /7 / 28 jours : "
-                    + "<b>" + Donnees.instance().obtenirConsoJour(Donnees.Equipement.PhMoins) + "</b> / "
-                    + "<b>" + Donnees.instance().obtenirConsoSemaine(Donnees.Equipement.PhMoins) + "</b> / "
-                    + "<b>" + Donnees.instance().obtenirConsoMois(Donnees.Equipement.PhMoins) + "</b>");
+            alarmesAEteModifie();
         }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.bouton_retour:
-                if (Donnees.instance().obtenirPageSource() == Donnees.PAGE_SYNOPTIQUE) {
-                    MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_synoptique_layout));
-                } else {
-                    MainActivity.instance().onNavigationItemSelected(MainActivity.instance().menu.findItem(R.id.nav_menu_layout));
-                }
+            case R.id.layout_mode_marche:
+            case R.id.layout_mode_arret:
+            case R.id.layout_mode_auto:
+                modifierMode((LinearLayout) v.findViewById(v.getId()));
                 break;
-            case R.id.radio_bouton_auto:
-            case R.id.radio_bouton_arret:
-            case R.id.radio_bouton_marche:
-                modifierMode((RadioButton) view.findViewById(rgBoutonsMode.getCheckedRadioButtonId()));
+            case R.id.texte_debit:
+                typeModification = 0;
+                afficherQuestion(true, "Veuillez entrer le débit (en L/h)");
                 break;
-            case R.id.bouton_auto:
-            case R.id.bouton_arret:
-            case R.id.bouton_marche:
-                modifierMode((Button) v.findViewById(v.getId()));
+            case R.id.texte_consommations:
+                typeModification = 1;
+                afficherQuestion(true, "Veuillez entrer le volume du bidon (en Litres)");
+                break;
+            case R.id.texte_duree_cycle:
+                typeModification = 2;
+                afficherQuestion(true, "Veuillez entrer la durée du cycle (de 3 à 360 secondes)");
+                break;
+            case R.id.texte_duree_injection_min:
+                typeModification = 3;
+                afficherQuestion(true, "Veuillez entrer la durée d'injection minimum (de 1 à " + (Donnees.instance().obtenirDureeCycle(Donnees.Equipement.PhMoins) - 2) + " secondes)");
+                break;
+            case R.id.texte_mult_diff:
+                typeModification = 4;
+                afficherQuestion(true, "Veuillez entrer le multiplicateur de différence (de 1 à 50)");
+                break;
+            case R.id.texte_duree_injection:
+                typeModification = 5;
+                afficherQuestion(true, "Veuillez entrer la durée d'injection (de 0.1 à 30 minutes)");
+                break;
+            case R.id.texte_temps_reponse:
+                typeModification = 6;
+                afficherQuestion(true, "Veuillez entrer le temps de réponse après injection (de 1 à 60 minutes)");
+                break;
+            case R.id.texte_temps_jour_max:
+                typeModification = 7;
+                afficherQuestion(true, "Veuillez entrer le temps d'injection journalier maximum (de 0 à 1380 minutes)");
+                break;
+            case R.id.texte_point_consigne:
+                typeModification = 8;
+                afficherQuestion(true, "Veuillez entrer le point de consigne");
+                break;
+            case R.id.texte_hysteresis:
+                typeModification = 9;
+                afficherQuestion(true, "Veuillez entrer l'hystérésis");
                 break;
             default:
                 break;
         }
     }
 
-    private void modifierMode(RadioButton rb) {
-        int etat = Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhMoins);
-        String data = "etat=";
+    private void afficherQuestion(Boolean visible, String question) {
+        scrollView.setVisibility(!visible ? View.VISIBLE : View.GONE);
+        viewQuestion.setVisibility(visible ? View.VISIBLE : View.GONE);
 
-        if (rb == rbAuto) {
-            etat = (etat == Donnees.AUTO_MARCHE) ? Donnees.AUTO_MARCHE : Donnees.AUTO_ARRET;
-        } else if (rb == rbMarche) {
-            etat = Donnees.MARCHE;
-        } else {
-            etat = Donnees.ARRET;
-        }
-
-        Donnees.instance().definirModeFonctionnement(Donnees.Equipement.PhMoins, etat);
-        modeAEteModifie(etat);
-
-        MainActivity.instance().sendData(false,
-                "",
-                "",
-                HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageRegulateurPhMoins),
-                data + String.valueOf(etat));
+        EditText reponse = view.findViewById(R.id.edit_question);
+        reponse.setText("");
+        TextView textView = view.findViewById(R.id.texte_question);
+        textView.setText(question);
     }
 
-    private void modifierMode(Button bouton) {
-        int etat = Donnees.instance().obtenirModeFonctionnement(Donnees.Equipement.PhMoins);
-        String data = "etat=";
+    private void validerQuestion() {
+        EditText reponse = view.findViewById(R.id.edit_question);
+        double valeur = Double.parseDouble(reponse.getText().toString());
 
-        if (bouton == boutonAuto) {
-            etat = (etat == Donnees.AUTO_MARCHE) ? Donnees.AUTO_MARCHE : Donnees.AUTO_ARRET;
-        } else if (bouton == boutonMarche) {
-            etat = Donnees.MARCHE;
-        } else {
-            etat = Donnees.ARRET;
+        switch (typeModification) {
+            case 0:
+                if (valeur > 0) {
+                    Donnees.instance().definirDebitEquipement(Donnees.Equipement.PhMoins, valeur);
+                    installationAEteModifie();
+                    Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "debit=" + valeur, false);
+                    afficherQuestion(false, "");
+                } else {
+                    reponse.setText("");
+                }
+                break;
+            case 1:
+                if ((0 < valeur) && (valeur <= 655.35)) {
+                    Donnees.instance().definirDateConso(Donnees.Equipement.PhMoins, new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime()));
+                    Donnees.instance().definirVolume(Donnees.Equipement.PhMoins, valeur);
+                    Donnees.instance().definirVolumeRestant(Donnees.Equipement.PhMoins, valeur);
+                    consoAEteModifie();
+                    Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "date_consommation=" + Donnees.instance().obtenirDateConso(Donnees.Equipement.PhMoins) + "&volume=" + valeur, false);
+                    afficherQuestion(false, "");
+                } else {
+                    reponse.setText("");
+                }
+                break;
+            case 2:
+                if ((3 <= valeur) && (valeur <= 360)) {
+                    Donnees.instance().definirDureeCycle(Donnees.Equipement.PhMoins, (int) valeur);
+                    asservissementAEteModifie();
+                    Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "duree_cycle=" + valeur, false);
+                    afficherQuestion(false, "");
+                } else {
+                    reponse.setText("");
+                }
+                break;
+            case 3:
+                if ((1 <= valeur) && (valeur <= (Donnees.instance().obtenirDureeCycle(Donnees.Equipement.PhMoins) - 2))) {
+                    Donnees.instance().definirDureeInjectionMinimum(Donnees.Equipement.PhMoins, (int) valeur);
+                    asservissementAEteModifie();
+                    Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "duree_injection_minimum=" + valeur, false);
+                    afficherQuestion(false, "");
+                } else {
+                    reponse.setText("");
+                }
+                break;
+            case 4:
+                if ((1 <= valeur) && (valeur <= 50)) {
+                    Donnees.instance().definirMultiplicateurDifference(Donnees.Equipement.PhMoins, (int) valeur);
+                    asservissementAEteModifie();
+                    Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "multiplicateur_diff=" + valeur, false);
+                    afficherQuestion(false, "");
+                } else {
+                    reponse.setText("");
+                }
+                break;
+            case 5:
+                if ((0.1 <= valeur) && (valeur <= 30)) {
+                    Donnees.instance().definirDureeInjection(Donnees.Equipement.PhMoins, valeur);
+                    asservissementAEteModifie();
+                    Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "duree_injection=" + valeur, false);
+                    afficherQuestion(false, "");
+                } else {
+                    reponse.setText("");
+                }
+                break;
+            case 6:
+                if ((1 <= valeur) && (valeur <= 60)) {
+                    Donnees.instance().definirTempsReponse(Donnees.Equipement.PhMoins, (int) valeur);
+                    asservissementAEteModifie();
+                    Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "temps_reponse=" + valeur, false);
+                    afficherQuestion(false, "");
+                } else {
+                    reponse.setText("");
+                }
+                break;
+            case 7:
+                if ((0 <= valeur) && (valeur <= 1380)) {
+                    int tpsInjectionEffectue = Donnees.instance().obtenirTempsInjectionJournalierMax(Donnees.Equipement.PhMoins) - Donnees.instance().obtenirTempsInjectionJournalierMaxRestant(Donnees.Equipement.PhMoins);
+                    Donnees.instance().definirTempsInjectionJournalierMax(Donnees.Equipement.PhMoins, (int) valeur);
+                    Donnees.instance().definirTempsInjectionJournalierMaxRestant(Donnees.Equipement.PhMoins, ((int) valeur - tpsInjectionEffectue) > 0 ? (int) valeur - tpsInjectionEffectue : 0);
+                    asservissementAEteModifie();
+                    Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "temps_injection_jour_max=" + valeur, false);
+                    Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "temps_injection_jour_max_restant=" + Donnees.instance().obtenirTempsInjectionJournalierMaxRestant(Donnees.Equipement.PhMoins), false);
+                    afficherQuestion(false, "");
+                } else {
+                    reponse.setText("");
+                }
+                break;
+            case 8:
+                if ((0 <= valeur) && (valeur <= 14)) {
+                    Donnees.instance().definirPointConsignePh(valeur);
+                    installationAEteModifie();
+                    Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhGlobal, "point_consigne=" + valeur, false);
+                    afficherQuestion(false, "");
+                } else {
+                    reponse.setText("");
+                }
+                break;
+            case 9:
+                if (valeur >= 0) {
+                    Donnees.instance().definirHysteresisPhMoins(valeur);
+                    installationAEteModifie();
+                    Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhGlobal, "hysteresis_moins=" + valeur, false);
+                    afficherQuestion(false, "");
+                } else {
+                    reponse.setText("");
+                }
+                break;
+            default:
+                break;
         }
-
-        Donnees.instance().definirModeFonctionnement(Donnees.Equipement.PhMoins, etat);
-        modeAEteModifie(etat);
-
-        MainActivity.instance().sendData(false,
-                "",
-                "",
-                HttpGetRequest.getRequestString(HttpGetRequest.RequestHTTP.Update),
-                HttpGetRequest.getPageString(HttpGetRequest.PageHTTP.PageRegulateurPhMoins),
-                data + String.valueOf(etat));
     }
 
-    private void modeAEteModifie(int mode) {
-        String autoText;
-        LinearLayout.LayoutParams paramEtatOk = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                0,
-                1.0f
-        );
-        LinearLayout.LayoutParams paramEtatNok = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                0,
-                2.0f
-        );
+    private void modifierMode(LinearLayout sender) {
+        if (Donnees.instance().obtenirActiviteIHM()) {
+            int etat = Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.PhMoins);
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            autoText = "Auto (" + ((mode == Donnees.AUTO_MARCHE) ? "marche" : "arrêt") + ")";
-
-            if (mode > Donnees.AUTO) {
-                rbAuto.setChecked(true);
-            } else if (mode == Donnees.MARCHE) {
-                rbMarche.setChecked(true);
+            if (sender == viewBoutonAuto) {
+                etat = (etat == Donnees.AUTO_MARCHE) ? Donnees.AUTO_MARCHE : Donnees.AUTO_ARRET;
+            } else if (sender == viewBoutonMarche) {
+                if (Donnees.instance().obtenirEtatRegulations()) {
+                    etat = Donnees.MARCHE;
+                } else {
+                    MainActivity.instance().afficherAlertDialog("Modification du mode de fonctionnement", "Le mode de fonctionnement choisi n'est pas possible car les régulations sont désactivées.\nPour modifier cela, veuillez activer les régulations (onglet Bassin).", "OK");
+                    return;
+                }
             } else {
-                rbArret.setChecked(true);
+                etat = Donnees.ARRET;
             }
 
-            rbAuto.setText(autoText);
-        } else {
-            if (mode > Donnees.AUTO) {
-                bouton3Etats.setImageResource(R.drawable.bouton_haut_vertical);
-                boutonAuto.setTextColor(getResources().getColor(R.color.bouton3EtatSelectionne));
-                boutonArret.setTextColor(getResources().getColor(R.color.bouton3EtatNonSelectionne));
-                boutonMarche.setTextColor(getResources().getColor(R.color.bouton3EtatNonSelectionne));
-                boutonAuto.setLayoutParams(paramEtatOk);
-                boutonArret.setLayoutParams(paramEtatNok);
-                boutonMarche.setLayoutParams(paramEtatNok);
-            } else if (mode == Donnees.MARCHE) {
-                bouton3Etats.setImageResource(R.drawable.bouton_bas_vertical);
-                boutonAuto.setTextColor(getResources().getColor(R.color.bouton3EtatNonSelectionne));
-                boutonArret.setTextColor(getResources().getColor(R.color.bouton3EtatNonSelectionne));
-                boutonMarche.setTextColor(getResources().getColor(R.color.bouton3EtatSelectionne));
-                boutonAuto.setLayoutParams(paramEtatNok);
-                boutonArret.setLayoutParams(paramEtatNok);
-                boutonMarche.setLayoutParams(paramEtatOk);
-            } else {
-                bouton3Etats.setImageResource(R.drawable.bouton_off_vertical);
-                boutonAuto.setTextColor(getResources().getColor(R.color.bouton3EtatNonSelectionne));
-                boutonArret.setTextColor(getResources().getColor(R.color.bouton3EtatSelectionne));
-                boutonMarche.setTextColor(getResources().getColor(R.color.bouton3EtatNonSelectionne));
-                boutonAuto.setLayoutParams(paramEtatNok);
-                boutonArret.setLayoutParams(paramEtatOk);
-                boutonMarche.setLayoutParams(paramEtatNok);
-            }
+            Donnees.instance().definirEtatEquipement(Donnees.Equipement.PhMoins, etat);
+            modeAEteModifie();
+            Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "etat=" + etat, false);
         }
     }
 
-    private void asservissementAEteModifie(String typeAsservissement) {
-        String data = "";
+    private void modeAEteModifie() {
+        int mode = Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.PhMoins);
 
-        rbTOR.setChecked(typeAsservissement.equals(Donnees.ASSERVISSEMENT_TOR));
-        rbLineaire.setChecked(typeAsservissement.equals(Donnees.ASSERVISSEMENT_LIN));
+        viewBoutonMarche.setBackgroundTintList(ColorStateList.valueOf(mode == Donnees.MARCHE ? Color.rgb(255, 83, 13) : Color.rgb(245, 245, 220)));
+        labelBoutonMarche.setTextColor(mode == Donnees.MARCHE ? Color.rgb(40, 40, 40) : Color.rgb(128, 128, 128));
+        imageBoutonMarche.setColorFilter(mode == Donnees.MARCHE ? Color.rgb(40, 40, 40) : Color.rgb(128, 128, 128));
 
-        if (typeAsservissement.equals(Donnees.ASSERVISSEMENT_TOR)) {
-            data += "Durée injection : ";
-            data += "<b>" + Donnees.instance().obtenirDureeInjection(Donnees.Equipement.PhMoins) + "</b>";
-            data += "<br />Temps de réponse après injection : ";
-            data += "<b>" + Donnees.instance().obtenirTempsReponse(Donnees.Equipement.PhMoins) + "</b>";
-        } else {
-            data += "Durée cycle : ";
-            data += "<b>" + Donnees.instance().obtenirDureeCycle(Donnees.Equipement.PhMoins) + " seconde(s)</b>";
-            data += "<br />Multiplicateur de différence : ";
-            data += "<b>" + Donnees.instance().obtenirMultiplicateurDifference(Donnees.Equipement.PhMoins) + "</b>";
+        viewBoutonArret.setBackgroundColor(mode == Donnees.ARRET ? Color.rgb(255, 83, 13) : Color.rgb(245, 245, 220));
+        labelBoutonArret.setTextColor(mode == Donnees.ARRET ? Color.rgb(40, 40, 40) : Color.rgb(128, 128, 128));
+        imageBoutonArret.setColorFilter(mode == Donnees.ARRET ? Color.rgb(40, 40, 40) : Color.rgb(128, 128, 128));
 
-            if (Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.PhMoins)) {
-                data += "<br />Durée injection : ";
-                data += "<b>" + Donnees.instance().obtenirDureeInjection(Donnees.Equipement.PhMoins) + "</b>";
-                data += "<br />Temps de réponse après injection : ";
-                data += "<b>" + Donnees.instance().obtenirTempsReponse(Donnees.Equipement.PhMoins) + "</b>";
-            }
-        }
-
-        data += "<br />Temps d'injection journalier maximum : ";
-        data += "<b>" + Donnees.instance().obtenirTempsInjectionJournalierMax(Donnees.Equipement.PhMoins) + " minute(s)</b>";
-        data += "<br /><font color=\"" + (Donnees.instance().obtenirTempsInjectionJournalierMaxRestant(Donnees.Equipement.PhMoins) > 0 ? "#00FF00" : "orange") + "\"><i>Temps d'injection journalier maximum restant : ";
-        data += "<b>" + Donnees.instance().obtenirTempsInjectionJournalierMaxRestant(Donnees.Equipement.PhMoins) + " minute(s)</b></i></font>";
-
-        MainActivity.instance().setHtmlText(texteDonneesAsservissement, data);
+        viewBoutonAuto.setBackgroundTintList(ColorStateList.valueOf(mode > Donnees.AUTO ? Color.rgb(0, 174, 239) : Color.rgb(245, 245, 220)));
+        labelBoutonAuto.setTextColor(mode > Donnees.AUTO ? Color.rgb(40, 40, 40) : Color.rgb(128, 128, 128));
+        imageBoutonAuto.setColorFilter(mode > Donnees.AUTO ? Color.rgb(40, 40, 40) : Color.rgb(128, 128, 128));
     }
 
-    private void consoAEteModifie(String date, double consoVolume, double consoVolumeRestant) {
-        String color;
+    private void installationAEteModifie() {
+        labelDebit.setEnabled(Donnees.instance().obtenirActiviteIHM() && Donnees.instance().obtenirCodeInstallateur());
+        labelDebit.setText(Html.fromHtml("Débit : <b>" + String.format("%.2f", Donnees.instance().obtenirDebitEquipement(Donnees.Equipement.PhMoins)) + " L/h</b>"));
 
-        if (consoVolumeRestant < (consoVolume * Global.HYSTERESIS_BIDON_VIDE / 100.0)) {
+        labelPointConsigne.setEnabled(Donnees.instance().obtenirActiviteIHM() && Donnees.instance().obtenirCodeInstallateur());
+        labelPointConsigne.setText(Html.fromHtml("Point de consigne : <b>" + String.format("%.2f", Donnees.instance().obtenirPointConsignePh()) + "</b>"));
+        labelHysteresis.setEnabled(Donnees.instance().obtenirActiviteIHM() && Donnees.instance().obtenirCodeInstallateur());
+        labelHysteresis.setText(Html.fromHtml("Hystérésis : <b>" + String.format("%.2f", Donnees.instance().obtenirHysteresisPhMoins()) + " (" + (String.format("%.2f", Donnees.instance().obtenirPointConsignePh() + Donnees.instance().obtenirHysteresisPhMoins())) + ")</b>"));
+    }
+
+    private void consoAEteModifie() {
+        String color = "";
+        String date = Donnees.instance().obtenirDateConso(Donnees.Equipement.PhMoins);
+        double volume = Donnees.instance().obtenirVolume(Donnees.Equipement.PhMoins);
+        double volumeRestant = Donnees.instance().obtenirVolumeRestant(Donnees.Equipement.PhMoins);
+
+        if (volumeRestant < (volume * Global.HYSTERESIS_BIDON_VIDE / 100.0)) {
             color = "red";
-        } else if (consoVolumeRestant < (consoVolume * Global.HYSTERESIS_BIDON_PRESQUE_VIDE / 100.0)) {
+        } else if (volumeRestant < (volume * Global.HYSTERESIS_BIDON_PRESQUE_VIDE / 100.0)) {
             color = "orange";
         } else {
             color = "#00FF00";
         }
 
-        MainActivity.instance().setHtmlText(texteConso, "Depuis : " + date +
-                "<br />Volume : <b>" + consoVolume + " L</b>" +
-                "<br /><font color=\"" + color + "\"><i>Volume restant : <b>" + consoVolumeRestant + " L</b></i></font>");
+        labelConsommations.setEnabled(Donnees.instance().obtenirActiviteIHM());
+        labelConsommations.setText(Html.fromHtml("Depuis : " + date + "<br />Volume : <b>" + volume + " L</b><br /><font color=\"" + color + "\"><i>Volume restant : <b>" + volumeRestant + " L</b></i></font>"));
+        labelConsoProduitInjecte.setText(Html.fromHtml("Produit injecté sur 1 / 7 / 28 jours : <b>" + Donnees.instance().obtenirConsoJour(Donnees.Equipement.PhMoins) + " L</b> / <b>" + Donnees.instance().obtenirConsoSemaine(Donnees.Equipement.PhMoins) + " L</b> / <b>" + Donnees.instance().obtenirConsoMois(Donnees.Equipement.PhMoins) + " L</b>"));
+        labelConsoProduitInjecte.setVisibility((Donnees.instance().obtenirTypeAppareil() == Donnees.MYOZONEX) || (Donnees.instance().obtenirTypeAppareil() == Donnees.MYOZONEXESSENTIEL) ? View.VISIBLE : View.GONE);
+    }
+
+    private void asservissementAEteModifie() {
+        labelDureeCycle.setEnabled(Donnees.instance().obtenirActiviteIHM() && Donnees.instance().obtenirCodeInstallateur());
+        labelDureeCycle.setText(Html.fromHtml("Durée cycle : <b>" + Donnees.instance().obtenirDureeCycle(Donnees.Equipement.PhMoins) + " seconde(s)</b>"));
+        labelDureeCycle.setVisibility(Donnees.instance().obtenirTypeRegulation() == Donnees.ASSERVISSEMENT_LIN ? View.VISIBLE : View.GONE);
+        labelDureeInjectionMin.setEnabled(Donnees.instance().obtenirActiviteIHM() && Donnees.instance().obtenirCodeInstallateur());
+        labelDureeInjectionMin.setText(Html.fromHtml("Durée injection minimum : <b>" + Donnees.instance().obtenirDureeInjectionMinimum(Donnees.Equipement.PhMoins) + " seconde(s)</b>"));
+        labelDureeInjectionMin.setVisibility(Donnees.instance().obtenirTypeRegulation() == Donnees.ASSERVISSEMENT_LIN ? View.VISIBLE : View.GONE);
+        labelMultDiff.setEnabled(Donnees.instance().obtenirActiviteIHM() && Donnees.instance().obtenirCodeInstallateur());
+        labelMultDiff.setText(Html.fromHtml("Multiplicateur de différence : <b>" + Donnees.instance().obtenirMultiplicateurDifference(Donnees.Equipement.PhMoins) + "</b>"));
+        labelMultDiff.setVisibility(Donnees.instance().obtenirTypeRegulation() == Donnees.ASSERVISSEMENT_LIN ? View.VISIBLE : View.GONE);
+
+        labelDureeInjection.setEnabled(Donnees.instance().obtenirActiviteIHM() && Donnees.instance().obtenirCodeInstallateur());
+        labelDureeInjection.setText(Html.fromHtml("Durée injection : <b>" + Donnees.instance().obtenirDureeInjection(Donnees.Equipement.PhMoins) + " minute(s)</b>"));
+        labelDureeInjection.setVisibility(Donnees.instance().obtenirTypeRegulation() == Donnees.ASSERVISSEMENT_TOR ? View.VISIBLE : View.GONE);
+        labelTempsReponse.setEnabled(Donnees.instance().obtenirActiviteIHM() && Donnees.instance().obtenirCodeInstallateur());
+        labelTempsReponse.setText(Html.fromHtml("Temps de réponse après injection : <b>" + Donnees.instance().obtenirTempsReponse(Donnees.Equipement.PhMoins) + " minute(s)</b>"));
+        labelTempsReponse.setVisibility(Donnees.instance().obtenirTypeRegulation() == Donnees.ASSERVISSEMENT_TOR ? View.VISIBLE : View.GONE);
+
+        labelTempsJourMax.setEnabled(Donnees.instance().obtenirActiviteIHM() && Donnees.instance().obtenirCodeInstallateur());
+        labelTempsJourMax.setText(Html.fromHtml("Temps d'injection journalier maximum : <b>" + Donnees.instance().obtenirTempsInjectionJournalierMax(Donnees.Equipement.PhMoins) + " minute(s)</b><br /><font color=\"" + (Donnees.instance().obtenirTempsInjectionJournalierMaxRestant(Donnees.Equipement.PhMoins) > 0 ? "#00FF00" : "orange") + "\"><i>Temps d'injection journalier maximum restant : <b>" + Donnees.instance().obtenirTempsInjectionJournalierMaxRestant(Donnees.Equipement.PhMoins) + " minute(s)</b></i></font>"));
+    }
+
+    private void alarmesAEteModifie() {
+        sliderMinAlarme.setEnabled(Donnees.instance().obtenirActiviteIHM());
+        sliderMaxAlarme.setEnabled(Donnees.instance().obtenirActiviteIHM());
+
+        if (!sliderIsTracking) {
+            sliderMinAlarme.setProgress((int) (Donnees.instance().obtenirAlarmeSeuilBas(Donnees.Equipement.PhGlobal, null) * 10));
+            sliderMaxAlarme.setProgress((int) (Donnees.instance().obtenirAlarmeSeuilHaut(Donnees.Equipement.PhGlobal, null) * 10));
+        }
     }
 }
