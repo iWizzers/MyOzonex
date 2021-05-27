@@ -330,7 +330,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
         if (requestCode == Bluetooth.REQUEST_ENABLE_BT) {
             if (Bluetooth.instance().isOn()) {
                 Bluetooth.instance().connect();
@@ -467,15 +466,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (!result.isEmpty()) {
                 if (result.contains("LOG")) {
                     if (result.contains("OK")) {
-                        int index = 1;
-                        while (!Donnees.instance().obtenirListeAppareils().contains(Donnees.getPreferences(Donnees.ID_SYSTEME))) {
-                            if (Donnees.getPreferences(Donnees.ID_SYSTEME_X.replace("x", String.valueOf(index))).isEmpty()) {
-                                Donnees.setPreferences(Donnees.ID_SYSTEME_X.replace("x", String.valueOf(index)), Donnees.getPreferences(Donnees.ID_SYSTEME));
-                                Donnees.instance().ajouterAppareil(Donnees.getPreferences(Donnees.ID_SYSTEME));
-                                fragmentConnexion.update();
-                            }
-
-                            index++;
+                        if (!Donnees.instance().obtenirListeAppareils().contains(Donnees.getPreferences(Donnees.ID_SYSTEME))) {
+                            Donnees.instance().ajouterAppareil(Donnees.getPreferences(Donnees.ID_SYSTEME));
+                            Donnees.setPreferences(Donnees.ID_SYSTEME_X.replace("x", String.valueOf(Donnees.instance().obtenirListeAppareils().size())), Donnees.getPreferences(Donnees.ID_SYSTEME));
+                            fragmentConnexion.update();
                         }
 
                         premierDemarrage = false;
