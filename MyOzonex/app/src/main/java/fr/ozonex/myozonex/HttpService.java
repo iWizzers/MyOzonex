@@ -12,7 +12,6 @@ import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -106,8 +105,16 @@ public class HttpService extends Service {
     public void initializeTimerTask() {
         timerTask = new TimerTask() {
             public void run() {
-                if (!Donnees.getPreferences(Donnees.ID_SYSTEME).isEmpty()) {
-                    Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Get, StructureHttp.PageHTTP.PageData, "", false);
+                if (!Donnees.getPreferences(Donnees.ID_SYSTEME).isEmpty() && Donnees.instance().getTimerState()) {
+                    if (BluetoothLe.instance().connected != BluetoothLe.Connected.True) {
+                        if (!Donnees.instance().contientRequeteHttp(StructureHttp.RequestHTTP.Get, StructureHttp.PageHTTP.PageData, "")) {
+                            Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Get, StructureHttp.PageHTTP.PageData, "", false);
+                        }
+                    } else {
+                        if (!Donnees.instance().contientRequeteBt("Data?")) {
+                            Donnees.instance().ajouterRequeteBt("Data?", false);
+                        }
+                    }
                 }
             }
         };
@@ -158,14 +165,15 @@ public class HttpService extends Service {
                             MainActivity.instance().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    progressDialog = ProgressDialog.show(MainActivity.instance(), "Veuillez patienter", structureHttp.getRequest() == StructureHttp.RequestHTTP.Update ? "Application des modifications" : "Connexion à la base de données...", true);
+                                    progressDialog = ProgressDialog.show(MainActivity.instance(), getString(R.string.serveur_titre), getString(structureHttp.getRequest() == StructureHttp.RequestHTTP.Update ? R.string.serveur_application_modifications : R.string.serveur_connexion_bdd), true);
                                 }
                             });
                         } else {
                             MainActivity.instance().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    progressDialog.setMessage(structureHttp.getRequest() == StructureHttp.RequestHTTP.Update ? "Application des modifications" : "Connexion à la base de données...");
+                                    progressDialog.setTitle(getString(R.string.serveur_titre));
+                                    progressDialog.setMessage(getString(structureHttp.getRequest() == StructureHttp.RequestHTTP.Update ? R.string.serveur_application_modifications : R.string.serveur_connexion_bdd));
                                 }
                             });
                         }
@@ -181,7 +189,7 @@ public class HttpService extends Service {
 
                     String result;
                     String inputLine;
-                    String data = BDD + "/debug/" + structureHttp.getRequestString() + '_' + structureHttp.getPageString() + "?id_systeme=" + Donnees.getPreferences(Donnees.ID_SYSTEME) + (!structureHttp.getData().isEmpty() ? '&' + structureHttp.getData() : "");
+                    String data = BDD + "/release/" + structureHttp.getRequestString() + '_' + structureHttp.getPageString() + "?id_systeme=" + Donnees.getPreferences(Donnees.ID_SYSTEME) + (!structureHttp.getData().isEmpty() ? '&' + structureHttp.getData() : "");
 
                     try {
                         //Log.d("URL", data);
@@ -249,31 +257,37 @@ public class HttpService extends Service {
                             MainActivity.instance().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    progressDialog = ProgressDialog.show(MainActivity.instance(), "Veuillez patienter", structureBt.getData().charAt(structureBt.getData().length() - 1) == '?' ? "Récupération des informations" : "Application des modifications", true);
+                                    progressDialog = ProgressDialog.show(MainActivity.instance(), getString(R.string.bluetooth_titre), getString(structureBt.getData().charAt(structureBt.getData().length() - 1) == '?' ? R.string.bluetooth_get_data : R.string.serveur_application_modifications), true);
                                 }
                             });
                         } else {
                             MainActivity.instance().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    progressDialog.setMessage(structureBt.getData().charAt(structureBt.getData().length() - 1) == '?' ? "Récupération des informations" : "Application des modifications");
+                                    progressDialog.setTitle(getString(R.string.bluetooth_titre));
+                                    progressDialog.setMessage(getString(structureBt.getData().charAt(structureBt.getData().length() - 1) == '?' ? R.string.bluetooth_get_data : R.string.serveur_application_modifications));
                                 }
                             });
                         }
                     }
 
-                    if (Bluetooth.instance().isConnected()) {
-                        while (Bluetooth.instance().isUsed()) {
-                            try {
-                                Thread.sleep(10);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
+                    BluetoothLe.instance().send(structureBt.getData());
 
-                        Bluetooth.instance().send(structureBt.getData());
+                    while (!BluetoothLe.instance().readTrameComplete) {
+                        try {
+                            Thread.sleep(10);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
 
+                    try {
+                        Thread.sleep(1500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    BluetoothLe.instance().readTrameComplete = false;
                     Donnees.instance().supprimerRequeteBt();
                 } else if (progressDialogVisible) {
                     progressDialogVisible = false;

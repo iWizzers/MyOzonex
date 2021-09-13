@@ -190,6 +190,8 @@ public class Donnees {
     private int typeChauffage = 0;
     private int controleTemperature = 0;
     private int temperatureConsigne = 0;
+    private int gestionReversible = 0;
+    private int temperatureReversible = 0;
 
     private double volumeBassin = 0.0;
     private int tempoDemarrage = 0;
@@ -346,6 +348,7 @@ public class Donnees {
     private List<StructureHttp> listeHttp = new ArrayList<>();
     private List<StructureBt> listeBt = new ArrayList<>();
     private int wifiState = 0;
+    private boolean timerState = true;
 
     private static SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.instance());
 
@@ -438,7 +441,7 @@ public class Donnees {
         Date dateIHM = calendarIHM.getTime();
         Date dateIHMPlus = calendarIHMPlus.getTime();
 
-        if ((dateAndroid.after(dateIHM) && dateAndroid.before(dateIHMPlus)) || Bluetooth.instance().isConnected()) {
+        if ((dateAndroid.after(dateIHM) && dateAndroid.before(dateIHMPlus)) || (BluetoothLe.instance().connected == BluetoothLe.Connected.True)) {
             IHMactive = true;
         } else {
             IHMactive = false;
@@ -491,6 +494,10 @@ public class Donnees {
     }
 
     public void supprimerEvents() {
+        events.clear();
+    }
+
+    public void supprimerEventsTmp() {
         for (int i = 0; i < events.size(); i++) {
             boolean exists = false;
 
@@ -1219,11 +1226,7 @@ public class Donnees {
     }
 
     public void definirControlePompeFiltration(int type) {
-        if (type == 0) {
-            controleTemperature = CONTROLE_PAR_POMPE_FILTRATION;
-        } else {
-            controleTemperature = CONTROLE_POMPE_FILTRATION;
-        }
+        controleTemperature = type;
     }
 
     public int obtenirTemperatureConsigne() {
@@ -1232,6 +1235,22 @@ public class Donnees {
 
     public void definirTemperatureConsigne(int valeur) {
         temperatureConsigne = valeur;
+    }
+
+    public int obtenirGestionReversible() {
+        return gestionReversible;
+    }
+
+    public void definirGestionReversible(int valeur) {
+        gestionReversible = valeur;
+    }
+
+    public int obtenirTemperatureReversible() {
+        return temperatureReversible;
+    }
+
+    public void definirTemperatureReversible(int valeur) {
+        temperatureReversible = valeur;
     }
 
     public double obtenirVolumeBassin() {
@@ -2141,6 +2160,22 @@ public class Donnees {
         return listeHttp.size() > 0;
     }
 
+    public Boolean contientRequeteHttp(StructureHttp.RequestHTTP request, StructureHttp.PageHTTP page, String data) {
+        Boolean ret = false;
+
+        for (int i = 0; i < listeHttp.size(); i++) {
+            if (i >= listeHttp.size()) {
+                break;
+            }
+            if ((listeHttp.get(i).getRequest() == request) && (listeHttp.get(i).getPage() == page) && (listeHttp.get(i).getData().equals(data))) {
+                ret = true;
+                break;
+            }
+        }
+
+        return ret;
+    }
+
     public StructureHttp obtenirStructureHttp() {
         return listeHttp.get(0);
     }
@@ -2155,6 +2190,22 @@ public class Donnees {
 
     public Boolean contientRequeteBt() {
         return listeBt.size() > 0;
+    }
+
+    public Boolean contientRequeteBt(String data) {
+        Boolean ret = false;
+
+        for (int i = 0; i < listeBt.size(); i++) {
+            if (i >= listeBt.size()) {
+                break;
+            }
+            if (listeBt.get(i).getData().equals(data)) {
+                ret = true;
+                break;
+            }
+        }
+
+        return ret;
     }
 
     public StructureBt obtenirStructureBt() {
@@ -2175,5 +2226,17 @@ public class Donnees {
 
     public int getWiFiState() {
         return wifiState;
+    }
+
+    public void stopTimer() {
+        timerState = false;
+    }
+
+    public void startTimer() {
+        timerState = true;
+    }
+
+    public boolean getTimerState() {
+        return timerState;
     }
 }

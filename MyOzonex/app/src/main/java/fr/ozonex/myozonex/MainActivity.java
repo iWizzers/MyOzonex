@@ -1,5 +1,6 @@
 package fr.ozonex.myozonex;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
@@ -12,7 +13,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.internal.NavigationMenuView;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -31,6 +31,12 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static MainActivity inst;
     public static MainActivity instance() {
@@ -39,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private Intent serviceIntent;
 
-    public boolean premierDemarrage = false;
     private boolean activityResume = false;
 
     private Handler clignotementLED;
@@ -54,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ImageView imageEtatSysteme;
     private TextView texteEtatSysteme;
     private TextView versionApplication;
+    private boolean msgConnexionBt = false;
 
     private FragmentConnexion fragmentConnexion = new FragmentConnexion();
     private FragmentDonnees fragmentDonnees = new FragmentDonnees();
@@ -75,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FragmentParams fragmentParams = new FragmentParams();
 
     private Donnees.Capteur typeCapteur;
+
+    private final int REQUEST_LOCATION_PERMISSION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,11 +134,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             index++;
         }
 
+        requestLocationPermission();
+
         if (!Donnees.getPreferences(Donnees.ID_SYSTEME).isEmpty()) {
-            premierDemarrage = true;
             Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Get, StructureHttp.PageHTTP.PageLogin, "admin", false);
         } else {
             onNavigationItemSelected(menu.findItem(R.id.nav_deconnexion_layout));
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @AfterPermissionGranted(REQUEST_LOCATION_PERMISSION)
+    public void requestLocationPermission() {
+        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION};
+        if (!EasyPermissions.hasPermissions(this, perms)) {
+            EasyPermissions.requestPermissions(this, "Veuillez accorder l'autorisation de localisation", REQUEST_LOCATION_PERMISSION, perms);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (BluetoothLe.instance().previousConnected == BluetoothLe.Connected.True) {
+            if (BluetoothLe.instance().service != null) {
+                BluetoothLe.instance().service.attach(BluetoothLe.instance());
+            }
+
+            MainActivity.instance().bindService(new Intent(MainActivity.instance(), SerialService.class), BluetoothLe.instance(), Context.BIND_AUTO_CREATE);
         }
     }
 
@@ -146,8 +183,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (clignotementLED != null) {
             clignotementLED.postDelayed(clignotement,0);
         }
-
-        //MainActivity.instance().registerReceiver(BluetoothLe.instance().gattUpdateReceiver, BluetoothLe.instance().makeGattUpdateIntentFilter());
 
         CustomNotification.instance().supprimer();
 
@@ -165,9 +200,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             clignotementLED.removeCallbacks(clignotement);
         }
 
-        //unregisterReceiver(BluetoothLe.instance().gattUpdateReceiver);
-
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    @Override
+    public void onStop() {
+        BluetoothLe.instance().previousConnected = BluetoothLe.instance().connected;
+        if ((BluetoothLe.instance().service != null) && !MainActivity.instance().isChangingConfigurations()) {
+            BluetoothLe.instance().service.detach();
+        }
+
+        super.onStop();
     }
 
     @Override
@@ -176,10 +219,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Donnees.instance().definirCodeInstallateur(false);
 
-        if (Bluetooth.instance().isConnected()) {
-            Bluetooth.instance().disconnect();
+        if (BluetoothLe.instance().connected == BluetoothLe.Connected.True) {
+            BluetoothLe.instance().disconnect();
         }
-        //fragmentPremiereConnexion.unregisterReceiver();
         stopService(serviceIntent);
 
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -208,10 +250,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             showNavigationViewButton(false);
 
             Donnees.setPreferences(Donnees.ID_SYSTEME, "");
-            if (Bluetooth.instance().isConnected()) {
-                Bluetooth.instance().disconnect();
-            }
             Donnees.instance().setWiFiState(0);
+            if (BluetoothLe.instance().connected == BluetoothLe.Connected.True) {
+                BluetoothLe.instance().disconnect();
+            }
+            Donnees.instance().supprimerEvents();
 
             fragmentManager.beginTransaction()
                     .replace(R.id.content_frame
@@ -330,10 +373,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Bluetooth.REQUEST_ENABLE_BT) {
-            if (Bluetooth.instance().isOn()) {
-                Bluetooth.instance().connect();
-            }
+        if (requestCode == BluetoothLe.REQUEST_ENABLE_BT) {
+            BluetoothLe.instance().scanLeDevice(true);
         }
     }
 
@@ -444,23 +485,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         dialog.show();
     }
 
-    public void cancelBt() {
-        fragmentParams.cancelBt();
-    }
-
     public void getTreatment(String result) {
         if (result == null) {
-            if (Integer.parseInt(Donnees.getPreferences(Donnees.BT_PAIRED_DEVICE)) == 1) {
-                Bluetooth.instance().init();
-            } else {
-                if (isActivityResumed()) {
-                    Toast.makeText(this, "Un problème est survenu lors de la communication avec le serveur", Toast.LENGTH_SHORT).show();
-                }
-            }
+            if (isActivityResumed()) {
+                if (!msgConnexionBt && (Integer.parseInt(Donnees.getPreferences(Donnees.BT_PAIRED_DEVICE)) == 1)) {
+                    msgConnexionBt = true;
 
-            if (premierDemarrage) {
-                premierDemarrage = false;
-                onNavigationItemSelected(menu.findItem(R.id.nav_deconnexion_layout));
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.instance());
+                    builder.setCancelable(true);
+                    builder.setTitle(getString(R.string.bluetooth_titre));
+                    builder.setMessage(getString(R.string.bluetooth_connexion_erreur_serveur));
+
+                    builder.setPositiveButton("OUI", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            msgConnexionBt = false;
+                            BluetoothLe.instance().init();
+                        }
+                    });
+
+                    builder.setNegativeButton("NON", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            msgConnexionBt = false;
+                            onNavigationItemSelected(menu.findItem(R.id.nav_deconnexion_layout));
+                            dialog.cancel();
+                        }
+                    });
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
             }
         } else {
             if (!result.isEmpty()) {
@@ -472,30 +527,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             fragmentConnexion.update();
                         }
 
-                        premierDemarrage = false;
                         updateNavigationView();
                         showNavigationViewButton(true);
                         onNavigationItemSelected(menu.findItem(R.id.nav_accueil_layout));
 
                         Donnees.instance().definirTypeAppareil(Integer.parseInt(result.split(";")[1]));
                         Donnees.setPreferences(Donnees.BT_PAIRED_DEVICE, Donnees.instance().obtenirTypeAppareil() >= Donnees.MYOZONEXMINI ? "1" : "0");
-                        if (Integer.parseInt(Donnees.getPreferences(Donnees.BT_PAIRED_DEVICE)) == 1) {
+                        if (!msgConnexionBt && (Integer.parseInt(Donnees.getPreferences(Donnees.BT_PAIRED_DEVICE)) == 1)) {
+                            msgConnexionBt = true;
+
                             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.instance());
                             builder.setCancelable(true);
-                            builder.setTitle("Connexion Bluetooth");
-                            builder.setMessage("Souhaitez-vous vous connecter via Bluetooth ?");
+                            builder.setTitle(getString(R.string.bluetooth_titre));
+                            builder.setMessage(getString(R.string.bluetooth_connexion));
 
                             builder.setPositiveButton("OUI", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Bluetooth.instance().init();
-                                    //BluetoothLe.instance().init();
+                                    msgConnexionBt = false;
+                                    BluetoothLe.instance().init();
                                 }
                             });
 
                             builder.setNegativeButton("NON", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    msgConnexionBt = false;
                                     dialog.cancel();
                                 }
                             });
@@ -503,13 +560,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             AlertDialog dialog = builder.create();
                             dialog.show();
                         }
-
                         Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Get, StructureHttp.PageHTTP.PageData, "", false);
                     } else {
                         Donnees.setPreferences(Donnees.ID_SYSTEME, "");
 
                         if (isActivityResumed()) {
-                            MainActivity.instance().afficherAlertDialog("Connexion", "ID et/ou mot de passe erroné.", "OK");
+                            MainActivity.instance().afficherAlertDialog(getString(R.string.connexion_titre), getString(R.string.connexion_erreur), "OK");
                         }
                     }
                 } else {
@@ -534,7 +590,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Donnees.instance().definirPointConsigneOrpAuto(object.getInt("consigne_orp_auto") > 0);
                             //Donnees.instance().definirPointConsigneOrpAuto(object.getInt("capteur_niveau_eau") > 0);
                         } catch (JSONException e) {
-                            Log.d("ERROR", "Automatisation");
+                            //Log.d("ERROR", "Automatisation");
                         }
 
                         try {
@@ -549,7 +605,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Donnees.instance().definirHystInjectionChloreAmpero(object.getDouble("hyst_injection_ampero"));
                             Donnees.instance().definirEtatRegulations(object.getInt("etat_regulations") > 0);
                         } catch (JSONException e) {
-                            Log.d("ERROR", "Bassin");
+                            //Log.d("ERROR", "Bassin");
                         }
 
                         try {
@@ -590,7 +646,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Donnees.instance().definirEtatCapteur(Donnees.Capteur.Ampero, object.getJSONObject("Ampéro").getString("etat"));
                             Donnees.instance().definirValeurCapteur(Donnees.Capteur.Ampero, object.getJSONObject("Ampéro").getDouble("valeur"));
                         } catch (JSONException e) {
-                            Log.d("ERROR", "Capteurs");
+                            //Log.d("ERROR", "Capteurs");
                         }
 
                         try {
@@ -601,7 +657,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 Donnees.instance().definirPlageFonctionnement(Donnees.Equipement.Eclairage, i, object.getString(String.format("plage_%d", i+1)));
                             }
                         } catch (JSONException e) {
-                            Log.d("ERROR", "Eclairage");
+                            //Log.d("ERROR", "Eclairage");
                         }
 
                         try {
@@ -620,7 +676,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Donnees.instance().definirArretHorsGel(object.getInt("arret_hors_gel"));
                             Donnees.instance().definirFreqHorsGel(object.getInt("frequence_hors_gel"));
                         } catch (JSONException e) {
-                            Log.d("ERROR", "Pompe filtration");
+                            //Log.d("ERROR", "Pompe filtration");
                         }
 
                         try {
@@ -634,7 +690,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Donnees.instance().definirSeuilHautPression(object.getDouble("seuil_haut_pression"));
                             Donnees.instance().definirSeuilBasPression(object.getDouble("seuil_bas_pression"));
                         } catch (JSONException e) {
-                            Log.d("ERROR", "Filtre");
+                            //Log.d("ERROR", "Filtre");
                         }
 
                         try {
@@ -648,7 +704,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 Donnees.instance().definirPlageFonctionnement(Donnees.Equipement.Surpresseur, i, object.getString(String.format("plage_%d", i+1)));
                             }
                         } catch (JSONException e) {
-                            Log.d("ERROR", "Surpresseur");
+                            //Log.d("ERROR", "Surpresseur");
                         }
 
                         try {
@@ -660,13 +716,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Donnees.instance().definirConsoHC(Donnees.Equipement.Chauffage, object.getDouble("consommation_hc"));
                             Donnees.instance().definirControlePompeFiltration(object.getInt("gestion_temperature"));
                             Donnees.instance().definirTemperatureConsigne(object.getInt("temperature_consigne"));
-                            //Donnees.instance().definirControlePompeFiltration(object.getInt("gestion_reversible"));
-                            //Donnees.instance().definirTemperatureConsigne(object.getInt("temperature_reversible"));
+                            Donnees.instance().definirGestionReversible(object.getInt("gestion_reversible"));
+                            Donnees.instance().definirTemperatureReversible(object.getInt("temperature_reversible"));
                             Donnees.instance().definirTypeChauffage(object.getInt("type_chauffage"));
                             Donnees.instance().definirAlarmeSeuilBas(Donnees.Equipement.Chauffage, object.getInt("alarme_seuil_bas"), null);
                             Donnees.instance().definirAlarmeSeuilHaut(Donnees.Equipement.Chauffage, object.getInt("alarme_seuil_haut"), null);
                         } catch (JSONException e) {
-                            Log.d("ERROR", "Chauffage");
+                            //Log.d("ERROR", "Chauffage");
                         }
 
                         try {
@@ -677,7 +733,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Donnees.instance().definirConsoHP(Donnees.Equipement.LampesUV, object.getDouble("consommation_hp"));
                             Donnees.instance().definirConsoHC(Donnees.Equipement.LampesUV, object.getDouble("consommation_hc"));
                         } catch (JSONException e) {
-                            Log.d("ERROR", "Lampes UV");
+                            //Log.d("ERROR", "Lampes UV");
                         }
 
                         try {
@@ -688,7 +744,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Donnees.instance().definirConsoHP(Donnees.Equipement.Ozone, object.getDouble("consommation_hp"));
                             Donnees.instance().definirConsoHC(Donnees.Equipement.Ozone, object.getDouble("consommation_hc"));
                         } catch (JSONException e) {
-                            Log.d("ERROR", "Ozonateur");
+                            //Log.d("ERROR", "Ozonateur");
                         }
 
                         try {
@@ -699,7 +755,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Donnees.instance().definirConsoHP(Donnees.Equipement.Electrolyseur, object.getDouble("consommation_hp"));
                             Donnees.instance().definirConsoHC(Donnees.Equipement.Electrolyseur, object.getDouble("consommation_hc"));
                         } catch (JSONException e) {
-                            Log.d("ERROR", "Electrolyseur");
+                            //Log.d("ERROR", "Electrolyseur");
                         }
 
                         try {
@@ -710,7 +766,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Donnees.instance().definirAlarmeSeuilBas(Donnees.Equipement.PhGlobal, object.getDouble("alarme_seuil_bas"), null);
                             Donnees.instance().definirAlarmeSeuilHaut(Donnees.Equipement.PhGlobal, object.getDouble("alarme_seuil_haut"), null);
                         } catch (JSONException e) {
-                            Log.d("ERROR", "Régulateur pH");
+                            //Log.d("ERROR", "Régulateur pH");
                         }
 
                         try {
@@ -733,7 +789,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Donnees.instance().definirTempsInjectionJournalierMax(Donnees.Equipement.PhMoins, object.getInt("temps_injection_jour_max"));
                             Donnees.instance().definirTempsInjectionJournalierMaxRestant(Donnees.Equipement.PhMoins, object.getInt("temps_injection_jour_max_restant"));
                         } catch (JSONException e) {
-                            Log.d("ERROR", "Régulateur pH-");
+                            //Log.d("ERROR", "Régulateur pH-");
                         }
 
                         try {
@@ -756,7 +812,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Donnees.instance().definirTempsInjectionJournalierMax(Donnees.Equipement.PhPlus, object.getInt("temps_injection_jour_max"));
                             Donnees.instance().definirTempsInjectionJournalierMaxRestant(Donnees.Equipement.PhPlus, object.getInt("temps_injection_jour_max_restant"));
                         } catch (JSONException e) {
-                            Log.d("ERROR", "Régulateur pH+");
+                            //Log.d("ERROR", "Régulateur pH+");
                         }
 
                         try {
@@ -793,7 +849,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Donnees.instance().definirAlarmeSeuilBas(Donnees.Equipement.Orp, object.getInt("alarme_seuil_bas_orp"), Donnees.Capteur.Redox);
                             Donnees.instance().definirAlarmeSeuilHaut(Donnees.Equipement.Orp, object.getInt("alarme_seuil_haut_orp"), Donnees.Capteur.Redox);
                         } catch (JSONException e) {
-                            Log.d("ERROR", "Régulateur ORP");
+                            //Log.d("ERROR", "Régulateur ORP");
                         }
 
                         try {
@@ -812,7 +868,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Donnees.instance().definirProchaineAlgicide(object.getInt("prochain"));
                             Donnees.instance().definirDureeRestantAlgicide(object.getInt("temps_restant"));
                         } catch (JSONException e) {
-                            Log.d("ERROR", "Algicide");
+                            //Log.d("ERROR", "Algicide");
                         }
 
                         try {
@@ -823,14 +879,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                             Donnees.instance().definirGMT(object.getString("index_gmt"));
                         } catch (JSONException e) {
-                            Log.d("ERROR", "Horlogerie");
+                            //Log.d("ERROR", "Horlogerie");
                         }
 
                         try {
                             object = new JSONObject(jsonObject.getString("Système"));
                             Donnees.instance().definirActiviteIHM(object.getString("alive"));
                         } catch (JSONException e) {
-                            Log.d("ERROR", "Système");
+                            //Log.d("ERROR", "Système");
                         }
 
                         try {
@@ -846,9 +902,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 }
                             }
 
-                            Donnees.instance().supprimerEvents();
+                            Donnees.instance().supprimerEventsTmp();
                         } catch (JSONException e) {
-                            Log.d("ERROR", "Events");
+                            //Log.d("ERROR", "Events");
                         }
 
                         if (!Donnees.instance().obtenirActiviteIHM()) {
@@ -856,7 +912,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 msgEtatSysteme = true;
 
                                 if (isActivityResumed()) {
-                                    Toast.makeText(this, "L'appareil est déconnecté du serveur", Toast.LENGTH_SHORT).show();
+                                    if (!msgConnexionBt && (Integer.parseInt(Donnees.getPreferences(Donnees.BT_PAIRED_DEVICE)) == 1)) {
+                                        msgConnexionBt = true;
+
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.instance());
+                                        builder.setCancelable(true);
+                                        builder.setTitle(getString(R.string.bluetooth_titre));
+                                        builder.setMessage(getString(R.string.bluetooth_connexion_erreur_deconnecte));
+
+                                        builder.setPositiveButton("OUI", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                msgConnexionBt = false;
+                                                BluetoothLe.instance().init();
+                                            }
+                                        });
+
+                                        builder.setNegativeButton("NON", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                msgConnexionBt = false;
+                                                dialog.cancel();
+                                            }
+                                        });
+
+                                        AlertDialog dialog = builder.create();
+                                        dialog.show();
+                                    }
                                 }
                                 CustomNotification.instance().supprimer("L'appareil est connecté au serveur");
                                 CustomNotification.instance().ajouter("L'appareil est déconnecté du serveur");
@@ -885,10 +967,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    public void updateBt() {
+        fragmentParams.update();
+    }
+
     public void getBtTreatment(String result) {
-        if (result.contains("WiFi")) {
+        if (result.contains("ID")) {
+            if (result.split(";")[1].equals(Donnees.getPreferences(Donnees.ID_SYSTEME))) {
+                Donnees.instance().ajouterRequeteBt("Time;" + new SimpleDateFormat("uddMMyyyyHHmmss").format(Calendar.getInstance().getTime()), true);
+                Donnees.instance().ajouterRequeteBt("WiFi?", true);
+                Donnees.instance().ajouterRequeteBt("Data?", true);
+            } else {
+                BluetoothLe.instance().disconnect();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.instance());
+                builder.setCancelable(true);
+                builder.setTitle(getString(R.string.bluetooth_titre));
+                builder.setMessage(getString(R.string.bluetooth_erreur_id));
+
+                builder.setPositiveButton("DÉCONNEXION", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        onNavigationItemSelected(menu.findItem(R.id.nav_deconnexion_layout));
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        } else if (result.contains("WiFi")) {
             Donnees.instance().setWiFiState(Integer.parseInt(result.split(";")[1]));
-            fragmentParams.updateBt();
+            fragmentParams.update();
+            fragmentParams.stopWiFi();
+        } else if (result.contains("WPS")) {
+            fragmentParams.stopWPS();
         } else if (result.contains("Data")) {
             result = result.replaceAll("Data;", "");
             String buff = "";
@@ -913,30 +1025,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     updatePages();
                 }
             });
-        } else if (result.contains("Calibration")) {
-            final String finalResult = result;
-            MainActivity.instance().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    fragmentParams.etalonnage(finalResult.contains("next") ? fragmentParams.typeModification : 100, finalResult.contains("canceled"));
-                }
-            });
         }
+
+        BluetoothLe.instance().readTrameComplete = true;
     }
 
     private void traitementRequete(String buff, int pos)
     {
         double valeur = 0;
 
-        if (((46 <= pos) && (pos <= 48)) || ((61 <= pos) && (pos <= 63)))	// Durée inj min | Durée inj | Tps réponse
+        if (((54 <= pos) && (pos <= 56)) || ((69 <= pos) && (pos <= 71)))	// Durée inj min | Durée inj | Tps réponse
         {
             valeur = Double.parseDouble(buff.split(" ")[0]);
         }
-        else if (pos == 70)	// Fréq surchloration
+        else if (pos == 78)	// Fréq surchloration
         {
             valeur = Double.parseDouble(buff.split(" ")[0]);
         }
-        else if ((pos != 0) && (pos != 15) && (pos != 16) && (pos != 17) && (pos != 18) && (pos != 75) && (pos != 76) && (pos != 77))
+        else if ((pos != 0) && (pos != 15) && (pos != 16) && (pos != 17) && (pos != 18) && (pos != 83) && (pos != 84) && (pos != 85))
         {
             valeur = Double.parseDouble(buff);
         }
@@ -944,7 +1050,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (pos)
         {
             case 0:
-                if (!buff.equals(Donnees.instance().obtenirDateDerniereConnexion() + Donnees.instance().obtenirHeureDerniereConnexion()))
+                if (!buff.equals(Donnees.instance().obtenirDateDerniereConnexion().replaceAll("/", "") + Donnees.instance().obtenirHeureDerniereConnexion().replaceAll(":", "")))
                 {
                     Donnees.instance().definirActiviteIHM(String.valueOf(buff.charAt(0)) + String.valueOf(buff.charAt(1)) + "/" + String.valueOf(buff.charAt(2)) + String.valueOf(buff.charAt(3)) + "/" + String.valueOf(buff.charAt(4)) + String.valueOf(buff.charAt(5)) + String.valueOf(buff.charAt(6)) + String.valueOf(buff.charAt(7)) + "-" + String.valueOf(buff.charAt(8)) + String.valueOf(buff.charAt(9)) + ":" + String.valueOf(buff.charAt(10)) + String.valueOf(buff.charAt(11)));
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageLogin, "alive=" + Donnees.instance().obtenirDateDerniereConnexion() + "-" + Donnees.instance().obtenirHeureDerniereConnexion(), true);
@@ -953,7 +1059,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case 4:
                 if (valeur != Donnees.instance().obtenirVolumeBassin())
                 {
-                    Donnees.instance().definirVolumeBassin((int) valeur);
+                    Donnees.instance().definirVolumeBassin(valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageBassin, "volume=" + valeur, true);
                 }
                 break;
@@ -1063,425 +1169,467 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 break;
             case 23:
+                if (valeur != (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) ? 1 : 0))
+                {
+                    Donnees.instance().definirEquipementInstalle(Donnees.Equipement.Chauffage, valeur == 1);
+                    Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageChauffage, "installe=" + valeur, true);
+                }
+                break;
+            case 24:
+                if (valeur != Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.Chauffage))
+                {
+                    Donnees.instance().definirEtatEquipement(Donnees.Equipement.Chauffage, (int) valeur);
+                    Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageChauffage, "etat=" + valeur, true);
+                }
+                break;
+            case 25:
+                if (valeur != Donnees.instance().obtenirControlePompeFiltration())
+                {
+                    Donnees.instance().definirControlePompeFiltration((int) valeur);
+                    Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageChauffage, "gestion_temperature=" + valeur, true);
+                }
+                break;
+            case 26:
+                if (valeur != Donnees.instance().obtenirTemperatureConsigne())
+                {
+                    Donnees.instance().definirTemperatureConsigne((int) valeur);
+                    Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageChauffage, "temperature_consigne=" + valeur, true);
+                }
+                break;
+            case 27:
+                if (valeur != Donnees.instance().obtenirGestionReversible())
+                {
+                    Donnees.instance().definirGestionReversible((int) valeur);
+                    Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageChauffage, "gestion_reversible=" + valeur, true);
+                }
+                break;
+            case 28:
+                if (valeur != Donnees.instance().obtenirTemperatureReversible())
+                {
+                    Donnees.instance().definirTemperatureReversible((int) valeur);
+                    Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageChauffage, "temperature_reversible=" + valeur, true);
+                }
+                break;
+            case 31:
                 if (valeur != (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Ozone) ? 1 : 0))
                 {
                     Donnees.instance().definirEquipementInstalle(Donnees.Equipement.Ozone, valeur == 1);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageOzonateur, "installe=" + valeur, true);
                 }
                 break;
-            case 24:
+            case 32:
                 if (valeur != Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.Ozone))
                 {
                     Donnees.instance().definirEtatEquipement(Donnees.Equipement.Ozone, (int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageOzonateur, "etat=" + valeur, true);
                 }
                 break;
-            case 25:
+            case 33:
                 if (valeur != Donnees.instance().obtenirTypeOzone())
                 {
                     Donnees.instance().definirTypeOzone((int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageOzonateur, "type_ozone=" + valeur, true);
                 }
                 break;
-            case 26:
+            case 34:
                 if (valeur != Donnees.instance().obtenirNombreVentilateursOzone())
                 {
                     Donnees.instance().definirNombreVentilateursOzone((int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageOzonateur, "nombre_ventilateurs=" + valeur, true);
                 }
                 break;
-            case 27:
+            case 35:
                 if (valeur != Donnees.instance().obtenirTempoOzone())
                 {
                     Donnees.instance().definirTempoOzone((int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageOzonateur, "tempo_ozone=" + valeur, true);
                 }
                 break;
-            case 28:
+            case 36:
                 if (valeur != Donnees.instance().obtenirErreurOzone())
                 {
                     Donnees.instance().definirErreurOzone((int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageOzonateur, "erreurs_ozone=" + valeur, true);
                 }
                 break;
-            case 29:
+            case 37:
                 if (valeur != Donnees.instance().obtenirVitesseFan1Ozone())
                 {
                     Donnees.instance().definirVitesseFan1Ozone((int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageOzonateur, "vitesse_fan_1_ozone=" + valeur, true);
                 }
                 break;
-            case 30:
+            case 38:
                 if (valeur != Donnees.instance().obtenirVitesseFan2Ozone())
                 {
                     Donnees.instance().definirVitesseFan2Ozone((int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageOzonateur, "vitesse_fan_2_ozone=" + valeur, true);
                 }
                 break;
-            case 31:
+            case 39:
                 if (valeur != Donnees.instance().obtenirCourantAlimOzone())
                 {
                     Donnees.instance().definirCourantAlimOzone((int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageOzonateur, "courant_alim_ozone=" + valeur, true);
                 }
                 break;
-            case 32:
+            case 40:
                 if (valeur != Donnees.instance().obtenirTensionAlimOzone())
                 {
                     Donnees.instance().definirTensionAlimOzone(valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageOzonateur, "tension_alim_ozone=" + valeur, true);
                 }
                 break;
-            case 33:
+            case 41:
                 if (valeur != Donnees.instance().obtenirHauteTensionAlimOzone())
                 {
                     Donnees.instance().definirHauteTensionAlimOzone((int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageOzonateur, "haute_tension_alim_ozone=" + valeur, true);
                 }
                 break;
-            case 34:
+            case 42:
                 if (valeur != Donnees.instance().obtenirPointConsignePh())
                 {
                     Donnees.instance().definirPointConsignePh(valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhGlobal, "point_consigne=" + valeur, true);
                 }
                 break;
-            case 35:
+            case 43:
                 if (valeur != Donnees.instance().obtenirHysteresisPhMoins())
                 {
                     Donnees.instance().definirHysteresisPhMoins(valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhGlobal, "hysteresis_moins=" + valeur, true);
                 }
                 break;
-            case 36:
+            case 44:
                 if (valeur != Donnees.instance().obtenirAlarmeSeuilBas(Donnees.Equipement.PhGlobal, null))
                 {
                     Donnees.instance().definirAlarmeSeuilBas(Donnees.Equipement.PhGlobal, valeur, null);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhGlobal, "alarme_seuil_bas=" + valeur, true);
                 }
                 break;
-            case 37:
+            case 45:
                 if (valeur != Donnees.instance().obtenirAlarmeSeuilHaut(Donnees.Equipement.PhGlobal, null))
                 {
                     Donnees.instance().definirAlarmeSeuilHaut(Donnees.Equipement.PhGlobal, valeur, null);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhGlobal, "alarme_seuil_haut=" + valeur, true);
                 }
                 break;
-            case 38:
+            case 46:
                 if (valeur != (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins) ? 1 : 0))
                 {
                     Donnees.instance().definirEquipementInstalle(Donnees.Equipement.PhMoins, valeur == 1);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "installe=" + valeur, true);
                 }
                 break;
-            case 39:
+            case 47:
                 if (valeur != Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.PhMoins))
                 {
                     Donnees.instance().definirEtatEquipement(Donnees.Equipement.PhMoins, (valeur == Donnees.MARCHE) && !Donnees.instance().obtenirEtatRegulations() ? Donnees.ARRET : (int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "etat=" + valeur, true);
                 }
                 break;
-            case 40:
+            case 48:
                 if (valeur != Donnees.instance().obtenirDebitEquipement(Donnees.Equipement.PhMoins))
                 {
                     Donnees.instance().definirDebitEquipement(Donnees.Equipement.PhMoins, valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "debit=" + valeur, true);
                 }
                 break;
-            case 41:
+            case 49:
                 if (valeur != Donnees.instance().obtenirVolume(Donnees.Equipement.PhMoins))
                 {
                     Donnees.instance().definirVolume(Donnees.Equipement.PhMoins, valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "date_consommation=" + Donnees.instance().obtenirDateConso(Donnees.Equipement.PhMoins) + "&volume=" + valeur, true);
                 }
                 break;
-            case 42:
-                if (valeur != Donnees.instance().obtenirVolume(Donnees.Equipement.PhMoins))
+            case 50:
+                if (valeur != Donnees.instance().obtenirVolumeRestant(Donnees.Equipement.PhMoins))
                 {
                     Donnees.instance().definirVolumeRestant(Donnees.Equipement.PhMoins, valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "volume_restant=" + valeur, true);
                 }
                 break;
-            case 43:
+            case 51:
                 if (valeur != (Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.PhMoins) ? 1 : 0))
                 {
                     Donnees.instance().definirTraitementEnCours(Donnees.Equipement.PhMoins, (int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "injection=" + valeur, true);
                 }
                 break;
-            case 44:
+            case 52:
                 if (valeur != Donnees.instance().obtenirDureeCycle(Donnees.Equipement.PhMoins))
                 {
                     Donnees.instance().definirDureeCycle(Donnees.Equipement.PhMoins, (int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "duree_cycle=" + valeur, true);
                 }
                 break;
-            case 45:
+            case 53:
                 if (valeur != Donnees.instance().obtenirMultiplicateurDifference(Donnees.Equipement.PhMoins))
                 {
                     Donnees.instance().definirMultiplicateurDifference(Donnees.Equipement.PhMoins, (int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "multiplicateur_diff=" + valeur, true);
                 }
                 break;
-            case 46:
+            case 54:
                 if (valeur != Donnees.instance().obtenirDureeInjectionMinimum(Donnees.Equipement.PhMoins))
                 {
                     Donnees.instance().definirDureeInjectionMinimum(Donnees.Equipement.PhMoins, (int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "duree_injection_minimum=" + valeur, true);
                 }
                 break;
-            case 47:
+            case 55:
                 if (valeur != Donnees.instance().obtenirDureeInjection(Donnees.Equipement.PhMoins))
                 {
                     Donnees.instance().definirDureeInjection(Donnees.Equipement.PhMoins, valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "duree_injection=" + valeur, true);
                 }
                 break;
-            case 48:
+            case 56:
                 if (valeur != Donnees.instance().obtenirTempsReponse(Donnees.Equipement.PhMoins))
                 {
                     Donnees.instance().definirTempsReponse(Donnees.Equipement.PhMoins, (int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "temps_reponse=" + valeur, true);
                 }
                 break;
-            case 49:
+            case 57:
                 if (valeur != Donnees.instance().obtenirTempsInjectionJournalierMax(Donnees.Equipement.PhMoins))
                 {
                     Donnees.instance().definirTempsInjectionJournalierMax(Donnees.Equipement.PhMoins, (int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "temps_injection_jour_max=" + valeur, true);
                 }
                 break;
-            case 50:
+            case 58:
                 if (valeur != Donnees.instance().obtenirTempsInjectionJournalierMaxRestant(Donnees.Equipement.PhMoins))
                 {
                     Donnees.instance().definirTempsInjectionJournalierMaxRestant(Donnees.Equipement.PhMoins, (int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "temps_injection_jour_max_restant=" + valeur, true);
                 }
                 break;
-            case 51:
+            case 59:
                 if (valeur != (Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) ? 1 : 0))
                 {
                     Donnees.instance().definirEquipementInstalle(Donnees.Equipement.Orp, valeur == 1);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "installe=" + valeur, true);
                 }
                 break;
-            case 52:
+            case 60:
                 if (valeur != Donnees.instance().obtenirPointConsigneOrp())
                 {
                     Donnees.instance().definirPointConsigneOrp((int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "point_consigne_orp=" + valeur, true);
                 }
                 break;
-            case 53:
+            case 61:
                 if (valeur != Donnees.instance().obtenirHysteresisOrp())
                 {
                     Donnees.instance().definirHysteresisOrp((int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "hysteresis_orp=" + valeur, true);
                 }
                 break;
-            case 54:
+            case 62:
                 if (valeur != Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.Orp))
                 {
                     Donnees.instance().definirEtatEquipement(Donnees.Equipement.Orp, (valeur == Donnees.MARCHE) && !Donnees.instance().obtenirEtatRegulations() ? Donnees.ARRET : (int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "etat=" + valeur, true);
                 }
                 break;
-            case 55:
+            case 63:
                 if (valeur != Donnees.instance().obtenirDebitEquipement(Donnees.Equipement.Orp))
                 {
                     Donnees.instance().definirDebitEquipement(Donnees.Equipement.Orp, valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "debit=" + valeur, true);
                 }
                 break;
-            case 56:
+            case 64:
                 if (valeur != Donnees.instance().obtenirVolume(Donnees.Equipement.Orp))
                 {
                     Donnees.instance().definirVolume(Donnees.Equipement.Orp, valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "date_consommation=" + Donnees.instance().obtenirDateConso(Donnees.Equipement.Orp) + "&volume=" + valeur, true);
                 }
                 break;
-            case 57:
+            case 65:
                 if (valeur != Donnees.instance().obtenirVolumeRestant(Donnees.Equipement.Orp))
                 {
                     Donnees.instance().definirVolumeRestant(Donnees.Equipement.Orp, valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "volume_restant=" + valeur, true);
                 }
                 break;
-            case 58:
+            case 66:
                 if (valeur != (Donnees.instance().obtenirTraitementEnCours(Donnees.Equipement.Orp) ? 1 : 0))
                 {
                     Donnees.instance().definirTraitementEnCours(Donnees.Equipement.Orp, (int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "injection=" + valeur, true);
                 }
                 break;
-            case 59:
+            case 67:
                 if (valeur != Donnees.instance().obtenirDureeCycle(Donnees.Equipement.Orp))
                 {
                     Donnees.instance().definirDureeCycle(Donnees.Equipement.Orp, (int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "duree_cycle=" + valeur, true);
                 }
                 break;
-            case 60:
+            case 68:
                 if (valeur != Donnees.instance().obtenirMultiplicateurDifference(Donnees.Equipement.Orp))
                 {
                     Donnees.instance().definirMultiplicateurDifference(Donnees.Equipement.Orp, (int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "multiplicateur_diff=" + valeur, true);
                 }
                 break;
-            case 61:
+            case 69:
                 if (valeur != Donnees.instance().obtenirDureeInjectionMinimum(Donnees.Equipement.Orp))
                 {
                     Donnees.instance().definirDureeInjectionMinimum(Donnees.Equipement.Orp, (int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "duree_injection_minimum=" + valeur, true);
                 }
                 break;
-            case 62:
+            case 70:
                 if (valeur != Donnees.instance().obtenirDureeInjection(Donnees.Equipement.Orp))
                 {
                     Donnees.instance().definirDureeInjection(Donnees.Equipement.Orp, valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "duree_injection=" + valeur, true);
                 }
                 break;
-            case 63:
+            case 71:
                 if (valeur != Donnees.instance().obtenirTempsReponse(Donnees.Equipement.Orp))
                 {
                     Donnees.instance().definirTempsReponse(Donnees.Equipement.Orp, (int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "temps_reponse=" + valeur, true);
                 }
                 break;
-            case 64:
+            case 72:
                 if (valeur != Donnees.instance().obtenirTempsInjectionJournalierMax(Donnees.Equipement.Orp))
                 {
                     Donnees.instance().definirTempsInjectionJournalierMax(Donnees.Equipement.Orp, (int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "temps_injection_jour_max=" + valeur, true);
                 }
                 break;
-            case 65:
+            case 73:
                 if (valeur != Donnees.instance().obtenirTempsInjectionJournalierMaxRestant(Donnees.Equipement.Orp))
                 {
                     Donnees.instance().definirTempsInjectionJournalierMaxRestant(Donnees.Equipement.Orp, (int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "temps_injection_jour_max_restant=" + valeur, true);
                 }
                 break;
-            case 66:
+            case 74:
                 if (valeur != Donnees.instance().obtenirAlarmeSeuilBas(Donnees.Equipement.Orp, Donnees.Capteur.Redox))
                 {
                     Donnees.instance().definirAlarmeSeuilBas(Donnees.Equipement.Orp, valeur, Donnees.Capteur.Redox);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "alarme_seuil_bas_orp=" + valeur, true);
                 }
                 break;
-            case 67:
+            case 75:
                 if (valeur != Donnees.instance().obtenirAlarmeSeuilHaut(Donnees.Equipement.Orp, Donnees.Capteur.Redox))
                 {
                     Donnees.instance().definirAlarmeSeuilHaut(Donnees.Equipement.Orp, valeur, Donnees.Capteur.Redox);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "alarme_seuil_haut_orp=" + valeur, true);
                 }
                 break;
-            case 68:
+            case 76:
                 if (valeur != (Donnees.instance().obtenirEtat(Donnees.Equipement.Orp) ? 1 : 0))
                 {
                     Donnees.instance().definirEtat(Donnees.Equipement.Orp, (int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "surchloration=" + valeur, true);
                 }
                 break;
-            case 69:
+            case 77:
                 if (valeur != Donnees.instance().obtenirJourSurchloration())
                 {
                     Donnees.instance().definirJourSurchloration((int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "jour=" + valeur, true);
                 }
                 break;
-            case 70:
+            case 78:
                 if (!buff.equals(Donnees.instance().obtenirFrequenceSurchloration()))
                 {
                     Donnees.instance().definirFrequenceSurchloration(String.valueOf((int) valeur) + " " + buff.split(" ")[1]);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "frequence=" + Donnees.instance().obtenirFrequenceSurchloration(), true);
                 }
                 break;
-            case 71:
+            case 79:
                 if (valeur != Donnees.instance().obtenirValeurSurchloration())
                 {
                     Donnees.instance().definirValeurSurchloration((int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "mv_ajoute=" + valeur, true);
                 }
                 break;
-            case 72:
+            case 80:
                 if (valeur != Donnees.instance().obtenirProchaineSurchloration())
                 {
                     Donnees.instance().definirProchaineSurchloration((int) valeur);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "prochaine_surchloration=" + valeur, true);
                 }
                 break;
-            case 73:
+            case 81:
                 if (valeur != (Donnees.instance().obtenirDonneesEquipementsAuto() ? 1 : 0))
                 {
                     Donnees.instance().definirDonneesEquipementsAuto(valeur == 1);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageAutomatisation, "donnees_equipement=" + valeur, true);
                 }
                 break;
-            case 74:
+            case 82:
                 if (valeur != (Donnees.instance().obtenirPlagesAuto() ? 1 : 0))
                 {
                     Donnees.instance().definirPlagesAuto(valeur == 1);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageAutomatisation, "plages_auto=" + valeur, true);
                 }
                 break;
-            case 75:
+            case 83:
                 if (!Donnees.instance().obtenirPlageAuto().equals(buff))
                 {
                     Donnees.instance().definirPlageAuto(buff);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageAutomatisation, "plage_auto=" + buff, true);
                 }
                 break;
-            case 77:
+            case 85:
                 if (!Donnees.instance().obtenirTempsFiltrationJour().equals(buff))
                 {
                     Donnees.instance().definirTempsFiltrationJour(buff);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageAutomatisation, "temps_filtration_jour=" + buff, true);
                 }
                 break;
-            case 78:
+            case 86:
                 if (valeur != (Donnees.instance().obtenirAsservissementAuto(Donnees.Equipement.PhMoins) ? 1 : 0))
                 {
                     Donnees.instance().definirAsservissementAuto(Donnees.Equipement.PhMoins, valeur == 1);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageAutomatisation, "asservissement_ph_moins=" + valeur, true);
                 }
                 break;
-            case 79:
+            case 87:
                 if (valeur != (Donnees.instance().obtenirAsservissementAuto(Donnees.Equipement.Orp) ? 1 : 0))
                 {
                     Donnees.instance().definirAsservissementAuto(Donnees.Equipement.Orp, valeur == 1);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageAutomatisation, "asservissement_orp=" + valeur, true);
                 }
                 break;
-            case 80:
+            case 88:
                 if (valeur != (Donnees.instance().obtenirPointConsigneOrpAuto() ? 1 : 0))
                 {
                     Donnees.instance().definirPointConsigneOrpAuto(valeur == 1);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageAutomatisation, "consigne_orp_auto=" + valeur, true);
                 }
                 break;
-            case 81:
+            case 89:
                 //if (valeur != obtenirEtatCapteurNiveau())
                 //{
                 //    definirEtatCapteurNiveau(valeur);
                 //}
                 break;
-            case 82: case 88: case 94:
-                typeCapteur = pos == 82 ? Donnees.Capteur.TemperatureBassin : pos == 88 ? Donnees.Capteur.Ph : Donnees.Capteur.Redox;
+            case 90: case 96: case 102:
+                typeCapteur = pos == 90 ? Donnees.Capteur.TemperatureBassin : pos == 96 ? Donnees.Capteur.Ph : Donnees.Capteur.Redox;
                 if (valeur != (Donnees.instance().obtenirCapteurInstalle(typeCapteur) ? 1 : 0))
                 {
-                    Donnees.instance().definirCapteurInstalle(typeCapteur, valeur == 1);
+                    Donnees.instance().definirCapteurInstalle(typeCapteur, valeur > 1);
                     Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageCapteurs, "type=" + (typeCapteur == Donnees.Capteur.TemperatureBassin ? "Température bassin" : typeCapteur == Donnees.Capteur.Ph ? "pH" : "ORP") + "&installe=" + valeur, true);
                 }
                 break;
-            case 83: case 89: case 95:
+            case 91: case 97: case 103:
                 if (valeur != (Donnees.instance().obtenirEtatCapteur(typeCapteur) ? 1 : 0))
                 {
                     Donnees.instance().definirEtatCapteur(typeCapteur, valeur == 1 ? "OK" : "ERR");
                 }
                 break;
-            case 84: case 90: case 96:
+            case 92: case 98: case 104:
                 if (valeur != Donnees.instance().obtenirValeurCapteur(typeCapteur))
                 {
                     Donnees.instance().definirValeurCapteur(typeCapteur, valeur);

@@ -27,4 +27,40 @@
     <string name="automatisation">AUTOMATISATION</string>
     <string name="parametres">PARAMÈTRES</string>
     <string name="deconnexion">DÉCONNEXION</string>
+
+    <string name="connexion_titre">Connexion</string>
+    <string name="connexion_erreur">ID et/ou mot de passe erroné.</string>
+
+    <string name="bluetooth_titre">Bluetooth</string>
+    <string name="bluetooth_le_non_supporte">Bluetooth Low Energy (BLE) non supporte.</string>
+    <string name="bluetooth_non_supporte">Bluetooth non supporte.</string>
+    <string name="bluetooth_scan_en_cours">Recherche de l\'appareil en cours…</string>
+    <string name="bluetooth_erreur_scan">Appareil non détecté.\n\nVous pouvez effectuer une nouvelle tentative via le menu \"Paramètres\".</string>
+    <string name="bluetooth_connexion_en_cours">Connexion à l\'appareil en cours…</string>
+    <string name="bluetooth_erreur_connexion">La connexion a échouée : %1$s.</string>
+    <string name="bluetooth_erreur">Connexion perdue : %1$s\n\nNécessite le redémarrage de l\'appareil.</string>
+    <string name="bluetooth_appairage_requis">Appairage requis</string>
+    <string name="bluetooth_connexion_ok">Connecté en Bluetooth.</string>
+    <string name="bluetooth_erreur_id">L\'appareil actuellement connecté en Bluetooth ne correspond pas à celui sur lequel vous vous êtes loggé.\n\nVeuillez utiliser le bon identifiant. Pour cela, déconnectez-vous puis reconnectez-vous.</string>
+    <string name="bluetooth_get_data">Récupération des informations.</string>
+    <string name="bluetooth_connexion">Souhaitez-vous vous connecter à l\'appareil via Bluetooth ?</string>
+    <string name="bluetooth_connexion_erreur_serveur">Un problème est survenu lors de la communication avec le serveur.\n\nSouhaitez-vous vous connecter à l\'appareil via Bluetooth ?</string>
+    <string name="bluetooth_connexion_erreur_deconnecte">L\'appareil est déconnecté du serveur.\n\nSouhaitez-vous vous connecter à l\'appareil via Bluetooth ?</string>
+
+    <string name="wifi_titre">Wi-Fi</string>
+    <string name="wifi_recherche_en_cours">Recherche des réseaux Wi-Fi disponible…</string>
+    <string name="wifi_connexion">Connexion Wi-Fi : %1$s</string>
+    <string name="wifi_mot_de_passe">Veuillez entrer le mot de passe.</string>
+    <string name="wifi_connexion_en_cours">Connexion au réseau %1$s en cours…</string>
+    <string name="wifi_erreur_connexion">La connexion au réseau %1$s a échoué.</string>
+    <string name="wifi_wps_en_cours">WPS activé.\nRecherche de la connexion…</string>
+    <string name="wifi_erreur_wps">La connexion via WPS n\'a pas fonctionné.</string>
+    <string name="wifi_connexion_ok">Connexion établie.</string>
+
+    <string name="serveur_titre">Serveur</string>
+    <string name="serveur_connexion_bdd">Connexion à la base de données…</string>
+    <string name="serveur_application_modifications">Application des modifications.</string>
+
+    <string name="mode_fonctionnement_titre">Mode de fonctionnement</string>
+    <string name="mode_fonctionnement_texte_regulations">Le mode de fonctionnement choisi n\'est pas possible car les régulations sont désactivées.\n\nPour modifier cela, veuillez activer les régulations (onglet Bassin).</string>
 </resources>

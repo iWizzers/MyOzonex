@@ -271,7 +271,7 @@ public class FragmentAlgicide extends Fragment implements View.OnClickListener {
                 if (Donnees.instance().obtenirEtatRegulations()) {
                     etat = Donnees.MARCHE;
                 } else {
-                    MainActivity.instance().afficherAlertDialog("Modification du mode de fonctionnement", "Le mode de fonctionnement choisi n'est pas possible car les régulations sont désactivées.\nPour modifier cela, veuillez activer les régulations (onglet Bassin).", "OK");
+                    MainActivity.instance().afficherAlertDialog(getString(R.string.mode_fonctionnement_titre), getString(R.string.mode_fonctionnement_texte_regulations), "OK");
                     return;
                 }
             } else {

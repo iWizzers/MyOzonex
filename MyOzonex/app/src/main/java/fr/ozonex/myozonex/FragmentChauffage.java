@@ -33,6 +33,10 @@ public class FragmentChauffage extends Fragment implements View.OnClickListener 
     Switch switchGestionTempBassin;
     SeekBar sliderGestionTempBassin;
     TextView labelGestionTempBassin;
+    LinearLayout viewGestionReversible;
+    Switch switchGestionReversible;
+    SeekBar sliderGestionReversible;
+    TextView labelGestionReversible;
 
     @Nullable
     @Override
@@ -57,6 +61,10 @@ public class FragmentChauffage extends Fragment implements View.OnClickListener 
         switchGestionTempBassin = view.findViewById(R.id.switch_gestion_temp_bassin);
         sliderGestionTempBassin = view.findViewById(R.id.seekbar_gestion_temp_bassin);
         labelGestionTempBassin = view.findViewById(R.id.texte_gestion_temp_bassin);
+        viewGestionReversible = view.findViewById(R.id.layout_gestion_reversible);
+        switchGestionReversible = view.findViewById(R.id.switch_gestion_reversible);
+        sliderGestionReversible = view.findViewById(R.id.seekbar_gestion_reversible);
+        labelGestionReversible = view.findViewById(R.id.texte_gestion_reversible);
 
         viewBoutonMarche.setOnClickListener(this);
         viewBoutonArret.setOnClickListener(this);
@@ -81,6 +89,25 @@ public class FragmentChauffage extends Fragment implements View.OnClickListener 
             }
         });
 
+        switchGestionReversible.setOnClickListener(this);
+        sliderGestionReversible.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+                labelGestionReversible.setText(progress + " °C");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                Donnees.instance().definirTemperatureReversible(seekBar.getProgress());
+                Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageChauffage, "temperature_reversible=" + Donnees.instance().obtenirTemperatureReversible(), false);
+            }
+        });
+
         update();
 
         return view;
@@ -93,8 +120,11 @@ public class FragmentChauffage extends Fragment implements View.OnClickListener 
             viewConsommations.setVisibility(Donnees.instance().obtenirTypeAppareil() == Donnees.MYOZONEX ? View.VISIBLE : View.GONE);
             labelConsommations.setText("Date : " + Donnees.instance().obtenirDateConso(Donnees.Equipement.Chauffage) + "\nHeures pleines : " + Donnees.instance().obtenirConsoHP(Donnees.Equipement.Chauffage) + " kWh \nHeures creuses : " + Donnees.instance().obtenirConsoHC(Donnees.Equipement.Chauffage) + " kWh");
 
-            switchGestionTempBassin.setChecked(Donnees.instance().obtenirControlePompeFiltration() == Donnees.CONTROLE_POMPE_FILTRATION);
+            switchGestionTempBassin.setChecked(Donnees.instance().obtenirControlePompeFiltration() != Donnees.CONTROLE_PAR_POMPE_FILTRATION);
             gestionTempBassinAEteModifie();
+
+            switchGestionReversible.setChecked(Donnees.instance().obtenirGestionReversible() > 0);
+            gestionReversibleAEteModifie();
         }
     }
 
@@ -108,6 +138,9 @@ public class FragmentChauffage extends Fragment implements View.OnClickListener 
                 break;
             case R.id.switch_gestion_temp_bassin:
                 switchGestionTempBassinValueChanged((Switch) v.findViewById(v.getId()));
+                break;
+            case R.id.switch_gestion_reversible:
+                switchGestionReversibleValueChanged((Switch) v.findViewById(v.getId()));
                 break;
             default:
                 break;
@@ -160,6 +193,22 @@ public class FragmentChauffage extends Fragment implements View.OnClickListener 
         
         if (!sliderGestionTempBassin.isPressed()) {
             sliderGestionTempBassin.setProgress(Donnees.instance().obtenirTemperatureConsigne());
+        }
+    }
+
+    private void switchGestionReversibleValueChanged(Switch sender) {
+        Donnees.instance().definirGestionReversible(sender.isChecked() ? 1 : 0);
+        gestionReversibleAEteModifie();
+        Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageChauffage, "gestion_reversible=" + Donnees.instance().obtenirGestionReversible(), false);
+    }
+
+    private void gestionReversibleAEteModifie() {
+        switchGestionReversible.setEnabled(Donnees.instance().obtenirActiviteIHM());
+        sliderGestionReversible.setEnabled(Donnees.instance().obtenirActiviteIHM());
+        viewGestionReversible.setVisibility(Donnees.instance().obtenirGestionReversible() > 0 ? View.VISIBLE : View.GONE);
+
+        if (!sliderGestionReversible.isPressed()) {
+            sliderGestionReversible.setProgress(Donnees.instance().obtenirTemperatureReversible());
         }
     }
 }

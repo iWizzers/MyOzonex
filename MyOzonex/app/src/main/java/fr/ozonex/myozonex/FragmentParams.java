@@ -3,6 +3,7 @@ package fr.ozonex.myozonex;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,26 +13,25 @@ import android.graphics.Color;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.List;
 
-public class FragmentParams extends Fragment implements Animation.AnimationListener, View.OnClickListener {
+public class FragmentParams extends Fragment implements View.OnClickListener {
     View view = null;
 
     ScrollView scrollView;
@@ -39,38 +39,26 @@ public class FragmentParams extends Fragment implements Animation.AnimationListe
     private LinearLayout layoutBt;
     private TextView texteDonneesBt;
     private ImageButton boutonRechercherBt;
-    private Animation animationRechercherBt;
 
+    private LinearLayout layoutWifi;
+    private LinearLayout layoutWPS;
+    private Switch switchWPS;
+    private TextView texteDonneesWiFi;
+    private ImageButton boutonRechercherWiFi;
     private WifiManager wifiManager;
     private ArrayAdapter<String> wifiAdapter;
     private ListView listViewWifi;
-
-    private LinearLayout layoutWifi;
-    private TextView texteDonneesWiFi;
-    private ImageButton boutonRechercherWiFi;
-    private Animation animationRechercherWiFi;
-
-    private int varState = 0;
+    private int connectToWiFi = 0;
 
     private View sepInstallation;
     private Button boutonCodeInstallateur;
-    private LinearLayout layoutInstallationEquipements;
-    private CheckBox rbRegulateurPhMoins;
-    private CheckBox rbRegulateurORP;
-    private CheckBox rbPompeFiltration;
-    private LinearLayout layoutInstallationCapteurs;
-    private CheckBox rbCapteurPh;
-    private Button boutonEtalonnageCapteurPh;
-    private CheckBox rbCapteurRedox;
-    private Button boutonEtalonnageCapteurRedox;
-    private CheckBox rbCapteurTempBassin;
-    private Button boutonEtalonnageCapteurTempBassin;
 
-    int typeModification = 0;
-    int nbPointEtalonnage = 0;
-    Donnees.Capteur capteur;
     LinearLayout viewQuestion;
     public ProgressDialog progressDialog;
+
+    private Handler handler = new Handler();
+
+    private static final long SCAN_PERIOD = 60000;
 
     @Nullable
     @Override
@@ -82,29 +70,35 @@ public class FragmentParams extends Fragment implements Animation.AnimationListe
         layoutBt = view.findViewById(R.id.layout_bt);
         texteDonneesBt = view.findViewById(R.id.texte_donnees_bt);
         boutonRechercherBt = view.findViewById(R.id.bouton_rechercher_bt);
-        animationRechercherBt = AnimationUtils.loadAnimation(MainActivity.instance().getApplicationContext(),
-                R.anim.rotate);
-        animationRechercherBt.setAnimationListener(this);
         boutonRechercherBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                varState = 0;
-                texteDonneesBt.setText("Connexion en cours...");
-                setAnimationBtButtonState(true);
-                Bluetooth.instance().connect();
+                if (!BluetoothLe.instance().isInit()) {
+                    BluetoothLe.instance().init();
+                } else {
+                    if (!BluetoothLe.instance().isOn()) {
+                        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                        MainActivity.instance().startActivityForResult(enableBtIntent, BluetoothLe.REQUEST_ENABLE_BT);
+                    } else {
+                        if (BluetoothLe.instance().connected != BluetoothLe.Connected.True) {
+                            BluetoothLe.instance().scanLeDevice(true);
+                        } else {
+                            BluetoothLe.instance().disconnect();
+                        }
+                    }
+                }
             }
         });
 
         layoutWifi = view.findViewById(R.id.layout_wifi);
+        layoutWPS = view.findViewById(R.id.layout_wps);
+        switchWPS = view.findViewById(R.id.switch_wps);
+        switchWPS.setOnClickListener(this);
         texteDonneesWiFi = view.findViewById(R.id.texte_donnees_wifi);
         boutonRechercherWiFi = view.findViewById(R.id.bouton_rechercher_wifi);
-        animationRechercherWiFi = AnimationUtils.loadAnimation(MainActivity.instance().getApplicationContext(),
-                R.anim.rotate);
-        animationRechercherWiFi.setAnimationListener(this);
         boutonRechercherWiFi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                varState = 1;
                 scanWifi();
             }
         });
@@ -133,8 +127,8 @@ public class FragmentParams extends Fragment implements Animation.AnimationListe
             public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.instance());
                 builder.setCancelable(true);
-                builder.setTitle("Connexion Wi-Fi : " + wifiAdapter.getItem(position));
-                builder.setMessage("Veuillez entrer le mot de passe");
+                builder.setTitle(getString(R.string.wifi_connexion, wifiAdapter.getItem(position)));
+                builder.setMessage(getString(R.string.wifi_mot_de_passe));
 
                 final EditText input = new EditText(MainActivity.instance());
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
@@ -145,13 +139,22 @@ public class FragmentParams extends Fragment implements Animation.AnimationListe
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        Donnees.instance().stopTimer();
                         MainActivity.instance().masquerClavier();
 
-                        texteDonneesWiFi.setText("Connexion au réseau WiFi en cours...");
-                        setAnimationWiFiButtonState(true);
+                        progressDialog = ProgressDialog.show(MainActivity.instance(), getString(R.string.wifi_titre), getString(R.string.wifi_connexion_en_cours, wifiAdapter.getItem(position)), true);
                         listViewWifi.setVisibility(View.GONE);
 
-                        Donnees.instance().ajouterRequeteBt("WiFi;" + wifiAdapter.getItem(position) + ';' + input.getText().toString(), true);
+                        // Stops scanning after a pre-defined scan period.
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Donnees.instance().ajouterRequeteBt("WiFi?", false);
+                            }
+                        }, SCAN_PERIOD);
+
+                        connectToWiFi = position + 1;
+                        Donnees.instance().ajouterRequeteBt("WiFi;" + wifiAdapter.getItem(position) + ';' + input.getText().toString(), false);
                     }
                 });
 
@@ -170,28 +173,8 @@ public class FragmentParams extends Fragment implements Animation.AnimationListe
 
         sepInstallation = view.findViewById(R.id.sep_installation);
         boutonCodeInstallateur = view.findViewById(R.id.bouton_code_installateur);
-        layoutInstallationEquipements = view.findViewById(R.id.layout_installation_equipements);
-        rbRegulateurPhMoins = view.findViewById(R.id.rb_regulateur_ph_moins);
-        rbRegulateurORP = view.findViewById(R.id.rb_regulateur_orp);
-        rbPompeFiltration = view.findViewById(R.id.rb_pompe_filtration);
-        layoutInstallationCapteurs = view.findViewById(R.id.layout_installation_capteurs);
-        rbCapteurPh = view.findViewById(R.id.rb_capteur_ph);
-        boutonEtalonnageCapteurPh  = view.findViewById(R.id.bouton_etalonnage_capteur_ph);
-        rbCapteurRedox = view.findViewById(R.id.rb_capteur_redox);
-        boutonEtalonnageCapteurRedox  = view.findViewById(R.id.bouton_etalonnage_capteur_redox);
-        rbCapteurTempBassin = view.findViewById(R.id.rb_capteur_temp_bassin);
-        boutonEtalonnageCapteurTempBassin  = view.findViewById(R.id.bouton_etalonnage_capteur_temp_bassin);
 
         boutonCodeInstallateur.setOnClickListener(this);
-        rbRegulateurPhMoins.setOnClickListener(this);
-        rbRegulateurORP.setOnClickListener(this);
-        rbPompeFiltration.setOnClickListener(this);
-        rbCapteurPh.setOnClickListener(this);
-        boutonEtalonnageCapteurPh.setOnClickListener(this);
-        rbCapteurRedox.setOnClickListener(this);
-        boutonEtalonnageCapteurRedox.setOnClickListener(this);
-        rbCapteurTempBassin.setOnClickListener(this);
-        boutonEtalonnageCapteurTempBassin.setOnClickListener(this);
 
         viewQuestion = view.findViewById(R.id.layout_question);
         ImageButton boutonAnnulerQuestion = view.findViewById(R.id.bouton_annuler_question);
@@ -217,55 +200,67 @@ public class FragmentParams extends Fragment implements Animation.AnimationListe
     public void update() {
         if ((view != null) && isAdded()) {
             layoutBt.setVisibility(Integer.parseInt(Donnees.getPreferences(Donnees.BT_PAIRED_DEVICE)) == 1 ? View.VISIBLE : View.GONE);
-            texteDonneesBt.setText(Bluetooth.instance().isOn() ? Bluetooth.instance().isConnected() ? "Connecté" : "Hors de portée" : "Désactivé");
-            boutonRechercherBt.setVisibility(Bluetooth.instance().isConnected() ? View.GONE : View.VISIBLE);
+            texteDonneesBt.setText("Etat : " + (BluetoothLe.instance().isSupported() ? BluetoothLe.instance().isOn() ? BluetoothLe.instance().connected == BluetoothLe.Connected.True ? "Connecté" : "Non connecté" : "Désactivé" : "Non supporté"));
+            boutonRechercherBt.setImageResource(BluetoothLe.instance().connected == BluetoothLe.Connected.True ? android.R.drawable.ic_menu_close_clear_cancel : android.R.drawable.ic_menu_search);
 
-            layoutWifi.setVisibility(Bluetooth.instance().isConnected() ? View.VISIBLE : View.GONE);
-            texteDonneesWiFi.setText(Donnees.instance().getWiFiState() == 1 ? "Connecté" : "Non connecté");
+            layoutWifi.setVisibility(BluetoothLe.instance().connected == BluetoothLe.Connected.True ? View.VISIBLE : View.GONE);
+            layoutWPS.setVisibility(Donnees.instance().getWiFiState() == 0 ? View.VISIBLE : View.GONE);
+            texteDonneesWiFi.setText("Etat : " + (Donnees.instance().getWiFiState() == 1 ? "Connecté" : "Non connecté"));
             boutonRechercherWiFi.setVisibility(Donnees.instance().getWiFiState() == 0 ? View.VISIBLE : View.GONE);
 
             sepInstallation.setVisibility(Integer.parseInt(Donnees.getPreferences(Donnees.BT_PAIRED_DEVICE)) == 1 ? View.VISIBLE : View.GONE);
             boutonCodeInstallateur.setVisibility(!Donnees.instance().obtenirCodeInstallateur() ? View.VISIBLE : View.GONE);
-            layoutInstallationEquipements.setVisibility(Donnees.instance().obtenirCodeInstallateur() && Bluetooth.instance().isConnected() ? View.VISIBLE : View.GONE);
-            rbRegulateurPhMoins.setChecked(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins));
-            rbRegulateurORP.setChecked(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp));
-            rbPompeFiltration.setChecked(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PompeFiltration));
-            layoutInstallationCapteurs.setVisibility(Donnees.instance().obtenirCodeInstallateur() && Bluetooth.instance().isConnected() ? View.VISIBLE : View.GONE);
-            rbCapteurPh.setChecked(Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Ph));
-            boutonEtalonnageCapteurPh.setVisibility(Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Ph) ? View.VISIBLE : View.GONE);
-            rbCapteurRedox.setChecked(Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Redox));
-            boutonEtalonnageCapteurRedox.setVisibility(Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Redox) ? View.VISIBLE : View.GONE);
-            rbCapteurTempBassin.setChecked(Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.TemperatureBassin));
-            boutonEtalonnageCapteurTempBassin.setVisibility(Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.TemperatureBassin) ? View.VISIBLE : View.GONE);
         }
     }
 
-    public void updateBt() {
-        if ((view != null) && isAdded()) {
-            switch (varState) {
-                case 0:
-                    setAnimationBtButtonState(false);
-                    update();
-
-                    break;
-                case 1:
-                    setAnimationWiFiButtonState(false);
-                    update();
-
-                    if (Donnees.instance().getWiFiState() == 0) {
-                        scanWifi();
-                    }
-                    break;
-                default:
-                    break;
-            }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.switch_wps:
+                switchWPSValueChanged((Switch) v.findViewById(v.getId()));
+                break;
+            case R.id.bouton_code_installateur:
+                afficherQuestion(true, "Veuillez entrer le code installateur");
+                break;
+            default:
+                break;
         }
     }
 
-    public void cancelBt() {
+    public void stopWPS() {
         if ((view != null) && isAdded()) {
-            texteDonneesBt.setText("Connexion impossible");
-            setAnimationBtButtonState(false);
+            switchWPS.setChecked(false);
+            switchWPSValueChanged(switchWPS);
+        }
+    }
+
+    private void switchWPSValueChanged(Switch sender) {
+        update();
+
+        if (sender.isChecked()) {
+            Donnees.instance().stopTimer();
+            progressDialog = ProgressDialog.show(MainActivity.instance(), getString(R.string.wifi_titre), getString(R.string.wifi_wps_en_cours), true);
+
+            // Stops scanning after a pre-defined scan period.
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Donnees.instance().startTimer();
+
+                    progressDialog.dismiss();
+                    progressDialog = null;
+
+                    switchWPS.setChecked(false);
+                    MainActivity.instance().afficherAlertDialog(getString(R.string.wifi_titre), getString(R.string.wifi_erreur_wps), "OK");
+                    Donnees.instance().ajouterRequeteBt("WPS;0", false);
+                }
+            }, SCAN_PERIOD);
+
+            Donnees.instance().ajouterRequeteBt("WPS;1", false);
+        } else {
+            Donnees.instance().startTimer();
+            handler.removeCallbacksAndMessages(null);
+            MainActivity.instance().afficherAlertDialog(getString(R.string.wifi_titre), getString(R.string.wifi_connexion_ok), "OK");
         }
     }
 
@@ -273,9 +268,7 @@ public class FragmentParams extends Fragment implements Animation.AnimationListe
         MainActivity.instance().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                texteDonneesWiFi.setText("Recherche des réseaux Wi-Fi disponible...");
-                boutonRechercherWiFi.setVisibility(View.VISIBLE);
-                setAnimationWiFiButtonState(true);
+                progressDialog = ProgressDialog.show(MainActivity.instance(), getString(R.string.wifi_titre), getString(R.string.wifi_recherche_en_cours), true);
                 listViewWifi.setVisibility(View.GONE);
             }
         });
@@ -314,36 +307,14 @@ public class FragmentParams extends Fragment implements Animation.AnimationListe
                 }
             }
 
-            texteDonneesWiFi.setText("Veuillez sélectionner le réseau Wi-Fi");
-            setAnimationWiFiButtonState(false);
+            progressDialog.dismiss();
+            progressDialog = null;
+
+            texteDonneesWiFi.setText("Etat : Veuillez sélectionner le réseau Wi-Fi");
             listViewWifi.setVisibility(View.VISIBLE);
             MainActivity.instance().unregisterReceiver(wifiScanReceiver);
         }
     };
-
-    public void setAnimationBtButtonState(Boolean state) {
-        if (state) {
-            boutonRechercherBt.startAnimation(animationRechercherBt);
-            boutonRechercherBt.setClickable(false);
-        } else {
-            boutonRechercherBt.clearAnimation();
-            animationRechercherBt.cancel();
-            animationRechercherBt.reset();
-            boutonRechercherBt.setClickable(true);
-        }
-    }
-
-    public void setAnimationWiFiButtonState(Boolean state) {
-        if (state) {
-            boutonRechercherWiFi.startAnimation(animationRechercherWiFi);
-            boutonRechercherWiFi.setClickable(false);
-        } else {
-            boutonRechercherWiFi.clearAnimation();
-            animationRechercherWiFi.cancel();
-            animationRechercherWiFi.reset();
-            boutonRechercherWiFi.setClickable(true);
-        }
-    }
 
     private void setWifiLayoutHeight() {
         int totalHeight = 0;
@@ -357,42 +328,21 @@ public class FragmentParams extends Fragment implements Animation.AnimationListe
         listViewWifi.setLayoutParams(params);
     }
 
-    @Override
-    public void onAnimationStart(Animation animation) {
+    public void stopWiFi() {
+        if ((view != null) && isAdded() && (connectToWiFi > 0)) {
+            Donnees.instance().startTimer();
+            handler.removeCallbacksAndMessages(null);
 
-    }
+            progressDialog.dismiss();
+            progressDialog = null;
 
-    @Override
-    public void onAnimationEnd(Animation animation) {
+            if (Donnees.instance().getWiFiState() == 1) {
+                MainActivity.instance().afficherAlertDialog(getString(R.string.wifi_titre), getString(R.string.wifi_connexion_ok), "OK");
+            } else {
+                MainActivity.instance().afficherAlertDialog(getString(R.string.wifi_titre), getString(R.string.wifi_erreur_connexion, wifiAdapter.getItem(connectToWiFi - 1)), "OK");
+            }
 
-    }
-
-    @Override
-    public void onAnimationRepeat(Animation animation) {
-
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.bouton_code_installateur:
-                afficherQuestion(true, "Veuillez entrer le code installateur");
-                break;
-            case R.id.rb_regulateur_ph_moins:
-            case R.id.rb_regulateur_orp:
-            case R.id.rb_pompe_filtration:
-            case R.id.rb_capteur_ph:
-            case R.id.rb_capteur_redox:
-            case R.id.rb_capteur_temp_bassin:
-                installer((CheckBox) v.findViewById(v.getId()));
-                break;
-            case R.id.bouton_etalonnage_capteur_ph:
-            case R.id.bouton_etalonnage_capteur_redox:
-            case R.id.bouton_etalonnage_capteur_temp_bassin:
-                etalonnage((Button) v.findViewById(v.getId()));
-                break;
-            default:
-                break;
+            connectToWiFi = 0;
         }
     }
 
@@ -416,90 +366,6 @@ public class FragmentParams extends Fragment implements Animation.AnimationListe
             afficherQuestion(false, "");
         } else {
             reponse.setText("");
-        }
-    }
-
-    private void installer(CheckBox sender) {
-        if (sender == rbRegulateurPhMoins) {
-            Donnees.instance().definirEquipementInstalle(Donnees.Equipement.PhMoins, sender.isChecked());
-            Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurPhMoins, "installe=" + (sender.isChecked() ? 1 : 0), false);
-        } else if (sender == rbRegulateurORP) {
-            Donnees.instance().definirEquipementInstalle(Donnees.Equipement.Orp, sender.isChecked());
-            Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageRegulateurORP, "installe=" + (sender.isChecked() ? 1 : 0), false);
-        } else if (sender == rbPompeFiltration) {
-            Donnees.instance().definirEquipementInstalle(Donnees.Equipement.PompeFiltration, sender.isChecked());
-            Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PagePompeFiltration, "installe=" + (sender.isChecked() ? 1 : 0), false);
-        } else if (sender == rbCapteurPh) {
-            Donnees.instance().definirCapteurInstalle(Donnees.Capteur.Ph, sender.isChecked());
-            Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageCapteurs, "type=pH&installe=" + (sender.isChecked() ? 1 : 0), false);
-        } else if (sender == rbCapteurRedox) {
-            Donnees.instance().definirCapteurInstalle(Donnees.Capteur.Redox, sender.isChecked());
-            Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageCapteurs, "type=ORP&installe=" + (sender.isChecked() ? 1 : 0), false);
-        } else if (sender == rbCapteurTempBassin) {
-            Donnees.instance().definirCapteurInstalle(Donnees.Capteur.TemperatureBassin, sender.isChecked());
-            Donnees.instance().ajouterRequeteHttp(StructureHttp.RequestHTTP.Update, StructureHttp.PageHTTP.PageCapteurs, "type=Température bassin&installe=" + (sender.isChecked() ? 1 : 0), false);
-        }
-
-        MainActivity.instance().updatePages();
-    }
-
-    private void etalonnage(Button sender) {
-        if (sender == boutonEtalonnageCapteurPh) {
-            capteur = Donnees.Capteur.Ph;
-        } else if (sender == boutonEtalonnageCapteurRedox) {
-            capteur = Donnees.Capteur.Redox;
-        } else if (sender == boutonEtalonnageCapteurTempBassin) {
-            capteur = Donnees.Capteur.TemperatureBassin;
-        }
-
-        etalonnage(typeModification = 0, false);
-    }
-
-    public void etalonnage(int position, boolean annulation) {
-        if ((view != null) && isAdded()) {
-            switch (position) {
-                case 0:
-                    nbPointEtalonnage = 1;
-
-                    if (capteur == Donnees.Capteur.Ph) {
-                        progressDialog = ProgressDialog.show(MainActivity.instance(), "Étalonnage en cours", "Veuillez mettre la sonde à " + (Global.BASE_VOLTAGE_PH_MIN) + " mV", true);
-                        Donnees.instance().ajouterRequeteBt("Calibration;pH;1", false);
-                    } else if (capteur == Donnees.Capteur.Redox) {
-                        progressDialog = ProgressDialog.show(MainActivity.instance(), "Étalonnage en cours", "Veuillez mettre la sonde à " + (Global.BASE_VOLTAGE_REDOX_MIN) + " mV", true);
-                        Donnees.instance().ajouterRequeteBt("Calibration;Redox;1", false);
-                    } else if (capteur == Donnees.Capteur.TemperatureBassin) {
-                        progressDialog = ProgressDialog.show(MainActivity.instance(), "Étalonnage en cours", "Veuillez mettre la sonde à " + ((int) ((Global.BASE_RESISTANCE_PT + Global.STEP_MIN_PT * Global.COEFFICIENT_PT) * 10)) + " Ohms", true);
-                        Donnees.instance().ajouterRequeteBt("Calibration;TempBassin;1", false);
-                    }
-                    break;
-                case 1:
-                    if ((progressDialog != null) && (progressDialog.isShowing())) {
-                        progressDialog.dismiss();
-                    }
-
-                    nbPointEtalonnage = 2;
-
-                    if (capteur == Donnees.Capteur.Ph) {
-                        progressDialog = ProgressDialog.show(MainActivity.instance(), "Étalonnage en cours", "Veuillez mettre la sonde à " + (Global.BASE_VOLTAGE_PH_MAX) + " mV", true);
-                        Donnees.instance().ajouterRequeteBt("Calibration;pH;2", false);
-                    } else if (capteur == Donnees.Capteur.Redox) {
-                        progressDialog = ProgressDialog.show(MainActivity.instance(), "Étalonnage en cours", "Veuillez mettre la sonde à " + (Global.BASE_VOLTAGE_REDOX_MAX) + " mV", true);
-                        Donnees.instance().ajouterRequeteBt("Calibration;Redox;2", false);
-                    } else if (capteur == Donnees.Capteur.TemperatureBassin) {
-                        progressDialog = ProgressDialog.show(MainActivity.instance(), "Étalonnage en cours", "Veuillez mettre la sonde à " + ((int) ((Global.BASE_RESISTANCE_PT + Global.STEP_MAX_PT * Global.COEFFICIENT_PT) * 10)) + " Ohms", true);
-                        Donnees.instance().ajouterRequeteBt("Calibration;TempBassin;2", false);
-                    }
-                    break;
-                default:
-                    if ((progressDialog != null) && (progressDialog.isShowing())) {
-                        progressDialog.dismiss();
-                    }
-
-                    MainActivity.instance().afficherAlertDialog(annulation ? "Étalonnage impossible" : "Étalonnage réussi", annulation ? nbPointEtalonnage == 1 ? "La valeur est instable." : "Les valeurs sont incohérentes." : "Étalonnage effectué avec succès.", "OK");
-                    break;
-            }
-
-            typeModification++;
         }
     }
 }

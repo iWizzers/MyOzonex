@@ -1,82 +1,113 @@
 package fr.ozonex.myozonex;
 
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGatt;
-import android.bluetooth.BluetoothGattCallback;
-import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattDescriptor;
-import android.bluetooth.BluetoothGattService;
-import android.bluetooth.BluetoothManager;
-import android.bluetooth.BluetoothProfile;
-import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.os.Handler;
-import android.util.Log;
+import android.os.IBinder;
+import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
-public class BluetoothLe {
+public class BluetoothLe implements ServiceConnection, SerialListener {
     private static BluetoothLe inst = new BluetoothLe();
     public static BluetoothLe instance() {
         return inst;
     }
 
-    private BluetoothManager bluetoothManager;
-    private BluetoothAdapter bluetoothAdapter;
-    private BluetoothGatt bluetoothGatt;
-    private int connectionState = STATE_DISCONNECTED;
+    public enum Connected { False, Pending, True }
 
-    private static final int STATE_DISCONNECTED = 0;
-    private static final int STATE_CONNECTING = 1;
-    private static final int STATE_CONNECTED = 2;
+    private boolean init = false;
+
+    // Scan
+    private BluetoothAdapter bluetoothAdapter;
+    private boolean scanning = false;
 
     public static final int REQUEST_ENABLE_BT = 1;
-
-    public final static String ACTION_GATT_CONNECTED ="com.example.bluetooth.le.ACTION_GATT_CONNECTED";
-    public final static String ACTION_GATT_DISCONNECTED ="com.example.bluetooth.le.ACTION_GATT_DISCONNECTED";
-    public final static String ACTION_GATT_SERVICES_DISCOVERED ="com.example.bluetooth.le.ACTION_GATT_SERVICES_DISCOVERED";
-    public final static String ACTION_DATA_AVAILABLE ="com.example.bluetooth.le.ACTION_DATA_AVAILABLE";
-    public final static String EXTRA_DATA ="com.example.bluetooth.le.EXTRA_DATA";
-
-    public final static UUID UUID_HEART_RATE_MEASUREMENT = UUID.fromString(GattAttributes.HEART_RATE_MEASUREMENT);
-
-    private boolean connected = false;
-    private boolean scanning;
-    private Handler handler = new Handler();
-    // Stops scanning after 10 seconds.
     private static final long SCAN_PERIOD = 10000;
 
-    public void init() {
-        // Initializes Bluetooth adapter.
-        bluetoothManager = (BluetoothManager) MainActivity.instance().getSystemService(Context.BLUETOOTH_SERVICE);
-        if (bluetoothManager != null) {
-            bluetoothAdapter = bluetoothManager.getAdapter();
-        }
+    // Control
+    private String deviceAddress;
+    public SerialService service;
 
-        // Ensures Bluetooth is available on the device and it is enabled. If not,
-        // displays a dialog requesting user permission to enable Bluetooth.
-        if (bluetoothAdapter != null) {
-            if (!bluetoothAdapter.isEnabled()) {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                MainActivity.instance().startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+    public Connected previousConnected = Connected.False;
+    public Connected connected = Connected.False;
+    public boolean initialStart = true;
+    private String newline = TextUtil.newline_crlf;
+
+    private Handler handler = new Handler();
+
+    private ProgressDialog progressDialog;
+    private String trame = "";
+    public boolean readTrameComplete = false;
+
+    public void init() {
+        // Use this check to determine whether BLE is supported on the device.  Then you can
+        // selectively disable BLE-related features.
+        if (!MainActivity.instance().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            MainActivity.instance().afficherAlertDialog(MainActivity.instance().getString(R.string.bluetooth_titre), MainActivity.instance().getString(R.string.bluetooth_le_non_supporte), "OK");
+        } else {
+            bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+            // Ensures Bluetooth is available on the device and it is enabled. If not,
+            // displays a dialog requesting user permission to enable Bluetooth.
+            if (bluetoothAdapter == null) {
+                MainActivity.instance().afficherAlertDialog(MainActivity.instance().getString(R.string.bluetooth_titre), MainActivity.instance().getString(R.string.bluetooth_non_supporte), "OK");
             } else {
-                scanLeDevice();
+                init = true;
+
+                if (!bluetoothAdapter.isEnabled()) {
+                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    MainActivity.instance().startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                } else {
+                    scanLeDevice(true);
+                }
             }
         }
     }
 
-    private void scanLeDevice() {
-        if (!scanning) {
+    public boolean isInit() {
+        return init;
+    }
+
+    public boolean isSupported() {
+        return MainActivity.instance().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
+    }
+
+    public boolean isOn() {
+        return bluetoothAdapter != null ? bluetoothAdapter.isEnabled() : false;
+    }
+
+    public void scanLeDevice(final boolean enable) {
+        if (enable) {
+            MainActivity.instance().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    progressDialog = ProgressDialog.show(MainActivity.instance(), MainActivity.instance().getString(R.string.bluetooth_titre), MainActivity.instance().getString(R.string.bluetooth_scan_en_cours), true);
+                }
+            });
+
             // Stops scanning after a pre-defined scan period.
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    MainActivity.instance().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                            progressDialog = null;
+                        }
+                    });
+
+                    MainActivity.instance().updateBt();
+                    MainActivity.instance().afficherAlertDialog(MainActivity.instance().getString(R.string.bluetooth_titre), MainActivity.instance().getString(R.string.bluetooth_erreur_scan), "OK");
+
                     scanning = false;
                     bluetoothAdapter.stopLeScan(leScanCallback);
                 }
@@ -85,6 +116,7 @@ public class BluetoothLe {
             scanning = true;
             bluetoothAdapter.startLeScan(leScanCallback);
         } else {
+            handler.removeCallbacksAndMessages(null);
             scanning = false;
             bluetoothAdapter.stopLeScan(leScanCallback);
         }
@@ -94,225 +126,260 @@ public class BluetoothLe {
     private BluetoothAdapter.LeScanCallback leScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
         public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-            if ((device.getName() != null) && device.getName().equals("MyOzonex Mini")) {
-                bluetoothAdapter.stopLeScan(leScanCallback);
-                connect(device);
-            }
+            MainActivity.instance().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if ((device.getName() != null) && device.getName().equals("MyOzonex")) {
+                        scanLeDevice(false);
+                        deviceAddress = device.getAddress();
+
+                        if (service != null) {
+                            service.attach(BluetoothLe.instance());
+                        }
+
+                        MainActivity.instance().bindService(new Intent(MainActivity.instance(), SerialService.class), BluetoothLe.instance(), Context.BIND_AUTO_CREATE);
+                    }
+                }
+            });
         }
     };
 
-    // Handles various events fired by the Service.
-    // ACTION_GATT_CONNECTED: connected to a GATT server.
-    // ACTION_GATT_DISCONNECTED: disconnected from a GATT server.
-    // ACTION_GATT_SERVICES_DISCOVERED: discovered GATT services.
-    // ACTION_DATA_AVAILABLE: received data from the device. This can be a
-    // result of read or notification operations.
-    public final BroadcastReceiver gattUpdateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-            if (BluetoothLe.ACTION_GATT_CONNECTED.equals(action)) {
-                connected = true;
-            } else if (BluetoothLe.ACTION_GATT_DISCONNECTED.equals(action)) {
-                connected = false;
-            } else if (BluetoothLe.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
-                // Show all the supported services and characteristics on the user interface.
-                displayGattServices(getSupportedGattServices());
-            } else if (BluetoothLe.ACTION_DATA_AVAILABLE.equals(action)) {
-                //displayData(intent.getStringExtra(BluetoothLe.EXTRA_DATA));
-            }
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder binder) {
+        service = ((SerialService.SerialBinder) binder).getService();
+        service.attach(this);
+        if (initialStart) {
+            initialStart = false;
+            MainActivity.instance().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    connect();
+                }
+            });
         }
-    };
-
-    // Implements callback methods for GATT events that the app cares about.  For example,
-    // connection change and services discovered.
-    private final BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
-        @Override
-        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            String intentAction;
-            if (newState == BluetoothProfile.STATE_CONNECTED) {
-                intentAction = ACTION_GATT_CONNECTED;
-                connectionState = STATE_CONNECTED;
-                broadcastUpdate(intentAction);
-                Log.i("TEST", "Connected to GATT server.");
-                // Attempts to discover services after successful connection.
-                Log.i("TEST", "Attempting to start service discovery:" + bluetoothGatt.discoverServices());
-            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                intentAction = ACTION_GATT_DISCONNECTED;
-                connectionState = STATE_DISCONNECTED;
-                Log.i("TEST", "Disconnected from GATT server.");
-                broadcastUpdate(intentAction);
-            }
-        }
-
-        @Override
-        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
-            } else {
-                Log.w("TEST", "onServicesDiscovered received: " + status);
-            }
-        }
-
-        @Override
-        public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
-            }
-        }
-
-        @Override
-        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-            broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
-        }
-    };
-
-    private void broadcastUpdate(final String action) {
-        final Intent intent = new Intent(action);
-        MainActivity.instance().sendBroadcast(intent);
     }
 
-    private void broadcastUpdate(final String action, final BluetoothGattCharacteristic characteristic) {
-        final Intent intent = new Intent(action);
-
-        // This is special handling for the Heart Rate Measurement profile.  Data parsing is
-        // carried out as per profile specifications:
-        // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
-        if (UUID_HEART_RATE_MEASUREMENT.equals(characteristic.getUuid())) {
-            int flag = characteristic.getProperties();
-            int format = -1;
-            if ((flag & 0x01) != 0) {
-                format = BluetoothGattCharacteristic.FORMAT_UINT16;
-                Log.d("TEST", "Heart rate format UINT16.");
-            } else {
-                format = BluetoothGattCharacteristic.FORMAT_UINT8;
-                Log.d("TEST", "Heart rate format UINT8.");
-            }
-            final int heartRate = characteristic.getIntValue(format, 1);
-            Log.d("TEST", String.format("Received heart rate: %d", heartRate));
-            intent.putExtra(EXTRA_DATA, String.valueOf(heartRate));
-        } else {
-            // For all other profiles, writes the data formatted in HEX.
-            final byte[] data = characteristic.getValue();
-            if (data != null && data.length > 0) {
-                final StringBuilder stringBuilder = new StringBuilder(data.length);
-                for(byte byteChar : data)
-                    stringBuilder.append(String.format("%02X ", byteChar));
-                intent.putExtra(EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
-            }
-        }
-        MainActivity.instance().sendBroadcast(intent);
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+        //service = null;
     }
 
-    public boolean connect(BluetoothDevice device) {
-        if (bluetoothAdapter == null) {
-            Log.w("TEST", "BluetoothAdapter not initialized or unspecified address.");
-            return false;
+    private void connect() {
+        try {
+            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            BluetoothDevice device = bluetoothAdapter.getRemoteDevice(deviceAddress);
+            MainActivity.instance().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    progressDialog.setMessage(MainActivity.instance().getString(R.string.bluetooth_connexion_en_cours));
+                }
+            });
+            connected = Connected.Pending;
+            SerialSocket socket = new SerialSocket(MainActivity.instance().getApplicationContext(), device);
+            service.connect(socket);
+        } catch (Exception e) {
+            onSerialConnectError(e);
         }
-
-        // Previously connected device.  Try to reconnect.
-        if (bluetoothGatt != null) {
-            Log.d("TEST", "Trying to use an existing mBluetoothGatt for connection.");
-            if (bluetoothGatt.connect()) {
-                connectionState = STATE_CONNECTING;
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        if (device == null) {
-            Log.w("TEST", "Device not found.  Unable to connect.");
-            return false;
-        }
-        // We want to directly connect to the device, so we are setting the autoConnect
-        // parameter to false.
-        bluetoothGatt = device.connectGatt(MainActivity.instance(), false, gattCallback);
-        Log.d("TEST", "Trying to create a new connection.");
-        connectionState = STATE_CONNECTING;
-        return true;
     }
 
     public void disconnect() {
-        if (bluetoothAdapter == null || bluetoothGatt == null) {
-            Log.w("TEST", "BluetoothAdapter not initialized");
-            return;
-        }
-        bluetoothGatt.disconnect();
+        connected = Connected.False;
+        readTrameComplete = true;
+        MainActivity.instance().updateBt();
+        service.disconnect();
+        service = null;
+        MainActivity.instance().unbindService(BluetoothLe.instance());
+        initialStart = true;
     }
 
-    public void close() {
-        if (bluetoothGatt == null) {
+    public void send(String str) {
+        if (connected != Connected.True) {
             return;
         }
-        bluetoothGatt.close();
-        bluetoothGatt = null;
-    }
 
-    private void displayGattServices(List<BluetoothGattService> gattServices) {
-        if (gattServices == null) return;
-        String uuid = null;
-        ArrayList<HashMap<String, String>> gattServiceData = new ArrayList<HashMap<String, String>>();
-        ArrayList<ArrayList<HashMap<String, String>>> gattCharacteristicData = new ArrayList<ArrayList<HashMap<String, String>>>();
-        ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics = new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
+        if (str.equals("Data")) {
+            str += new SimpleDateFormat(";<uddMMyyyyHHmmss;").format(Calendar.getInstance().getTime());
+            str += "0;0;0;";
+            str += String.valueOf(Donnees.instance().obtenirVolumeBassin()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirTempoDemarrage()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirTypeRefoulement()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirTypeRegulation()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirTempsSecuriteInjection()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirHystInjectionPh()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirHystInjectionChloreOrp()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirEtatRegulations() ? 1 : 0) + ';';
 
-        // Loops through available GATT Services.
-        for (BluetoothGattService gattService : gattServices) {
-            HashMap<String, String> currentServiceData = new HashMap<String, String>();
-            uuid = gattService.getUuid().toString();
-            Log.d("Service", uuid);
-            gattServiceData.add(currentServiceData);
-
-            ArrayList<HashMap<String, String>> gattCharacteristicGroupData = new ArrayList<HashMap<String, String>>();
-            List<BluetoothGattCharacteristic> gattCharacteristics = gattService.getCharacteristics();
-            ArrayList<BluetoothGattCharacteristic> charas = new ArrayList<BluetoothGattCharacteristic>();
-            // Loops through available Characteristics.
-            for (BluetoothGattCharacteristic gattCharacteristic :gattCharacteristics) {
-                charas.add(gattCharacteristic);
-                HashMap<String, String> currentCharaData = new HashMap<String, String>();
-                uuid = gattCharacteristic.getUuid().toString();
-                Log.d("Characteristic", uuid);
-                gattCharacteristicGroupData.add(currentCharaData);
+            str += String.valueOf(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PompeFiltration) ? 1 : 0) + ';';
+            str += String.valueOf(Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.PompeFiltration)) + ';';
+            str += String.valueOf(Donnees.instance().obtenirEtatLectureCapteurs() ? 1 : 0) + ';';
+            for (int i = 0; i < Global.MAX_PLAGES_EQUIPEMENTS; i++) {
+                str += Donnees.instance().obtenirPlageFonctionnement(Donnees.Equipement.PompeFiltration, i).getPlage() + ';';
             }
-            mGattCharacteristics.add(charas);
-            gattCharacteristicData.add(gattCharacteristicGroupData);
+            str += String.valueOf(Donnees.instance().obtenirEtatHorsGel() ? 1 : 0) + ';';
+            str += String.valueOf(Donnees.instance().obtenirEnclHorsGel()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirArretHorsGel()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirFreqHorsGel()) + ';';
+
+            str += String.valueOf(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Chauffage) ? 1 : 0) + ';';
+            str += String.valueOf(Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.Chauffage)) + ';';
+            str += String.valueOf(Donnees.instance().obtenirControlePompeFiltration()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirTemperatureConsigne()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirGestionReversible()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirTemperatureReversible()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirAlarmeSeuilBas(Donnees.Equipement.Chauffage, null)) + ';';
+            str += String.valueOf(Donnees.instance().obtenirAlarmeSeuilHaut(Donnees.Equipement.Chauffage, null)) + ';';
+
+            str += String.valueOf(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Ozone) ? 1 : 0) + ';';
+            str += String.valueOf(Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.Ozone)) + ';';
+            str += String.valueOf(Donnees.instance().obtenirTypeOzone()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirNombreVentilateursOzone()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirTempoOzone()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirErreurOzone()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirVitesseFan1Ozone()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirVitesseFan2Ozone()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirCourantAlimOzone()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirTensionAlimOzone()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirHauteTensionAlimOzone()) + ';';
+
+            str += String.valueOf(Donnees.instance().obtenirPointConsignePh()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirHysteresisPhMoins()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirAlarmeSeuilBas(Donnees.Equipement.PhGlobal, null)) + ';';
+            str += String.valueOf(Donnees.instance().obtenirAlarmeSeuilHaut(Donnees.Equipement.PhGlobal, null)) + ';';
+
+            str += String.valueOf(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.PhMoins) ? 1 : 0) + ';';
+            str += String.valueOf(Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.PhMoins)) + ';';
+            str += String.valueOf(Donnees.instance().obtenirDebitEquipement(Donnees.Equipement.PhMoins)) + ';';
+            str += String.valueOf(Donnees.instance().obtenirVolume(Donnees.Equipement.PhMoins)) + ';';
+            str += "0;";
+            str += "0;";
+            str += String.valueOf(Donnees.instance().obtenirDureeCycle(Donnees.Equipement.PhMoins)) + ';';
+            str += String.valueOf(Donnees.instance().obtenirMultiplicateurDifference(Donnees.Equipement.PhMoins)) + ';';
+            str += String.valueOf(Donnees.instance().obtenirDureeInjectionMinimum(Donnees.Equipement.PhMoins)) + ';';
+            str += String.valueOf(Donnees.instance().obtenirDureeInjection(Donnees.Equipement.PhMoins)) + ';';
+            str += String.valueOf(Donnees.instance().obtenirTempsReponse(Donnees.Equipement.PhMoins)) + ';';
+            str += String.valueOf(Donnees.instance().obtenirTempsInjectionJournalierMax(Donnees.Equipement.PhMoins)) + ';';
+            str += "0;";
+
+            str += String.valueOf(Donnees.instance().obtenirEquipementInstalle(Donnees.Equipement.Orp) ? 1 : 0) + ';';
+            str += String.valueOf(Donnees.instance().obtenirPointConsigneOrp()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirHysteresisOrp()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirEtatEquipement(Donnees.Equipement.Orp)) + ';';
+            str += String.valueOf(Donnees.instance().obtenirDebitEquipement(Donnees.Equipement.Orp)) + ';';
+            str += String.valueOf(Donnees.instance().obtenirVolume(Donnees.Equipement.Orp)) + ';';
+            str += "0;";
+            str += "0;";
+            str += String.valueOf(Donnees.instance().obtenirDureeCycle(Donnees.Equipement.Orp)) + ';';
+            str += String.valueOf(Donnees.instance().obtenirMultiplicateurDifference(Donnees.Equipement.Orp)) + ';';
+            str += String.valueOf(Donnees.instance().obtenirDureeInjectionMinimum(Donnees.Equipement.Orp)) + ';';
+            str += String.valueOf(Donnees.instance().obtenirDureeInjection(Donnees.Equipement.Orp)) + ';';
+            str += String.valueOf(Donnees.instance().obtenirTempsReponse(Donnees.Equipement.Orp)) + ';';
+            str += String.valueOf(Donnees.instance().obtenirTempsInjectionJournalierMax(Donnees.Equipement.Orp)) + ';';
+            str += "0;";
+            str += String.valueOf(Donnees.instance().obtenirAlarmeSeuilBas(Donnees.Equipement.Orp, Donnees.Capteur.Redox)) + ';';
+            str += String.valueOf(Donnees.instance().obtenirAlarmeSeuilHaut(Donnees.Equipement.Orp, Donnees.Capteur.Redox)) + ';';
+            str += String.valueOf(Donnees.instance().obtenirEtat(Donnees.Equipement.Orp) ? 1 : 0) + ';';
+            str += String.valueOf(Donnees.instance().obtenirJourSurchloration()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirFrequenceSurchloration()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirValeurSurchloration()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirProchaineSurchloration()) + ';';
+
+            str += String.valueOf(Donnees.instance().obtenirDonneesEquipementsAuto() ? 1 : 0) + ';';
+            str += String.valueOf(Donnees.instance().obtenirModifPlagesAuto() ? 1 : 0) + ';';
+            str += String.valueOf(Donnees.instance().obtenirPlagesAuto() ? 1 : 0) + ';';
+            str += String.valueOf(Donnees.instance().obtenirDebutPlageAuto()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirTempsFiltrationJour()) + ';';
+            str += String.valueOf(Donnees.instance().obtenirAsservissementAuto(Donnees.Equipement.PhMoins) ? 1 : 0) + ';';
+            str += String.valueOf(Donnees.instance().obtenirAsservissementAuto(Donnees.Equipement.Orp) ? 1 : 0) + ';';
+            str += String.valueOf(Donnees.instance().obtenirPointConsigneOrpAuto() ? 1 : 0) + ';';
+            str += "0;";
+
+            str += String.valueOf(Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.TemperatureBassin) ? 1 : 0) + ';';
+            str += "0;";
+            str += String.valueOf(Donnees.instance().obtenirValeurCapteur(Donnees.Capteur.TemperatureBassin)) + ';';
+            str += "0;";
+            str += String.valueOf(Donnees.instance().obtenirEtatEtalonnageCapteur(Donnees.Capteur.TemperatureBassin) ? 1 : 0) + ';';
+            str += String.valueOf(Donnees.instance().obtenirValeurEtalonnageCapteur(Donnees.Capteur.TemperatureBassin)) + ';';
+
+            str += String.valueOf(Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Ph) ? 1 : 0) + ';';
+            str += "0;";
+            str += String.valueOf(Donnees.instance().obtenirValeurCapteur(Donnees.Capteur.Ph)) + ';';
+            str += "0;";
+            str += String.valueOf(Donnees.instance().obtenirEtatEtalonnageCapteur(Donnees.Capteur.Ph) ? 1 : 0) + ';';
+            str += String.valueOf(Donnees.instance().obtenirValeurEtalonnageCapteur(Donnees.Capteur.Ph)) + ';';
+
+            str += String.valueOf(Donnees.instance().obtenirCapteurInstalle(Donnees.Capteur.Redox) ? 1 : 0) + ';';
+            str += "0;";
+            str += String.valueOf(Donnees.instance().obtenirValeurCapteur(Donnees.Capteur.Redox)) + ';';
+            str += "0;";
+            str += String.valueOf(Donnees.instance().obtenirEtatEtalonnageCapteur(Donnees.Capteur.Redox) ? 1 : 0) + ';';
+            str += String.valueOf(Donnees.instance().obtenirValeurEtalonnageCapteur(Donnees.Capteur.Redox)) + '>';
+
+            Donnees.instance().definirEtalonnageCapteur(Donnees.Capteur.TemperatureBassin, false, 0);
+            Donnees.instance().definirEtalonnageCapteur(Donnees.Capteur.Ph, false, 0);
+            Donnees.instance().definirEtalonnageCapteur(Donnees.Capteur.Redox, false, 0);
+        }
+
+        try {
+            service.write((str + newline).getBytes());
+        } catch (Exception e) {
+            onSerialIoError(e);
         }
     }
 
-    public void readCharacteristic(BluetoothGattCharacteristic characteristic) {
-        if (bluetoothAdapter == null || bluetoothGatt == null) {
-            Log.w("TEST", "BluetoothAdapter not initialized");
-            return;
+    private void receive(byte[] data) {
+        String msg = new String(data);
+        if(newline.equals(TextUtil.newline_crlf) && msg.length() > 0) {
+            // don't show CR as ^M if directly before LF
+            msg = msg.replace(TextUtil.newline_crlf, TextUtil.newline_lf);
         }
-        bluetoothGatt.readCharacteristic(characteristic);
-    }
+        trame += msg;
 
-    public void setCharacteristicNotification(BluetoothGattCharacteristic characteristic, boolean enabled) {
-        if (bluetoothAdapter == null || bluetoothGatt == null) {
-            Log.w("TEST", "BluetoothAdapter not initialized");
-            return;
-        }
-        bluetoothGatt.setCharacteristicNotification(characteristic, enabled);
-
-        // This is specific to Heart Rate Measurement.
-        if (UUID_HEART_RATE_MEASUREMENT.equals(characteristic.getUuid())) {
-            BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
-                    UUID.fromString(GattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
-            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-            bluetoothGatt.writeDescriptor(descriptor);
+        if (trame.contains("<") && trame.contains(">")) {
+            MainActivity.instance().getBtTreatment(trame.replace(trame.substring(0, trame.indexOf("<")), "").replaceAll("<", "").replaceAll(">", ""));
+            trame = "";
         }
     }
 
-    private List<BluetoothGattService> getSupportedGattServices() {
-        return bluetoothGatt != null ? bluetoothGatt.getServices() : null;
+    /*
+     * SerialListener
+     */
+    @Override
+    public void onSerialConnect() {
+        MainActivity.instance().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog.dismiss();
+                progressDialog = null;
+            }
+        });
+
+        Toast.makeText(MainActivity.instance(), MainActivity.instance().getString(R.string.bluetooth_connexion_ok), Toast.LENGTH_SHORT).show();
+
+        connected = Connected.True;
+
+        MainActivity.instance().updateBt();
+        Donnees.instance().ajouterRequeteBt("ID?", true);
     }
 
-    public IntentFilter makeGattUpdateIntentFilter() {
-        final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(ACTION_GATT_CONNECTED);
-        intentFilter.addAction(ACTION_GATT_DISCONNECTED);
-        intentFilter.addAction(ACTION_GATT_SERVICES_DISCOVERED);
-        intentFilter.addAction(ACTION_DATA_AVAILABLE);
-        return intentFilter;
+    @Override
+    public void onSerialConnectError(Exception e) {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
+
+        MainActivity.instance().afficherAlertDialog(MainActivity.instance().getString(R.string.bluetooth_titre), MainActivity.instance().getString(R.string.bluetooth_erreur_connexion, e.getMessage()), "OK");
+        disconnect();
+    }
+
+    @Override
+    public void onSerialRead(byte[] data) {
+        receive(data);
+    }
+
+    @Override
+    public void onSerialIoError(Exception e) {
+        MainActivity.instance().afficherAlertDialog(MainActivity.instance().getString(R.string.bluetooth_titre), MainActivity.instance().getString(R.string.bluetooth_erreur, e.getMessage()), "OK");
+        disconnect();
     }
 }

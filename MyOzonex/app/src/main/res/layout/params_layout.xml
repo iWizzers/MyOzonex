@@ -45,7 +45,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_gravity="center_vertical"
-                            android:text="Etat : Connecté"
+                            android:text="Etat : Non opérationnel"
                             android:textColor="@color/colorPrimary"
                             android:textSize="@dimen/texteGeneral" />
 
@@ -59,7 +59,7 @@
                             android:scaleType="fitCenter"
                             android:background="@drawable/roundedbutton"
                             android:tint="@color/colorAccent1"
-                            app:srcCompat="@android:drawable/ic_popup_sync" />
+                            app:srcCompat="@android:drawable/ic_menu_search" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -90,8 +90,50 @@
                     android:layout_marginTop="@dimen/layout_widget_space"
                     android:orientation="vertical">
                     <LinearLayout
+                        android:id="@+id/layout_wps"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="WPS"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/texteGeneral" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/layout_space"
+                            android:layout_weight="0"
+                            android:text="OFF"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/texteGeneral" />
+
+                        <Switch
+                            android:id="@+id/switch_wps"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/layout_space"
+                            android:layout_weight="0"
+                            android:theme="@style/SwitchStyle1" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/layout_space"
+                            android:layout_weight="0"
+                            android:text="ON"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/texteGeneral" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/layout_space"
                         android:orientation="horizontal">
                         <TextView
                             android:id="@+id/texte_donnees_wifi"
@@ -99,7 +141,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_gravity="center_vertical"
-                            android:text="Etat : Connecté"
+                            android:text="Etat : Non opérationnel"
                             android:textColor="@color/colorPrimary"
                             android:textSize="@dimen/texteGeneral" />
 
@@ -113,7 +155,7 @@
                             android:scaleType="fitCenter"
                             android:background="@drawable/roundedbutton"
                             android:tint="@color/colorAccent1"
-                            app:srcCompat="@android:drawable/ic_popup_sync" />
+                            app:srcCompat="@android:drawable/ic_menu_search" />
                     </LinearLayout>
 
                     <ListView
@@ -153,219 +195,6 @@
                         android:textColor="@color/colorAccent1"
                         android:textSize="@dimen/texteGeneral"
                         android:background="@android:color/transparent" />
-
-                    <LinearLayout
-                        android:id="@+id/layout_installation_equipements"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/layout_widget_space"
-                        android:orientation="vertical" >
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="ÉQUIPEMENTS"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="@dimen/texteGeneral" />
-
-                        <GridLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/layout_space">
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_row="0"
-                                android:layout_column="0"
-                                android:layout_columnWeight="1"
-                                android:layout_gravity="center_vertical"
-                                android:text="Relais 1 :"
-                                android:textColor="@color/colorPrimary"
-                                android:textSize="@dimen/texteGeneral" />
-
-                            <CheckBox
-                                android:id="@+id/rb_regulateur_ph_moins"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_row="0"
-                                android:layout_column="1"
-                                android:text="Régulateur pH-"
-                                android:textColor="@color/colorPrimary"
-                                android:buttonTint="@color/colorAccent1" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/layout_container_space"
-                                android:layout_row="1"
-                                android:layout_column="0"
-                                android:layout_columnWeight="1"
-                                android:layout_gravity="center_vertical"
-                                android:text="Relais 2 :"
-                                android:textColor="@color/colorPrimary"
-                                android:textSize="@dimen/texteGeneral" />
-
-                            <CheckBox
-                                android:id="@+id/rb_regulateur_orp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/layout_container_space"
-                                android:layout_row="1"
-                                android:layout_column="1"
-                                android:text="Régulateur ORP"
-                                android:textColor="@color/colorPrimary"
-                                android:buttonTint="@color/colorAccent1" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/layout_container_space"
-                                android:layout_row="2"
-                                android:layout_column="0"
-                                android:layout_columnWeight="1"
-                                android:layout_gravity="center_vertical"
-                                android:text="Relais 3 :"
-                                android:textColor="@color/colorPrimary"
-                                android:textSize="@dimen/texteGeneral" />
-
-                            <CheckBox
-                                android:id="@+id/rb_pompe_filtration"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/layout_container_space"
-                                android:layout_row="2"
-                                android:layout_column="1"
-                                android:text="Pompe filtration"
-                                android:textColor="@color/colorPrimary"
-                                android:buttonTint="@color/colorAccent1" />
-                        </GridLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layout_installation_capteurs"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/layout_widget_space"
-                        android:orientation="vertical" >
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="CAPTEURS"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="@dimen/texteGeneral" />
-
-                        <GridLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/layout_space">
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_row="0"
-                                android:layout_column="0"
-                                android:layout_columnWeight="1"
-                                android:layout_gravity="center_vertical"
-                                android:text="Connecteur 1 :"
-                                android:textColor="@color/colorPrimary"
-                                android:textSize="@dimen/texteGeneral" />
-
-                            <CheckBox
-                                android:id="@+id/rb_capteur_ph"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_row="0"
-                                android:layout_column="1"
-                                android:layout_gravity="center_vertical"
-                                android:text="pH"
-                                android:textColor="@color/colorPrimary"
-                                android:buttonTint="@color/colorAccent1" />
-
-                            <Button
-                                android:id="@+id/bouton_etalonnage_capteur_ph"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/layout_space"
-                                android:layout_row="0"
-                                android:layout_column="2"
-                                android:text="Etalonnage"
-                                android:textColor="@color/colorAccent1"
-                                android:textSize="@dimen/texteGeneral"
-                                android:background="@android:color/transparent" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/layout_container_space"
-                                android:layout_row="1"
-                                android:layout_column="0"
-                                android:layout_columnWeight="1"
-                                android:layout_gravity="center_vertical"
-                                android:text="Connecteur 2 :"
-                                android:textColor="@color/colorPrimary"
-                                android:textSize="@dimen/texteGeneral" />
-
-                            <CheckBox
-                                android:id="@+id/rb_capteur_redox"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/layout_container_space"
-                                android:layout_row="1"
-                                android:layout_column="1"
-                                android:layout_gravity="center_vertical"
-                                android:text="Redox"
-                                android:textColor="@color/colorPrimary"
-                                android:buttonTint="@color/colorAccent1" />
-
-                            <Button
-                                android:id="@+id/bouton_etalonnage_capteur_redox"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/layout_container_space"
-                                android:layout_marginLeft="@dimen/layout_space"
-                                android:layout_row="1"
-                                android:layout_column="2"
-                                android:text="Etalonnage"
-                                android:textColor="@color/colorAccent1"
-                                android:textSize="@dimen/texteGeneral"
-                                android:background="@android:color/transparent" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/layout_container_space"
-                                android:layout_row="2"
-                                android:layout_column="0"
-                                android:layout_columnWeight="1"
-                                android:layout_gravity="center_vertical"
-                                android:text="Connecteur 3 :"
-                                android:textColor="@color/colorPrimary"
-                                android:textSize="@dimen/texteGeneral" />
-
-                            <CheckBox
-                                android:id="@+id/rb_capteur_temp_bassin"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/layout_container_space"
-                                android:layout_row="2"
-                                android:layout_column="1"
-                                android:layout_gravity="center_vertical"
-                                android:text="Temp. bassin"
-                                android:textColor="@color/colorPrimary"
-                                android:buttonTint="@color/colorAccent1" />
-
-                            <Button
-                                android:id="@+id/bouton_etalonnage_capteur_temp_bassin"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/layout_container_space"
-                                android:layout_marginLeft="@dimen/layout_space"
-                                android:layout_row="2"
-                                android:layout_column="2"
-                                android:text="Etalonnage"
-                                android:textColor="@color/colorAccent1"
-                                android:textSize="@dimen/texteGeneral"
-                                android:background="@android:color/transparent" />
-                        </GridLayout>
-                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
